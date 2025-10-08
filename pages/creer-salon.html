@@ -100,6 +100,10 @@
             letter-spacing: 0.04em;
             text-shadow: 0 0 8px #00fff9, 0 0 24px #00fff9;
             margin-bottom: 1.2em;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
         }
 
         .form-group {
@@ -164,6 +168,23 @@
             opacity: 1;
         }
 
+        /* Fix Salon Créé button overflow */
+        .creer-btn {
+            max-width: 180px !important;
+            font-size: 1em !important;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-word;
+        }
+
+        .creer-btn:hover,
+        .creer-btn:focus {
+            background: linear-gradient(90deg, #ff00ff 60%, #00fff9 100%);
+            color: #fff;
+            box-shadow: 0 0 24px #ff00ffaa;
+        }
+
         .creer-btn:disabled {
             background: #222;
             color: #888;
@@ -211,28 +232,7 @@
 </head>
 
 <body>
-
-    <nav id="main-nav" class="main-nav" aria-label="Navigation principale" style="margin-bottom:2em;">
-        <ul>
-            <li><a href="../index.html">Accueil</a></li>
-            <li><a href="../index.html#contact">Contact</a></li>
-            <li><a href="jeux-quiz.html">Jeux / Quiz</a></li>
-            <li><a href="../page-apprentissage-langues/index.html">Apprentissage des Langues</a></li>
-            <li><a href="tv-replay.html">TV / Replay</a></li>
-            <li id="menu-user-icon" style="display:none">
-                <a href="espace-membre.php" title="Espace membre" style="display:flex;align-items:center;gap:0.4em;">
-                    <span style="font-size:1.5em;">👤</span>
-                    <span id="menu-user-nom" style="font-size:1em;">
-                        <?php session_start(); if(isset($_SESSION['user_nom'])) echo htmlspecialchars($_SESSION['user_nom']); ?>
-                    </span>
-                </a>
-            </li>
-            <li id="menu-login-link"><a href="../auth/login.html">Connexion</a></li>
-            <li id="menu-logout-link" style="display:none"><form action="logout.php" method="post" style="display:inline;"><button type="submit" style="background:none;border:none;color:#0ff1ce;font-size:1em;cursor:pointer;">Déconnexion</button></form></li>
-        </ul>
-    </nav>
-    <script src="../js/session-nav.js"></script>
-    <div class="card-form-group">
+    <div class="triple-flex">
         <div class="card-form">
             <div class="creer-salon-title">Créer un Salon</div>
             <form id="creer-salon-form" autocomplete="off">
@@ -287,40 +287,49 @@
                         &#8592; Accueil
                     </a>
                 </div>
-                <div id="dashboard-link-container" style="display:none; text-align:center; margin-top: 1.5em;">
-                    <a href="dashboard-hote.html" class="creer-btn"
-                        style="display:block;margin-top:0;text-align:center;text-decoration:none;opacity:1;">
-                        Aller au Dashboard Hôte
-                    </a>
-                </div>
             </form>
             <div class="form-error" id="form-global-error" style="margin-top:1.2em;"></div>
         </div>
-    </div>
-    <div class="salons-container">
-        <div class="creer-salon-title" style="margin-top:0;margin-bottom:1.5em;font-size:1.5rem;">Salons Actifs
-        </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Hôte</th>
-                    <th>Nom du Salon</th>
-                    <th>Code</th>
-                    <th>Joueurs</th>
-                    <th>Mot (Long.)</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="salons-list">
-            </tbody>
-        </table>
-        <div id="no-salons-message"
-            style="text-align:center;margin-top:1em;color:#ff00ff;font-weight:bold;display:none;">
-            Aucun salon actif pour le moment.
+        <div class="salons-container">
+            <div class="creer-salon-title" style="margin-top:0;margin-bottom:1.5em;font-size:1.5rem;">Salons Actifs
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Hôte</th>
+                        <th>Nom du Salon</th>
+                        <th>Code</th>
+                        <th>Joueurs</th>
+                        <th>Mot (Long.)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="salons-list">
+                </tbody>
+            </table>
+            <div id="no-salons-message"
+                style="text-align:center;margin-top:1em;color:#ff00ff;font-weight:bold;display:none;">
+                Aucun salon actif pour le moment.
+            </div>
         </div>
     </div>
 
     <script>
+        // Variable de garde pour éviter les redirections multiples
+        window.isRedirecting = false;
+
+        // Pré-remplissage automatique du nom de l'hôte avec la session utilisateur
+        fetch('../backend/get_user_info.php')
+            .then(res => res.ok ? res.json() : null)
+            .then(data => {
+                if (data && data.nom) {
+                    const nomHoteInput = document.getElementById('nom-hote');
+                    if (nomHoteInput) {
+                        nomHoteInput.value = data.nom;
+                        nomHoteInput.dispatchEvent(new Event('input'));
+                    }
+                }
+            });
         // --- Gestion avatar pour le formulaire Rejoindre un Salon ---
         const avatarUploadRejoindre = document.getElementById('avatar-upload-rejoindre');
         const avatarPreviewRejoindre = document.getElementById('avatar-preview-rejoindre');
@@ -365,12 +374,11 @@
                 }
             }
         }
-        // Clé unique pour stocker tous les salons dans localStorage
-        const LOCAL_SALONS_KEY = 'DEVITAL_SALONS';
-        // Clé pour stocker l'ID du dernier salon créé (pour le dashboard hôte)
-        const HOST_SALON_ID_KEY = 'last_created_salon_id';
+        // URL de l'API salons
+        const API_SALONS_URL = '../backend/salons.php';
 
         // --- Récupération des éléments DOM ---
+        const avatarUploadLabel = document.getElementById('avatar-upload-label');
         const avatarUpload = document.getElementById('avatar-upload');
         const avatarPreview = document.getElementById('avatar-preview');
         const avatarPlaceholder = document.getElementById('avatar-placeholder');
@@ -447,55 +455,59 @@
 
         // --- Logique de Base de Données (Local Storage) ---
 
-        /**
-         * Récupère tous les salons du localStorage.
-         * @returns {Array} Tableau d'objets salons.
-         */
-        function getAllSalons() {
+
+        // --- API salons (backend) ---
+        async function fetchSalons() {
             try {
-                const data = localStorage.getItem(LOCAL_SALONS_KEY);
-                return data ? JSON.parse(data) : [];
-            } catch (error) {
-                console.error("Erreur de lecture du localStorage:", error);
+                const res = await fetch(API_SALONS_URL);
+                if (!res.ok) throw new Error('Erreur API salons');
+                return await res.json();
+            } catch (e) {
+                formGlobalError.textContent = 'Erreur de chargement des salons.';
                 return [];
             }
         }
 
-        /**
-         * Met à jour la liste complète des salons dans le localStorage.
-         * Déclenche l'événement 'storage' dans les autres onglets.
-         * @param {Array} salons La nouvelle liste de salons.
-         */
-        function setAllSalons(salons) {
+        async function createSalonAPI(salon) {
+            // Robust: always ensure photo is base64 and not empty
+            if (salon.joueurs && salon.joueurs[0]) {
+                let photo = salon.joueurs[0].photo;
+                if (!photo || (!photo.startsWith('data:image') && !photo.startsWith('http'))) {
+                    salon.joueurs[0].photo = '../assets/avatar-default.png';
+                }
+            }
             try {
-                localStorage.setItem(LOCAL_SALONS_KEY, JSON.stringify(salons));
-                // L'écriture dans localStorage déclenche automatiquement l'événement 'storage'
-                // dans les autres onglets ouverts sur le même domaine.
-            } catch (error) {
-                console.error("Erreur d'écriture du localStorage:", error);
-                formGlobalError.textContent = "Erreur: Le stockage local est plein ou non disponible.";
+                const res = await fetch(API_SALONS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(salon)
+                });
+                return await res.json();
+            } catch (e) {
+                return { error: 'Erreur API' };
             }
         }
 
         // --- Logique d'affichage des Salons ---
 
-        function renderSalons(salons) {
+        async function renderSalonsFromAPI() {
+            if (window.isRedirecting) return;
             salonsList.innerHTML = '';
-
+            const salons = await fetchSalons();
             if (!salons || salons.length === 0) {
                 noSalonsMessage.style.display = 'block';
                 return;
             }
-
             noSalonsMessage.style.display = 'none';
-
             salons.forEach((salon) => {
                 const joueurs = Array.isArray(salon.joueurs) ? salon.joueurs : [];
-
-                const host = joueurs.find(j => j.estHote) || joueurs[0] || { nom: 'Inconnu', photo: '../assets/avatar-default.png' };
-                const hostPhoto = host.photo && host.photo.startsWith('data:image') ? host.photo : '../assets/avatar-default.png';
+                // Correction : toujours afficher la photo si présente, sinon avatar par défaut
+                let host = joueurs.find(j => j.estHote) || joueurs[0] || { nom: 'Inconnu', photo: '' };
+                let hostPhoto = '../assets/avatar-default.png';
+                if (host.photo && (host.photo.startsWith('data:image') || host.photo.startsWith('http'))) {
+                    hostPhoto = host.photo;
+                }
                 const salonId = salon.id;
-
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>
@@ -521,125 +533,116 @@
         // --- Logique de Création de Salon (Local Storage SET) ---
 
         const creerSalonForm = document.getElementById('creer-salon-form');
-        creerSalonForm.addEventListener('submit', async function (e) {
+        creerSalonForm.addEventListener('submit', function (e) {
             e.preventDefault();
             formGlobalError.textContent = '';
             creerBtn.disabled = true;
             creerBtn.textContent = 'Création...';
-
-            try {
-                const nomSalon = nomSalonInput.value.trim();
-                const nomHote = nomHoteInput.value.trim();
-                const maxJoueurs = parseInt(document.getElementById('nb-joueurs').value, 10);
-                const longueurMot = parseInt(document.getElementById('longueur-mot').value, 10);
-                if (!avatarUpload.files || avatarUpload.files.length === 0) {
-                    document.getElementById('avatar-error').textContent = 'La photo est obligatoire.';
-                    creerBtn.disabled = false;
-                    creerBtn.textContent = 'Créer Salon';
-                    return;
-                }
-                const photoBase64 = await getBase64Image(avatarUpload.files[0]);
-                const newSalonId = 's_' + Date.now().toString(); // ID unique basé sur le temps
+            const nomSalon = nomSalonInput.value.trim();
+            const maxJoueurs = parseInt(document.getElementById('nb-joueurs').value, 10);
+            const longueurMot = parseInt(document.getElementById('longueur-mot').value, 10);
+            if (!avatarUpload.files || avatarUpload.files.length === 0) {
+                document.getElementById('avatar-error').textContent = 'La photo est obligatoire.';
+                creerBtn.disabled = false;
+                creerBtn.textContent = 'Créer Salon';
+                return;
+            }
+            // Toujours relire le fichier image à chaque submit
+            const file = avatarUpload.files[0];
+            const reader = new FileReader();
+            reader.onload = async function (e) {
+                const photoBase64 = e.target.result;
                 const salonCode = genCode();
-
+                // Récupérer dynamiquement le nom et l'email de l'utilisateur connecté
+                let nomHote = '';
+                let emailHote = '';
+                try {
+                    const res = await fetch('../backend/get_user_info.php');
+                    if (res.ok) {
+                        const data = await res.json();
+                        nomHote = data.nom;
+                        emailHote = data.email;
+                    }
+                } catch (e) { }
                 const newSalon = {
-                    id: newSalonId,
                     nom: nomSalon,
                     code: salonCode,
                     maxJoueurs: maxJoueurs,
                     longueurMot: longueurMot,
-                    statut: 'en attente',
                     joueurs: [{
                         nom: nomHote,
+                        email: emailHote,
                         photo: photoBase64 || '../assets/avatar-default.png',
-                        estHote: true,
-                        id: 'host_' + newSalonId
-                    }],
-                    createdAt: Date.now()
+                        estHote: true
+                    }]
                 };
-
-                // 1. Récupérer la liste actuelle, ajouter le nouveau salon
-                const currentSalons = getAllSalons();
-                currentSalons.push(newSalon);
-
-                // 2. Écrire dans le localStorage (déclenche l'événement 'storage')
-                setAllSalons(currentSalons);
-
-                creerBtn.textContent = 'Salon Créé ! 🎉';
-
-                // 3. Stocker l'ID dans le localStorage (pour le Dashboard Hôte)
-                localStorage.setItem(HOST_SALON_ID_KEY, newSalonId);
-
-                // 4. Mettre à jour l'affichage dans cet onglet (l'événement 'storage' ne se déclenche pas dans l'onglet qui écrit)
-                renderSalons(currentSalons);
-
-                // 5. AFFICHE LE LIEN VERS LE DASHBOARD. PAS DE REDIRECTION AUTOMATIQUE.
-                if (dashboardLinkContainer) {
-                    dashboardLinkContainer.style.display = 'block';
+                try {
+                    const result = await createSalonAPI(newSalon);
+                    // Après la création réussie du salon, on met à jour la liste avant de rediriger
+                    if (result && result.success) {
+                        renderSalonsFromAPI();
+                        if (!window.isRedirecting) {
+                            window.isRedirecting = true;
+                            setTimeout(() => {
+                                window.location.href = `salon.html?code=${salonCode}`;
+                            }, 100);
+                        }
+                    } else {
+                        formGlobalError.textContent = 'Erreur lors de la création du salon.';
+                        creerBtn.disabled = false;
+                        creerBtn.textContent = 'Créer Salon';
+                    }
+                } catch (e) {
+                    formGlobalError.textContent = 'Erreur serveur. Veuillez réessayer plus tard.';
+                    creerBtn.disabled = false;
+                    creerBtn.textContent = 'Créer Salon';
                 }
+            };
+            reader.readAsDataURL(file);
+        });
 
-            } catch (error) {
-                console.error("Erreur de création de salon (Local Storage):", error);
-                formGlobalError.textContent = `Erreur: Échec de la création. ${error.message}`;
-                creerBtn.disabled = false;
-                creerBtn.textContent = 'Créer Salon';
-                checkFormValidity();
+        // Initialiser la liste des salons
+        renderSalonsFromAPI();
+
+        // Ajout : gestion du clic sur le label pour ouvrir le sélecteur de fichier
+        avatarUploadLabel.addEventListener('click', function (e) {
+            avatarUpload.click();
+        });
+        // Ajout : gestion clavier accessibilité
+        avatarUploadLabel.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                avatarUpload.click();
             }
         });
 
-        // Ajout du HTML pour la popin de confirmation
-        const popinHtml = `
-  <div id="popin-overlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(10,16,40,0.85);z-index:1000;display:flex;align-items:center;justify-content:center;">
-    <div id="popin-confirm" style="background:#181c3a;padding:2.2em 2.5em 2em 2.5em;border-radius:1.2em;box-shadow:0 0 32px #00fff966,0 0 0 2px #00fff933;text-align:center;max-width:90vw;">
-      <div style="font-size:1.25em;color:#00fff9;font-weight:bold;margin-bottom:1.2em;">Confirmation</div>
-      <div style="color:#fff;font-size:1.1em;margin-bottom:2em;">Voulez-vous vraiment rejoindre ce salon ?</div>
-      <button id="btn-popin-oui" style="background:linear-gradient(90deg,#00fff9 60%,#ff00ff 100%);color:#181c3a;border:none;border-radius:0.7em;font-size:1.1em;font-weight:bold;padding:0.6em 2.2em;cursor:pointer;box-shadow:0 0 12px #00fff966;margin-right:1.2em;">Oui</button>
-      <button id="btn-popin-non" style="background:#222;color:#fff;border:none;border-radius:0.7em;font-size:1.1em;font-weight:bold;padding:0.6em 2.2em;cursor:pointer;box-shadow:0 0 8px #00fff966;">Non</button>
-    </div>
-  </div>
-`;
-
-        function showPopinConfirmationSalon(onYes, onNo) {
-            // Supprime une popin existante si besoin
-            const old = document.getElementById('popin-overlay');
-            if (old) old.remove();
-            document.body.insertAdjacentHTML('beforeend', popinHtml);
-            document.getElementById('btn-popin-oui').onclick = function () {
-                document.getElementById('popin-overlay').remove();
-                onYes();
-            };
-            document.getElementById('btn-popin-non').onclick = function () {
-                document.getElementById('popin-overlay').remove();
-                if (onNo) onNo();
-            };
+        // Correction robuste pour l'ajout de photo
+        if (avatarUpload && avatarPreview && avatarPlaceholder) {
+            avatarUpload.addEventListener('change', function () {
+                if (avatarUpload.files && avatarUpload.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        avatarPreview.src = e.target.result;
+                        avatarPreview.style.display = 'block';
+                        avatarPlaceholder.style.display = 'none';
+                        checkFormValidity();
+                    };
+                    reader.readAsDataURL(avatarUpload.files[0]);
+                } else {
+                    avatarPreview.src = '';
+                    avatarPreview.style.display = 'none';
+                    avatarPlaceholder.style.display = 'block';
+                    checkFormValidity();
+                }
+            });
         }
 
+        // --- Fonction globale pour rejoindre un salon (nécessaire pour le onclick HTML)
         function rejoindreSalon(salonId, code) {
-            showPopinConfirmationSalon(
-                function () { window.location.href = 'salon.html'; },
-                function () { /* rien, reste sur la page */ }
-            );
+            // Ici, vous pouvez ajouter une logique de confirmation ou de redirection
+            window.location.href = `salon.html?code=${code}`;
         }
-
-        // --- Gestion des mises à jour entre les onglets ---
-        window.addEventListener('storage', (event) => {
-            // Se met à jour uniquement si la clé des salons est modifiée
-            if (event.key === LOCAL_SALONS_KEY) {
-                console.log("Événement 'storage' détecté. Mise à jour des salons.");
-                // Pas besoin de parser event.newValue, on utilise getAllSalons()
-                renderSalons(getAllSalons());
-            }
-        });
-
-        // --- Initialisation ---
-
-        nomSalonInput.addEventListener('input', checkFormValidity);
-        nomHoteInput.addEventListener('input', checkFormValidity);
-        avatarUpload.addEventListener('change', updateAvatarPreview);
-
-        checkFormValidity();
-        renderSalons(getAllSalons()); // Chargement initial
     </script>
 </body>
-<script src="../js/session-nav.js"></script>
+
 </html>

@@ -1,55 +1,33 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeux & Quiz - Trouvix</title>
     <link rel="stylesheet" href="../style.css">
 </head>
+
 <body>
-    <header>
-        <div class="header-row" id="global-header">
-            <div class="logo" tabindex="0" aria-label="Accueil Trouvix">
-                <span class="logo-text">Trouvix</span>
-            </div>
-            <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
-                <button id="close-menu" class="close-menu" aria-label="Fermer le menu" style="display:none">
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0ff1ce" stroke-width="3"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="8" y1="8" x2="24" y2="24" />
-                        <line x1="24" y1="8" x2="8" y2="24" />
-                    </svg>
-                </button>
-                <ul>
-                    <li><a href="index.html" aria-current="page">Accueil</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li><a href="pages/espace-membre.php">Espace membre</a></li>
-                    <li id="menu-user-icon" style="display:flex;align-items:center;gap:0.4em;">
-                        <a href="espace-membre.php" title="Espace membre"
-                            style="display:flex;align-items:center;gap:0.4em;">
-                            <span style="font-size:1.5em;">👤</span>
-                            <span id="menu-user-nom" style="font-size:1em;"></span>
-                            <?php session_start(); if(isset($_SESSION['user_nom'])) echo htmlspecialchars($_SESSION['user_nom']); ?>
-                            </span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-            <button id="burger-menu" class="burger" aria-label="Ouvrir le menu">
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0ff1ce" stroke-width="3"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="6" y1="10" x2="26" y2="10" />
-                    <line x1="6" y1="16" x2="26" y2="16" />
-                    <line x1="6" y1="22" x2="26" y2="22" />
-                </svg>
-            </button>
-        </div>
+    <header class="lw-header">
+        <h1 id="lw-logo"
+            style="cursor:pointer; text-align:center; width:100%; margin:0 auto; display:block; color:#19f6ff; font-weight: bold;">
+            TrouvixJeux</h1>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                document.getElementById('lw-logo').addEventListener('click', function () {
+                    window.location.href = '../index.html';
+                });
+            });
+        </script>
+        <nav>
+            <!-- Menu supprimé pour cette page -->
+        </nav>
     </header>
     </header>
-    <script src="../js/session-nav.js"></script>
+    <script src="/Trouvix/js/session-nav.js"></script>
     <main>
         <section class="jeux-quiz-content">
-            <h1>Jeux & Quiz</h1>
             <h2>Bienvenue dans l'espace Jeux & Quiz</h2>
             <p>Retrouvez ici tous les quiz, jeux de logique, classements et défis proposés par Trouvix !</p>
             <div class="quiz-cards">
@@ -58,6 +36,29 @@
                     <h3>DeviChal</h3>
                     <p>Défis quotidiens de devinettes et logique !</p>
                     <button class="btn-choix-role" id="btn-jouer-devichal">Jouer</button>
+                    <!-- Modal choix rôle -->
+                    <div id="modal-choix-role" class="modal-overlay" tabindex="-1" aria-modal="true" role="dialog" style="display:none;">
+                        <div class="modal-content" id="modal-choix-role-content">
+                            <button id="btn-fermer-modal" class="modal-close" aria-label="Fermer">&times;</button>
+                            <div class="modal-header">
+                                <span class="modal-icon">🎮</span>
+                                <h2>Choisissez votre rôle</h2>
+                                <p class="modal-desc">Sélectionnez comment vous souhaitez participer à DeviChal</p>
+                            </div>
+                            <div class="modal-actions">
+                                <button id="btn-hote" class="modal-btn modal-btn-hote">
+                                    <span class="modal-btn-icon">👑</span>
+                                    Hôte
+                                    <span class="modal-btn-sub">Créer un salon</span>
+                                </button>
+                                <button id="btn-joueur" class="modal-btn modal-btn-joueur">
+                                    <span class="modal-btn-icon">🎲</span>
+                                    Joueur
+                                    <span class="modal-btn-sub">Rejoindre une partie</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="quiz-card">
                     <span class="icon">🎮</span>
@@ -75,22 +76,134 @@
         </section>
     </main>
 </body>
-<script src="../js/session-nav.js"></script>
+
+<script src="/Trouvix/js/session-nav.js"></script>
 <script>
-// Désactive les boutons "Jouer" si non connecté
-document.addEventListener('DOMContentLoaded', function() {
-    const isConnected = sessionStorage.getItem('user_nom');
-    document.querySelectorAll('button').forEach(function(btn) {
-        if (btn.textContent.trim().toLowerCase() === 'jouer' && !isConnected) {
-            btn.disabled = true;
-            btn.style.opacity = '0.5';
-            btn.style.cursor = 'not-allowed';
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                alert('Vous devez être connecté(e) pour jouer.');
-            });
-        }
-    });
+// Redirige vers creer-salon.html au clic sur "Jouer" DeviChal
+document.getElementById('btn-jouer-devichal').addEventListener('click', function() {
+    window.location.href = 'creer-salon.html';
 });
 </script>
+<style>
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,0.7);
+        z-index: 2000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    @keyframes modal-fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    .modal-content {
+        background: linear-gradient(135deg, #181c34 80%, #23264a 100%);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px #000a;
+        padding: 2.5em 2.5em 2em 2.5em;
+        min-width: 320px;
+        max-width: 95vw;
+        text-align: center;
+        position: relative;
+        outline: none;
+    }
+    @keyframes modal-pop {
+        from { transform: scale(0.92); opacity: 0.5; }
+        to { transform: scale(1); opacity: 1; }
+    }
+    .modal-header {
+        margin-bottom: 1.2em;
+    }
+    .modal-icon {
+        font-size: 2.5em;
+        display: block;
+        margin-bottom: 0.2em;
+    }
+    .modal-content h2 {
+        color: #19f6ff;
+        margin-bottom: 0.2em;
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+    .modal-desc {
+        color: #b6eaff;
+        font-size: 1em;
+        margin-bottom: 0.5em;
+    }
+    .modal-actions {
+        display: flex;
+        gap: 1.5em;
+        justify-content: center;
+        margin-bottom: 1.2em;
+        flex-wrap: wrap;
+    }
+    .modal-btn {
+        padding: 1.1em 2.2em 0.7em 2.2em;
+        border: none;
+        border-radius: 12px;
+        font-weight: bold;
+        font-size: 1.1em;
+        cursor: pointer;
+        transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.13s;
+        box-shadow: 0 2px 12px #0002;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 120px;
+        background: #23264a;
+        color: #fff;
+        position: relative;
+    }
+    .modal-btn-hote {
+        background: linear-gradient(90deg, #19f6ff 60%, #0ff1ce 100%);
+        color: #181c34;
+    }
+    .modal-btn-hote:hover, .modal-btn-hote:focus {
+        background: linear-gradient(90deg, #0ff1ce 60%, #19f6ff 100%);
+        color: #181c34;
+        transform: translateY(-2px) scale(1.04);
+    }
+    .modal-btn-joueur {
+        background: #fff;
+        color: #181c34;
+    }
+    .modal-btn-joueur:hover, .modal-btn-joueur:focus {
+        background: #19f6ff;
+        color: #181c34;
+        transform: translateY(-2px) scale(1.04);
+    }
+    .modal-btn-icon {
+        font-size: 1.5em;
+        margin-bottom: 0.2em;
+        display: block;
+    }
+    .modal-btn-sub {
+        font-size: 0.85em;
+        color: #b6eaff;
+        font-weight: normal;
+        margin-top: 0.2em;
+        display: block;
+    }
+    .modal-close {
+        position: absolute;
+        top: 0.7em;
+        right: 1em;
+        background: none;
+        border: none;
+        color: #19f6ff;
+        font-size: 2em;
+        cursor: pointer;
+        transition: color 0.18s;
+        z-index: 10;
+    }
+    .modal-close:hover, .modal-close:focus {
+        color: #fff;
+    }
+</style>
+
+
 </html>

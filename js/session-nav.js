@@ -1,8 +1,9 @@
 // Script global pour gestion connexion/navigation Trouvix
 // Placez ce fichier dans js/ et incluez-le sur toutes les pages avec une nav
 
+let activityPingInterval = null;
 function checkUserSessionAndUpdateNav() {
-    fetch('backend/check_session.php', { credentials: 'include' })
+    fetch('/Trouvix/backend/check_session.php', { credentials: 'include' })
         .then(r => r.json())
         .then(data => {
             const loginLink = document.getElementById('menu-login-link');
@@ -10,19 +11,33 @@ function checkUserSessionAndUpdateNav() {
             const userNom = document.getElementById('menu-user-nom');
             if (data.connected) {
                 // Met à jour la dernière activité côté serveur
-                fetch('backend/update_activity.php', { credentials: 'include' });
+                fetch('/Trouvix/backend/update_activity.php', { credentials: 'include' });
                 if (userNom) userNom.textContent = data.username || 'Connecté(e)';
                 if (userIcon) userIcon.style.display = 'inline-block';
                 if (loginLink) loginLink.style.display = 'none';
                 // Pour JS local : sessionStorage
                 if (data.username) sessionStorage.setItem('user_nom', data.username);
+                // Démarre le ping régulier si pas déjà lancé
+                if (!activityPingInterval) {
+                    activityPingInterval = setInterval(() => {
+                        fetch('/Trouvix/backend/update_activity.php', { credentials: 'include' });
+                    }, 5000);
+                }
             } else {
                 if (userIcon) userIcon.style.display = 'none';
                 if (loginLink) loginLink.style.display = 'inline-block';
                 if (userNom) userNom.textContent = '';
                 sessionStorage.removeItem('user_nom');
                 if (typeof window.updateCardAccess === 'function') window.updateCardAccess();
+                // Stoppe le ping si déconnexion
+                if (activityPingInterval) {
+                    clearInterval(activityPingInterval);
+                    activityPingInterval = null;
+                }
             }
+        })
+        .catch(err => {
+            console.error('Erreur lors de la vérification de session:', err);
         });
 }
 
@@ -64,17 +79,18 @@ document.addEventListener('DOMContentLoaded', () => {
             e.stopPropagation();
         });
     }
-    // Ping régulier pour garder le statut en ligne
-    setInterval(() => {
-        fetch('backend/update_activity.php', { credentials: 'include' });
-    }, 5000); // toutes les 5 secondes
+
 
     // Ping rapide avant fermeture d'onglet/navigateur
     window.addEventListener('beforeunload', function() {
+        if (activityPingInterval) {
+            clearInterval(activityPingInterval);
+            activityPingInterval = null;
+        }
         if (navigator.sendBeacon) {
-            navigator.sendBeacon('backend/update_activity.php');
+            navigator.sendBeacon('/Trouvix/backend/update_activity.php');
         } else {
-            fetch('backend/update_activity.php', { credentials: 'include', keepalive: true });
+            fetch('/Trouvix/backend/update_activity.php', { credentials: 'include', keepalive: true });
         }
     });
 });
