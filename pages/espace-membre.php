@@ -32,13 +32,15 @@ $user_email = $_SESSION['user_email'];
                 <ul>
                     <li><a href="../index.html">Accueil</a></li>
                     <li><a href="../index.html#contact">Contact</a></li>
-                        <li id="menu-user-icon" style="display:none">
+                        <li id="menu-user-icon" style="display:flex;align-items:center;gap:0.4em;">
                             <a href="espace-membre.php" title="Espace membre" style="display:flex;align-items:center;gap:0.4em;">
                                 <span style="font-size:1.5em;">👤</span>
-                                <span id="menu-user-nom" style="font-size:1em;"></span>
+                                <span id="menu-user-nom" style="font-size:1em;">
+                                    <?php echo htmlspecialchars($user_nom); ?>
+                                </span>
                             </a>
                         </li>
-                        <li id="menu-login-link"><a href="../auth/login.html">Connexion</a></li>
+                        <!-- <li id="menu-login-link"><a href="../auth/login.html">Connexion</a></li> -->
                         <li id="menu-logout-link" style="display:none"><form action="logout.php" method="post" style="display:inline;"><button type="submit" style="background:none;border:none;color:#0ff1ce;font-size:1em;cursor:pointer;">Déconnexion</button></form></li>
                 </ul>
             </nav>

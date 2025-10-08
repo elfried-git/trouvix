@@ -1,3 +1,86 @@
+/* --- Menu burger responsive --- */
+.burger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3em;
+    margin-left: 0.5em;
+    z-index: 1300;
+}
+.burger svg {
+    display: block;
+    stroke: #0ff1ce;
+    background: none;
+}
+
+@media (max-width: 700px) {
+    .burger {
+        display: flex;
+    }
+    .main-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 100vh;
+        background: #18192a;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding-top: 4.5rem;
+        z-index: 1200;
+        transform: translateY(-100%);
+        transition: transform 0.3s cubic-bezier(.68, -0.55, .27, 1.55);
+        box-shadow: 0 8px 32px #0008;
+        display: flex;
+    }
+    .main-nav.open {
+        transform: translateY(0);
+    }
+    .main-nav ul {
+        flex-direction: column;
+        gap: 1.5rem;
+        margin: 2.5rem 0 0 0;
+        padding: 0;
+        width: 100%;
+        align-items: center;
+    }
+    .main-nav li {
+        width: 100%;
+        text-align: center;
+    }
+    .main-nav a {
+        font-size: 1.25rem;
+        padding: 0.9rem 0;
+        width: 100%;
+        display: block;
+    }
+    .close-menu {
+        display: block;
+        position: fixed;
+        top: 1.2rem;
+        right: 1.2rem;
+        z-index: 1301;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.3em;
+        border-radius: 50%;
+        transition: background 0.18s;
+    }
+    .close-menu svg {
+        display: block;
+        stroke: #0ff1ce;
+        background: none;
+    }
+    .close-menu:active,
+    .close-menu:focus {
+        background: #0ff1ce22;
+    }
+}
 /* Panel de choix de rôle */
 .panel-choix-role {
     position: fixed;
@@ -497,13 +580,24 @@ header {
     border-radius: 0 0 1.5rem 1.5rem;
 }
 
-/* Centrage du logo et du burger en mobile */
+/* Centrage du logo et du burger en mobile, menu à droite en desktop */
 .header-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     flex-direction: row;
     width: 100%;
+}
+
+@media (min-width: 701px) {
+    .header-row {
+        justify-content: flex-start;
+    }
+    .logo {
+        margin-right: 2.5rem;
+    }
+    .main-nav {
+        margin-left: auto;
+    }
 }
 
 @media (max-width: 700px) {
@@ -1197,4 +1291,8 @@ footer nav a:hover {
     .legal {
         padding: 1.2rem 0.5rem;
     }
+}
+
+#menu-user-icon {
+    pointer-events: none;
 }

@@ -22,7 +22,9 @@
           <li id="menu-user-icon" style="display:none">
             <a href="espace-membre.php" title="Espace membre" style="display:flex;align-items:center;gap:0.4em;">
               <span style="font-size:1.5em;">👤</span>
-              <span id="menu-user-nom" style="font-size:1em;"></span>
+              <span id="menu-user-nom" style="font-size:1em;">
+                <?php session_start(); if(isset($_SESSION['user_nom'])) echo htmlspecialchars($_SESSION['user_nom']); ?>
+              </span>
             </a>
           </li>
           <li id="menu-login-link"><a href="../auth/login.html">Connexion</a></li>

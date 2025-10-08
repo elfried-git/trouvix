@@ -28,6 +28,42 @@ function checkUserSessionAndUpdateNav() {
 
 document.addEventListener('DOMContentLoaded', () => {
     checkUserSessionAndUpdateNav();
+    // Menu responsive mobile
+    const burger = document.getElementById('burger-menu');
+    const closeMenu = document.getElementById('close-menu');
+    const mainNav = document.getElementById('main-nav');
+    if (burger && closeMenu && mainNav) {
+        // Ouvre le menu
+        burger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mainNav.classList.add('open');
+            closeMenu.style.display = 'block';
+        });
+        // Ferme le menu
+        closeMenu.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mainNav.classList.remove('open');
+            closeMenu.style.display = 'none';
+        });
+        // Ferme le menu si on clique sur un lien du menu
+        mainNav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mainNav.classList.remove('open');
+                closeMenu.style.display = 'none';
+            });
+        });
+        // Ferme le menu si on clique en dehors
+        document.addEventListener('click', (e) => {
+            if (mainNav.classList.contains('open') && !mainNav.contains(e.target) && e.target !== burger) {
+                mainNav.classList.remove('open');
+                closeMenu.style.display = 'none';
+            }
+        });
+        // Empêche la propagation du clic dans le menu
+        mainNav.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    }
     // Ping régulier pour garder le statut en ligne
     setInterval(() => {
         fetch('backend/update_activity.php', { credentials: 'include' });
