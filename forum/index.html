@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trouvix</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            500: '#009B3A', // Green from Congo flag
+                            600: '#008030',
+                        },
+                        secondary: {
+                            500: '#FBDE4A', // Yellow from Congo flag
+                            600: '#F0D030',
+                        },
+                        accent: {
+                            500: '#DC241F', // Red from Congo flag
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-pattern {
+            background-image: radial-gradient(circle, rgba(0, 155, 58, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .offline-badge {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.7;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.7;
+            }
+        }
+
+        .cat-card {
+            position: relative;
+            background: #10131a;
+            border-radius: 1.5rem;
+            border: 2px solid transparent;
+            box-shadow: 0 0 24px 0 #00fff966, 0 0 0 2px #00fff933;
+            transition: box-shadow 0.25s, border 0.25s, transform 0.18s;
+            overflow: hidden;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .cat-general {
+            border-color: #00ff99;
+            box-shadow: 0 0 24px #00ff9966, 0 0 0 2px #00ff9933;
+            color: #00ff99;
+        }
+
+        .cat-annonces {
+            border-color: #eab308;
+            box-shadow: 0 0 24px #eab30866, 0 0 0 2px #eab30833;
+            color: #eab308;
+        }
+
+        .cat-entraide {
+            border-color: #7c3aed;
+            box-shadow: 0 0 24px #7c3aed66, 0 0 0 2px #7c3aed33;
+            color: #7c3aed;
+        }
+
+        .cat-divers {
+            border-color: #ff3b3b;
+            box-shadow: 0 0 24px #ff3b3b66, 0 0 0 2px #ff3b3b33;
+            color: #ff3b3b;
+        }
+
+        .cat-card .font-bold {
+            font-size: 1.2em;
+            letter-spacing: 0.04em;
+            font-family: 'Orbitron', 'Segoe UI', Arial, sans-serif;
+            text-shadow: 0 0 8px currentColor, 0 0 24px currentColor;
+        }
+
+        .cat-card .text-primary-500 {
+            filter: drop-shadow(0 0 6px currentColor);
+        }
+
+        .cat-card:hover {
+            transform: scale(1.04) translateY(-2px);
+            z-index: 2;
+            border-width: 3px;
+            background: linear-gradient(120deg, #181c3a 80%, #00fff933 100%);
+            box-shadow: 0 0 48px 0 #00fff9cc, 0 0 0 4px #00fff966;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 font-sans">
+    <!-- Navigation simplifiée -->
+    <nav class="bg-primary-500 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <span style="display:inline-block;width:2.5rem;height:2.5rem;border-radius:50%;overflow:hidden;border:2px solid #009B3A;box-shadow:0 0 8px #009B3A55;vertical-align:middle;background:linear-gradient(135deg,#009B3A 0 33%,#FBDE4A 33% 66%,#DC241F 66% 100%);"></span>
+                <span class="font-bold text-xl">Unité - Travail - Progrès</span>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="../index.html" class="hover:text-secondary-500 transition">Accueil</a>
+                <a href="#categories" class="hover:text-secondary-500 transition">Catégories</a>
+                <a href="#recents" class="hover:text-secondary-500 transition">Sujets récents</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-pattern bg-primary-50 py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-primary-600 mb-4">Espace Communautaire</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
+                Partagez vos questions, idées et expériences. Pas de compte requis.
+            </p>
+            <button id="new-topic-btn"
+                class="bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 px-6 rounded-lg shadow transition flex items-center justify-center mx-auto">
+                <i data-feather="plus" class="mr-2"></i> Nouveau sujet
+            </button>
+        </div>
+    </div>
+
+    <main class="container mx-auto px-4 py-12">
+        <!-- Catégories -->
+        <section id="categories" class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                <i data-feather="grid" class="mr-2 text-primary-500"></i> Catégories
+            </h2>
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="cat-card cat-general bg-white p-4 rounded-xl shadow hover:shadow-lg transition cursor-pointer text-center"
+                    onclick="filterCategory('general')">
+                    <div class="text-primary-500 text-3xl mb-2"><i data-feather="message-circle"></i></div>
+                    <div class="font-bold">Général</div>
+                </div>
+                <div class="cat-card cat-annonces bg-white p-4 rounded-xl shadow hover:shadow-lg transition cursor-pointer text-center"
+                    onclick="filterCategory('annonces')">
+                    <div class="text-primary-500 text-3xl mb-2"><i data-feather="alert-circle"></i></div>
+                    <div class="font-bold">Annonces</div>
+                </div>
+                <div class="cat-card cat-entraide bg-white p-4 rounded-xl shadow hover:shadow-lg transition cursor-pointer text-center"
+                    onclick="filterCategory('entraide')">
+                    <div class="text-primary-500 text-3xl mb-2"><i data-feather="help-circle"></i></div>
+                    <div class="font-bold">Entraide</div>
+                </div>
+                <div class="cat-card cat-divers bg-white p-4 rounded-xl shadow hover:shadow-lg transition cursor-pointer text-center"
+                    onclick="filterCategory('divers')">
+                    <div class="text-primary-500 text-3xl mb-2"><i data-feather="coffee"></i></div>
+                    <div class="font-bold">Divers</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sujets récents -->
+        <section id="recents">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                <i data-feather="clock" class="mr-2 text-primary-500"></i> Sujets récents
+            </h2>
+            <div id="topics-list" class="space-y-6">
+                <!-- Les sujets seront injectés ici par JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Nouveau Sujet -->
+    <div id="topic-modal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
+            <button id="close-modal" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700">
+                <i data-feather="x"></i>
+            </button>
+            <h2 class="text-xl font-bold mb-4 text-primary-600 flex items-center">
+                <i data-feather="edit" class="mr-2"></i> Nouveau sujet
+            </h2>
+            <form id="topic-form">
+                <input type="text" id="topic-title" class="w-full border border-gray-300 rounded-lg p-3 mb-4"
+                    placeholder="Titre du sujet" required>
+                <textarea id="topic-content" class="w-full border border-gray-300 rounded-lg p-3 mb-4" rows="4"
+                    placeholder="Votre message..." required></textarea>
+                <input type="text" id="topic-author" class="w-full border border-gray-300 rounded-lg p-3 mb-4"
+                    placeholder="Votre pseudo (optionnel)">
+                <input type="url" id="topic-video" class="w-full border border-gray-300 rounded-lg p-3 mb-4"
+                    placeholder="Lien vidéo (YouTube, Vimeo, etc. - optionnel)">
+                <input type="file" id="topic-attachment" class="w-full border border-gray-300 rounded-lg p-3 mb-4"
+                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.zip,.rar,.txt,.xls,.xlsx,.ppt,.pptx,.mp4,.avi,.mov,.mkv,.webm">
+                <select id="topic-category" class="w-full border border-gray-300 rounded-lg p-3 mb-4" required>
+                    <option value="general">Général</option>
+                    <option value="annonces">Annonces</option>
+                    <option value="entraide">Entraide</option>
+                    <option value="divers">Divers</option>
+                </select>
+                <div class="flex justify-end">
+                    <button type="submit"
+                        class="bg-primary-500 hover:bg-primary-600 text-white px-5 py-2 rounded-lg font-medium transition">Publier</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Sujet (thread) -->
+    <div id="thread-modal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-2xl p-6 relative">
+            <button id="close-thread" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700">
+                <i data-feather="x"></i>
+            </button>
+            <div id="thread-content">
+                <!-- Sujet et réponses injectés ici -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Forum data (en mémoire, remplaçable par backend ou localStorage)
+        let topics = [
+            {
+                id: 1,
+                title: "Bienvenue sur le forum !",
+                content: "Présentez-vous, posez vos questions, partagez vos idées.",
+                author: "Admin",
+                category: "general",
+                date: "2025-10-09 09:00",
+                replies: [
+                    { author: "Visiteur", content: "Merci pour ce forum !", date: "2025-10-09 09:10" }
+                ]
+            },
+            {
+                id: 2,
+                title: "Annonce : Nouvelle fonctionnalité",
+                content: "Nous venons d'ajouter la section Entraide.",
+                author: "Admin",
+                category: "annonces",
+                date: "2025-10-09 08:00",
+                replies: []
+            }
+        ];
+        let currentCategory = null;
+
+        function renderTopics() {
+            const list = document.getElementById('topics-list');
+            list.innerHTML = '';
+            let filtered = topics;
+            if (currentCategory) {
+                filtered = topics.filter(t => t.category === currentCategory);
+            }
+            if (filtered.length === 0) {
+                list.innerHTML = '<div class="text-gray-500">Aucun sujet pour cette catégorie.</div>';
+                return;
+            }
+            filtered.slice().reverse().forEach(topic => {
+                const div = document.createElement('div');
+                div.className = 'bg-white rounded-xl shadow-md p-6 cursor-pointer hover:shadow-lg transition';
+                div.innerHTML = `
+                    <div class="flex items-center mb-2">
+                        <span class="text-xs bg-primary-100 text-primary-500 px-2 py-1 rounded-full mr-2">${categoryLabel(topic.category)}</span>
+                        <span class="text-xs text-gray-400">${topic.date}</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-1">${escapeHtml(topic.title)}</h3>
+                    <div class="text-gray-600 mb-2">${escapeHtml(topic.content).slice(0, 120)}${topic.content.length > 120 ? '...' : ''}</div>
+                    <div class="flex justify-between text-gray-500 text-sm">
+                        <span><i data-feather="user" class="inline w-4 h-4 mr-1"></i> ${escapeHtml(topic.author || 'Anonyme')}</span>
+                        <span><i data-feather="message-square" class="inline w-4 h-4 mr-1"></i> ${topic.replies.length} réponse(s)</span>
+                    </div>
+                `;
+                div.onclick = () => openThread(topic.id);
+                list.appendChild(div);
+            });
+            feather.replace();
+        }
+
+        function categoryLabel(cat) {
+            switch(cat) {
+                case 'general': return 'Général';
+                case 'annonces': return 'Annonces';
+                case 'entraide': return 'Entraide';
+                case 'divers': return 'Divers';
+                default: return cat;
+            }
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/[&<>"]/g, function(c) {
+                return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];
+            });
+        }
+
+        function filterCategory(cat) {
+            currentCategory = cat;
+            renderTopics();
+        }
+
+        // Nouveau sujet
+        document.getElementById('new-topic-btn').onclick = function() {
+            document.getElementById('topic-modal').classList.remove('hidden');
+            feather.replace();
+        };
+        document.getElementById('close-modal').onclick = function() {
+            document.getElementById('topic-modal').classList.add('hidden');
+        };
+        document.getElementById('topic-form').onsubmit = function(e) {
+            e.preventDefault();
+            const title = document.getElementById('topic-title').value.trim();
+            const content = document.getElementById('topic-content').value.trim();
+            const author = document.getElementById('topic-author').value.trim() || 'Anonyme';
+            const video = document.getElementById('topic-video').value.trim();
+            const attachmentInput = document.getElementById('topic-attachment');
+            let attachment = null;
+            if (attachmentInput.files && attachmentInput.files.length > 0) {
+                attachment = attachmentInput.files[0];
+            }
+            const category = document.getElementById('topic-category').value;
+            if (!title || !content) return;
+            const newTopic = {
+                id: Date.now(),
+                title,
+                content,
+                author,
+                category: category,
+                date: new Date().toISOString().slice(0,16).replace('T',' '),
+                video: video || null,
+                attachment: attachment ? {
+                    name: attachment.name,
+                    url: URL.createObjectURL(attachment)
+                } : null,
+                replies: []
+            };
+            topics.push(newTopic);
+            document.getElementById('topic-modal').classList.add('hidden');
+            document.getElementById('topic-form').reset();
+            renderTopics();
+        };
+
+        // Thread (sujet + réponses)
+        function openThread(id) {
+            const topic = topics.find(t => t.id === id);
+            if (!topic) return;
+            const thread = document.getElementById('thread-content');
+            thread.innerHTML = `
+                <div class="mb-6">
+                    <div class="flex items-center mb-2">
+                        <span class="text-xs bg-primary-100 text-primary-500 px-2 py-1 rounded-full mr-2">${categoryLabel(topic.category)}</span>
+                        <span class="text-xs text-gray-400">${topic.date}</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-1">${escapeHtml(topic.title)}</h3>
+                    <div class="text-gray-600 mb-2">${escapeHtml(topic.content)}</div>
+                    ${topic.video ? `<div class='mb-2'>
+                        <strong class='text-primary-500'>Vidéo :</strong><br>
+                        <div class='aspect-w-16 aspect-h-9 mb-2'>
+                            <iframe src='${embedVideo(topic.video)}' allowfullscreen class='w-full h-64 rounded-lg border'></iframe>
+                        </div>
+                    </div>` : ''}
+                    ${topic.attachment ? `<div class='mb-2'>
+                        <strong class='text-primary-500'>Pièce jointe :</strong> <a href='${topic.attachment.url}' download='${topic.attachment.name}' class='text-blue-600 underline'>${topic.attachment.name}</a>
+                    </div>` : ''}
+                    <div class="flex justify-between text-gray-500 text-sm mb-2">
+                        <span><i data-feather="user" class="inline w-4 h-4 mr-1"></i> ${escapeHtml(topic.author || 'Anonyme')}</span>
+                        <span><i data-feather="message-square" class="inline w-4 h-4 mr-1"></i> ${topic.replies.length} réponse(s)</span>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h4 class="font-bold mb-2 text-primary-600">Réponses</h4>
+                    <div id="replies-list">
+                        ${topic.replies.length === 0 ? '<div class="text-gray-500">Aucune réponse pour l\'instant.</div>' : ''}
+                        ${topic.replies.map(r => `
+                            <div class="bg-gray-100 rounded-lg p-3 mb-2">
+                                <div class="flex items-center mb-1">
+                                    <span class="font-bold text-primary-500 mr-2">${escapeHtml(r.author || 'Anonyme')}</span>
+                                    <span class="text-xs text-gray-400">${r.date}</span>
+                                </div>
+                                <div class="text-gray-700">${escapeHtml(r.content)}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <form id="reply-form">
+                    <input type="text" id="reply-author" class="w-full border border-gray-300 rounded-lg p-2 mb-2"
+                        placeholder="Votre pseudo (optionnel)">
+                    <textarea id="reply-content" class="w-full border border-gray-300 rounded-lg p-2 mb-2" rows="2"
+                        placeholder="Votre réponse..." required></textarea>
+                    <div class="flex justify-end">
+                        <button type="submit"
+                            class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-1 rounded-lg font-medium transition">Répondre</button>
+                    </div>
+                </form>
+            `;
+            document.getElementById('thread-modal').classList.remove('hidden');
+            feather.replace();
+            document.getElementById('reply-form').onsubmit = function(e) {
+                e.preventDefault();
+                const content = document.getElementById('reply-content').value.trim();
+                const author = document.getElementById('reply-author').value.trim() || 'Anonyme';
+                if (!content) return;
+                topic.replies.push({
+                    author,
+                    content,
+                    date: new Date().toISOString().slice(0,16).replace('T',' ')
+                });
+                openThread(id);
+            };
+        }
+        document.getElementById('close-thread').onclick = function() {
+            document.getElementById('thread-modal').classList.add('hidden');
+        };
+
+        function embedVideo(url) {
+            // Gère YouTube, Vimeo, liens directs mp4/webm
+            if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                let id = url.split('v=')[1] || '';
+                if (url.includes('youtu.be/')) id = url.split('youtu.be/')[1];
+                if (id.includes('&')) id = id.split('&')[0];
+                return `https://www.youtube.com/embed/${id}`;
+            }
+            if (url.includes('vimeo.com')) {
+                let id = url.split('vimeo.com/')[1];
+                return `https://player.vimeo.com/video/${id}`;
+            }
+            if (url.match(/\.(mp4|webm)$/)) {
+                return url;
+            }
+            return url;
+        }
+
+        // Initial rendering
+        renderTopics();
+        feather.replace();
+    </script>
+</body>
+
+</html>
