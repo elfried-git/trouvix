@@ -8,49 +8,43 @@
 </head>
 <body>
     <header>
-        <div class="header-row">
+        <div class="header-row" id="global-header">
             <div class="logo" tabindex="0" aria-label="Accueil Trouvix">
                 <span class="logo-text">Trouvix</span>
             </div>
-                        <button id="burger" class="burger" aria-label="Ouvrir le menu" aria-controls="main-nav" aria-expanded="false">
-                <span class="menu-grid" aria-hidden="true">
-                    <svg width="36" height="24" viewBox="0 0 36 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="2" y="2" width="8" height="8" rx="2" fill="#0ff1ce"/>
-                        <rect x="14" y="2" width="8" height="8" rx="2" fill="#0ff1ce"/>
-                        <rect x="26" y="2" width="8" height="8" rx="2" fill="#0ff1ce"/>
-                        <rect x="2" y="14" width="8" height="8" rx="2" fill="#0ff1ce"/>
-                        <rect x="14" y="14" width="8" height="8" rx="2" fill="#0ff1ce"/>
-                        <rect x="26" y="14" width="8" height="8" rx="2" fill="#0ff1ce"/>
-                    </svg>
-                </span>
-                <span class="close-icon" aria-hidden="true">
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0ff1ce" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:none"><line x1="8" y1="8" x2="24" y2="24"/><line x1="24" y1="8" x2="8" y2="24"/></svg>
-                </span>
-            </button>
-            <button id="close-menu" class="close-menu" aria-label="Fermer le menu" style="display:none">
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0ff1ce" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="8" y1="8" x2="24" y2="24"/>
-                    <line x1="24" y1="8" x2="8" y2="24"/>
-                </svg>
-            </button>
             <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
+                <button id="close-menu" class="close-menu" aria-label="Fermer le menu" style="display:none">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0ff1ce" stroke-width="3"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="8" y1="8" x2="24" y2="24" />
+                        <line x1="24" y1="8" x2="8" y2="24" />
+                    </svg>
+                </button>
                 <ul>
-                    <li><a href="../index.html">Accueil</a></li>
-                    <li><a href="../index.html#contact">Contact</a></li>
-                    <li><a href="jeux-quiz.html">Jeux / Quiz</a></li>
-                    <li><a href="../page-apprentissage-langues/index.html">Apprentissage des Langues</a></li>
-                    <li><a href="tv-replay.html">TV / Replay</a></li>
-                    <li id="menu-user-icon" style="display:none">
-                        <a href="espace-membre.php" title="Espace membre" style="display:flex;align-items:center;gap:0.4em;">
+                    <li><a href="index.html" aria-current="page">Accueil</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="pages/espace-membre.php">Espace membre</a></li>
+                    <li id="menu-user-icon" style="display:flex;align-items:center;gap:0.4em;">
+                        <a href="espace-membre.php" title="Espace membre"
+                            style="display:flex;align-items:center;gap:0.4em;">
                             <span style="font-size:1.5em;">👤</span>
                             <span id="menu-user-nom" style="font-size:1em;"></span>
+                            <?php session_start(); if(isset($_SESSION['user_nom'])) echo htmlspecialchars($_SESSION['user_nom']); ?>
+                            </span>
                         </a>
                     </li>
-                    <li id="menu-login-link"><a href="../auth/login.html">Connexion</a></li>
-                    <li id="menu-logout-link" style="display:none"><form action="logout.php" method="post" style="display:inline;"><button type="submit" style="background:none;border:none;color:#0ff1ce;font-size:1em;cursor:pointer;">Déconnexion</button></form></li>
                 </ul>
             </nav>
+            <button id="burger-menu" class="burger" aria-label="Ouvrir le menu">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0ff1ce" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="6" y1="10" x2="26" y2="10" />
+                    <line x1="6" y1="16" x2="26" y2="16" />
+                    <line x1="6" y1="22" x2="26" y2="22" />
+                </svg>
+            </button>
         </div>
+    </header>
     </header>
     <script src="../js/session-nav.js"></script>
     <main>

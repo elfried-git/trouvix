@@ -1,54 +1,108 @@
-// Gestion de l'ouverture de la rubrique TV Garden
-(function() {
-        const tvTrigger = document.getElementById("tv-garden");
-        function showAccessDeniedPopinTV() {
-                if (document.getElementById('popin-access-denied-overlay')) return;
-                const html = `\
-                    <div id=\"popin-access-denied-overlay\">\
-                        <div id=\"popin-access-denied\">\
-                            <div id=\"popin-access-denied-title\">Accès TV / Replay refusé</div>\
-                            <div id=\"popin-access-denied-msg\">Vous devez être connecté(e) pour accéder à la TV / Replay.</div>\
-                            <button id=\"popin-access-denied-btn\">OK</button>\
+
+document.addEventListener("DOMContentLoaded", main);
+
+function main() {
+    const header = document.getElementById("global-header");
+    const main = document.querySelector('main');
+    const tvTrigger = document.getElementById("tv-garden");
+
+    //  Affiche la pop-in d'accès refusé (non connecté).
+    function showAccessDeniedPopinTV() {
+        if (document.getElementById('popin-access-denied-overlay')) return;
+
+        const html = `\
+                    <div id="popin-access-denied-overlay">\
+                        <div id="popin-access-denied">\
+                            <div id="popin-access-denied-title">Accès TV / Replay refusé</div>\
+                            <div id="popin-access-denied-msg">Vous devez être connecté(e) pour accéder à la TV / Replay.</div>\
+                            <button id="popin-access-denied-btn">OK</button>\
                         </div>\
                     </div>`;
-                document.body.insertAdjacentHTML('beforeend', html);
-                document.getElementById('popin-access-denied-btn').onclick = function() {
-                    const overlay = document.getElementById('popin-access-denied-overlay');
-                    if (overlay) overlay.remove();
-                };
-                // Désactivé : la popin ne se ferme plus sur clic hors popin
+
+        document.body.insertAdjacentHTML('beforeend', html);
+
+        document.getElementById('popin-access-denied-btn').onclick = function () {
+            const overlay = document.getElementById('popin-access-denied-overlay');
+            if (overlay) overlay.remove();
+        };
+    }
+
+    /**
+     * @param { MouseEvent | Event } event 
+     * @returns { void }
+     */
+    function closeTv(event) {
+        event.stopPropagation();
+        const tvContainer = document.getElementById("tv-garden-view");
+        if (!tvContainer) {
+            return;
         }
-        function loadTv() {
-                const isConnected = sessionStorage.getItem('user_nom');
-                if (!isConnected) {
-                        showAccessDeniedPopinTV();
-                        return;
-                }
-                const divTv = document.createElement("div");
-                divTv.id = "tv-garden-view"
-                const closeBtn = document.createElement("span");
-                closeBtn.textContent = "X"
-                const iframe = document.createElement("iframe");
-                iframe.src = "https://tv.garden";
-                closeBtn.addEventListener("click", function () {
-                        const existingTv = document.getElementById("tv-garden-view");
-                        if (existingTv) {
-                                existingTv.remove();
-                        }
-                });
-                divTv.appendChild(iframe);
-                divTv.appendChild(closeBtn);
-                document.body.prepend(divTv);
+        tvContainer.querySelector("#tv-full-screen-btn").remove("click", () => fullScreenTv(!fullScreenState));
+        tvContainer.remove("click", closeTv)
+        tvContainer.querySelector("#tv-close-btn").remove("click", closeTv);
+    }
+
+    /** @returns { void } */
+    function fullScreenTv(/** @type { MouseEvent | Event } */ event) {
+        event.stopPropagation();
+        const tvContainer = document.querySelector("#tv-garden-view");
+        const tvIframe = tvContainer.querySelector("iframe");
+        if (!tvIframe.classList.contains("full-screen")) {
+            tvIframe.classList.add("full-screen");
+            return
         }
-        if (tvTrigger) {
-                tvTrigger.addEventListener("click", loadTv);
-        }
-})();
+        tvIframe.classList.remove("full-screen");
+    }
+
+
+
+    /**
+     * Charge et affiche l'iframe de la TV Garden en plein écran.
+     * @param {Event} event - L'objet Event de l'événement de clic.
+     */
+    function loadTv(event) {
+        event.stopPropagation();
+        /* Creating tv container element */
+        const tvContainer = document.createElement("div");
+        const quickCommands = document.createElement("span");
+        const tvCloseBtn = document.createElement("span");
+        const tvFullScreenBtn = document.createElement("span")
+        const tvIframe = document.createElement("iframe");
+
+        tvContainer.id = "tv-garden-view";
+
+        tvIframe.src = "https://tv.garden";
+
+        tvCloseBtn.id = "tv-close-btn";
+        tvCloseBtn.textContent = "X";
+        tvCloseBtn.addEventListener("click", closeTv);
+
+        tvFullScreenBtn.id = "tv-full-screen-btn";
+        tvFullScreenBtn.textContent = "Full Screen";
+        tvFullScreenBtn.addEventListener("click", fullScreenTv);
+
+        quickCommands.id = "quick-commands";
+        quickCommands.append(tvCloseBtn, tvFullScreenBtn);
+
+        tvContainer.appendChild(quickCommands);
+        tvContainer.appendChild(tvIframe);
+
+        tvContainer.addEventListener("click", closeTv);
+
+        document.body.prepend(tvContainer);
+    }
+
+    // Association de la fonction loadTv au clic sur l'élément #tv-garden
+    if (tvTrigger) {
+        tvTrigger.addEventListener("click", loadTv);
+    }
+}
+
 // Style popin accès refusé TV (si pas déjà présent)
 if (!document.getElementById('popin-access-denied-style')) {
-        const style = document.createElement('style');
-        style.id = 'popin-access-denied-style';
-        style.innerHTML = `
+    const style = document.createElement('style');
+    style.id = 'popin-access-denied-style';
+    style.innerHTML = `
         #popin-access-denied-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(10,16,40,0.85); z-index: 2000; display: flex; align-items: center; justify-content: center;
@@ -76,5 +130,5 @@ if (!document.getElementById('popin-access-denied-style')) {
             100% { transform: scale(1); opacity: 1; }
         }
         `;
-        document.head.appendChild(style);
+    document.head.appendChild(style);
 }
