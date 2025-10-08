@@ -1,3 +1,12 @@
+.close-menu {
+    display: none;
+}
+
+@media (max-width: 700px) {
+    .close-menu {
+        display: block;
+    }
+}
 /* --- Menu burger responsive --- */
 .burger {
     display: none;
@@ -17,6 +26,20 @@
 }
 
 @media (max-width: 700px) {
+    #menu-user-icon {
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+        width: 100%;
+        display: flex !important;
+    }
+    #menu-user-icon a {
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+        width: 100%;
+        display: flex !important;
+    }
     .burger {
         display: flex;
     }
@@ -907,7 +930,7 @@ nav button:focus {
 
 nav a:hover,
 nav button:hover {
-    color: var(--secondary);
+    color: var(--primary);
 }
 
 .hero {
@@ -923,8 +946,7 @@ nav button:hover {
 }
 
 .hero .highlight {
-    color: var(--secondary);
-    background: #fffbe6;
+    color: var(--primary);
     border-radius: 0.4em;
     padding: 0 0.3em;
 }
