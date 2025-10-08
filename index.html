@@ -6,100 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trouvix</title>
     <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-    <!-- Menu de navigation responsive -->
-    <header>
-        <div class="header-row">
-            <div class="logo" tabindex="0" aria-label="Accueil Trouvix">
-                <span class="logo-text">Trouvix</span>
-            </div>
-            <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
-                <button id="close-menu" class="close-menu" aria-label="Fermer le menu" style="display:none">
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0ff1ce" stroke-width="3"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="8" y1="8" x2="24" y2="24" />
-                        <line x1="24" y1="8" x2="8" y2="24" />
-                    </svg>
-                </button>
-                <ul>
-                    <li><a href="index.html" aria-current="page">Accueil</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li><a href="pages/espace-membre.php">Espace membre</a></li>
-                    <li id="menu-user-icon" style="display:flex;align-items:center;gap:0.4em;">
-                        <a href="espace-membre.php" title="Espace membre"
-                            style="display:flex;align-items:center;gap:0.4em;">
-                            <span style="font-size:1.5em;">👤</span>
-                            <span id="menu-user-nom" style="font-size:1em;"></span>
-                                <?php session_start(); if(isset($_SESSION['user_nom'])) echo htmlspecialchars($_SESSION['user_nom']); ?>
-                            </span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-            <button id="burger-menu" class="burger" aria-label="Ouvrir le menu">
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0ff1ce" stroke-width="3"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="6" y1="10" x2="26" y2="10" />
-                    <line x1="6" y1="16" x2="26" y2="16" />
-                    <line x1="6" y1="22" x2="26" y2="22" />
-                </svg>
-            </button>
-        </div>
-    </header>
-    <script src="js/session-nav.js"></script>
-    <main>
-        <section class="hero">
-            <h1><span class="highlight" data-test-id="welcome-title">Bienvenue sur Trouvix</span></h1>
-            <p class="subtitle" data-test-id="welcome-subtitle">La plateforme avec une variété des services à votre.</p>
-        </section>
-
-        <section class="services-grid" aria-label="Services principaux">
-            <div class="service-card jeux" tabindex="0" role="button" aria-label="Jeux et Quiz"
-                aria-describedby="desc-jeux" data-link="jeux-quiz.html" data-test-id="card-jeux_quiz">
-                <div class="icon">🎲</div>
-                <h2>Jeux / Quiz</h2>
-                <p id="desc-jeux" class="visually-hidden">Quiz éducatifs, jeux de logique, progression, classement.
-                    Appuyez sur Entrée pour accéder à Jeux & Quiz.</p>
-                <a href="pages/jeux-quiz.html" class="card-link" tabindex="-1" aria-hidden="true"
-                    style="display:none"></a>
-                <span class="card-accent"></span>
-            </div>
-            <div class="service-card langues" tabindex="0" role="button" aria-label="Apprentissage des Langues"
-                aria-describedby="desc-langues" data-link="page-apprentissage-langues/index.html">
-                <div class="icon">🌍</div>
-                <h2>Apprentissage des Langues</h2>
-                <p id="desc-langues" class="visually-hidden">Cours, exercices, quiz et jeux pour apprendre l'anglais,
-                    l'espagnol, le français, l'italien et le swahili. Appuyez sur Entrée pour accéder à l'espace
-                    Apprentissage des Langues.</p>
-                <a href="page-apprentissage-langues/index.html" class="card-link" tabindex="-1" aria-hidden="true"
-                    style="display:none"></a>
-                <span class="card-accent"></span>
-            </div>
-            <div class="service-card forum" tabindex="0" role="button" aria-label="TV Garden" id="tv-garden"
-                aria-describedby="desc-forum" data-link="#">
-                <div class="icon">📺</div>
-                <h2>TV / Replay</h2>
-            </div>
-        </section>
-        <section id="contact" class="contact">
-            <h2>Contact</h2>
-            <form aria-label="Formulaire de contact">
-                <input type="text" placeholder="Nom" required aria-label="Votre nom">
-                <input type="email" placeholder="Email" required aria-label="Votre email">
-                <textarea placeholder="Message" required aria-label="Votre message"></textarea>
-                <button type="submit">Envoyer</button>
-            </form>
-        </section>
-    </main>
-    <script src="js/login-modal.js"></script>
-    <script src="js/login-modal-ui.js"></script>
-    <script src="js/tv-garden.js"></script>
-    <script src="js/card-navigation.js"></script>
-    <script>
-        // Le formulaire de contact est maintenant accessible à tous, même sans connexion.
-    </script>
     <style>
         #popin-access-denied-overlay {
             position: fixed;
@@ -152,6 +58,17 @@
             transition: background 0.2s, color 0.2s;
         }
 
+        .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+    }
+
         @keyframes popinIn {
             0% {
                 transform: scale(0.8);
@@ -163,20 +80,105 @@
                 opacity: 1;
             }
         }
-    </style>
-</body>
-<style>
-    .visually-hidden {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        border: 0;
-    }
 </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-row" id="global-header">
+            <div class="logo" tabindex="0" aria-label="Accueil Trouvix">
+                <span class="logo-text">Trouvix</span>
+            </div>
+            <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
+                <button id="close-menu" class="close-menu" aria-label="Fermer le menu" style="display:none">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0ff1ce" stroke-width="3"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="8" y1="8" x2="24" y2="24" />
+                        <line x1="24" y1="8" x2="8" y2="24" />
+                    </svg>
+                </button>
+                <ul>
+                    <li><a href="index.html" aria-current="page">Accueil</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="pages/espace-membre.php">Espace membre</a></li>
+                    <li id="menu-user-icon" style="display:flex;align-items:center;gap:0.4em;">
+                        <a href="espace-membre.php" title="Espace membre"
+                            style="display:flex;align-items:center;gap:0.4em;">
+                            <span style="font-size:1.5em;">👤</span>
+                            <span id="menu-user-nom" style="font-size:1em;"></span>
+                            <?php session_start(); if(isset($_SESSION['user_nom'])) echo htmlspecialchars($_SESSION['user_nom']); ?>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <button id="burger-menu" class="burger" aria-label="Ouvrir le menu">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0ff1ce" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="6" y1="10" x2="26" y2="10" />
+                    <line x1="6" y1="16" x2="26" y2="16" />
+                    <line x1="6" y1="22" x2="26" y2="22" />
+                </svg>
+            </button>
+        </div>
+    </header>
+    <script src="js/session-nav.js"></script>
+    <main>
+        <section class="hero">
+            <h1><span class="highlight" data-test-id="welcome-title">Bienvenue sur Trouvix</span></h1>
+            <p class="subtitle" data-test-id="welcome-subtitle">La plateforme avec une variété des services.</p>
+        </section>
+
+        <section class="services-grid" aria-label="Services principaux">
+            <div class="service-card jeux" tabindex="0" role="button" aria-label="Jeux et Quiz"
+                aria-describedby="desc-jeux" data-link="jeux-quiz.html" data-test-id="card-jeux_quiz">
+                <div class="icon">🎲</div>
+                <h2>Jeux / Quiz</h2>
+                <p id="desc-jeux" class="visually-hidden">Quiz éducatifs, jeux de logique, progression, classement.
+                    Appuyez sur Entrée pour accéder à Jeux & Quiz.</p>
+                <a href="pages/jeux-quiz.html" class="card-link" tabindex="-1" aria-hidden="true"
+                    style="display:none"></a>
+                <span class="card-accent"></span>
+            </div>
+            <div class="service-card langues" tabindex="0" role="button" aria-label="Apprentissage des Langues"
+                aria-describedby="desc-langues" data-link="page-apprentissage-langues/index.html">
+                <div class="icon">🌍</div>
+                <h2>Apprentissage des Langues</h2>
+                <p id="desc-langues" class="visually-hidden">Cours, exercices, quiz et jeux pour apprendre l'anglais,
+                    l'espagnol, le français, l'italien et le swahili. Appuyez sur Entrée pour accéder à l'espace
+                    Apprentissage des Langues.</p>
+                <a href="page-apprentissage-langues/index.html" class="card-link" tabindex="-1" aria-hidden="true"
+                    style="display:none"></a>
+                <span class="card-accent"></span>
+            </div>
+            <div class="service-card forum" tabindex="0" role="button" aria-label="TV Garden" id="tv-garden"
+                aria-describedby="desc-forum" data-link="#">
+                <div class="icon">📺</div>
+                <h2>TV / Replay</h2>
+            </div>
+        </section>
+        <section id="contact" class="contact">
+            <h2>Contact</h2>
+            <form aria-label="Formulaire de contact">
+                <input type="text" placeholder="Nom" required aria-label="Votre nom">
+                <input type="email" placeholder="Email" required aria-label="Votre email">
+                <textarea placeholder="Votre message" required aria-label="Votre message"></textarea>
+                <button type="submit">Envoyer</button>
+            </form>
+        </section>
+    </main>
+    <button id="tv-close-btn" aria-label="Fermer la TV"
+        style="display:none;position:fixed;top:24px;right:36px;font-size:2.2rem;color:#fff;background:#222a44cc;border:2px solid #fff;border-radius:50%;cursor:pointer;padding:8px 16px;z-index:1000000000;">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="3"
+            stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;">
+            <line x1="8" y1="8" x2="24" y2="24" />
+            <line x1="24" y1="8" x2="8" y2="24" />
+        </svg>
+    </button>
+    <script src="js/login-modal-ui.js"></script>
+    <script src="js/card-navigation.js"></script>
+    <script type="text/javascript" src="js/tv-garden.js" defer></script>
+</body>
 <footer>
     <p>&copy; 2025 Trouvix. Tous droits réservés.</p>
     </body>
