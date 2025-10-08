@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeux & Quiz - Trouvix</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <div class="header-row">
+            <div class="logo" tabindex="0" aria-label="Accueil Trouvix">
+                <span class="logo-text">Trouvix</span>
+            </div>
+                        <button id="burger" class="burger" aria-label="Ouvrir le menu" aria-controls="main-nav" aria-expanded="false">
+                <span class="menu-grid" aria-hidden="true">
+                    <svg width="36" height="24" viewBox="0 0 36 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="2" y="2" width="8" height="8" rx="2" fill="#0ff1ce"/>
+                        <rect x="14" y="2" width="8" height="8" rx="2" fill="#0ff1ce"/>
+                        <rect x="26" y="2" width="8" height="8" rx="2" fill="#0ff1ce"/>
+                        <rect x="2" y="14" width="8" height="8" rx="2" fill="#0ff1ce"/>
+                        <rect x="14" y="14" width="8" height="8" rx="2" fill="#0ff1ce"/>
+                        <rect x="26" y="14" width="8" height="8" rx="2" fill="#0ff1ce"/>
+                    </svg>
+                </span>
+                <span class="close-icon" aria-hidden="true">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0ff1ce" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:none"><line x1="8" y1="8" x2="24" y2="24"/><line x1="24" y1="8" x2="8" y2="24"/></svg>
+                </span>
+            </button>
+            <button id="close-menu" class="close-menu" aria-label="Fermer le menu" style="display:none">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0ff1ce" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="8" y1="8" x2="24" y2="24"/>
+                    <line x1="24" y1="8" x2="8" y2="24"/>
+                </svg>
+            </button>
+            <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
+                <ul>
+                    <li><a href="../index.html">Accueil</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
+                    <li><a href="jeux-quiz.html">Jeux / Quiz</a></li>
+                    <li><a href="../page-apprentissage-langues/index.html">Apprentissage des Langues</a></li>
+                    <li><a href="tv-replay.html">TV / Replay</a></li>
+                    <li id="menu-user-icon" style="display:none">
+                        <a href="espace-membre.php" title="Espace membre" style="display:flex;align-items:center;gap:0.4em;">
+                            <span style="font-size:1.5em;">👤</span>
+                            <span id="menu-user-nom" style="font-size:1em;"></span>
+                        </a>
+                    </li>
+                    <li id="menu-login-link"><a href="../auth/login.html">Connexion</a></li>
+                    <li id="menu-logout-link" style="display:none"><form action="logout.php" method="post" style="display:inline;"><button type="submit" style="background:none;border:none;color:#0ff1ce;font-size:1em;cursor:pointer;">Déconnexion</button></form></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <script src="../js/session-nav.js"></script>
+    <main>
+        <section class="jeux-quiz-content">
+            <h1>Jeux & Quiz</h1>
+            <h2>Bienvenue dans l'espace Jeux & Quiz</h2>
+            <p>Retrouvez ici tous les quiz, jeux de logique, classements et défis proposés par Trouvix !</p>
+            <div class="quiz-cards">
+                <div class="quiz-card">
+                    <span class="icon">🤔</span>
+                    <h3>DeviChal</h3>
+                    <p>Défis quotidiens de devinettes et logique !</p>
+                    <button class="btn-choix-role" id="btn-jouer-devichal">Jouer</button>
+                </div>
+                <div class="quiz-card">
+                    <span class="icon">🎮</span>
+                    <h3>Jeux 2</h3>
+                    <p>Un jeu de réflexion pour tous les âges.</p>
+                    <button>Jouer</button>
+                </div>
+                <div class="quiz-card">
+                    <span class="icon">🧩</span>
+                    <h3>Jeux 3</h3>
+                    <p>Puzzles et casse-têtes variés.</p>
+                    <button>Jouer</button>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+<script src="../js/session-nav.js"></script>
+<script>
+// Désactive les boutons "Jouer" si non connecté
+document.addEventListener('DOMContentLoaded', function() {
+    const isConnected = sessionStorage.getItem('user_nom');
+    document.querySelectorAll('button').forEach(function(btn) {
+        if (btn.textContent.trim().toLowerCase() === 'jouer' && !isConnected) {
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            btn.style.cursor = 'not-allowed';
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Vous devez être connecté(e) pour jouer.');
+            });
+        }
+    });
+});
+</script>
+</html>

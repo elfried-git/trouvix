@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trouvix</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-row">
+            <div class="logo" tabindex="0" aria-label="Accueil Trouvix">
+                <span class="logo-text">Trouvix</span>
+            </div>
+            <button id="close-menu" class="close-menu" aria-label="Fermer le menu" style="display:none">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0ff1ce" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="8" y1="8" x2="24" y2="24" />
+                    <line x1="24" y1="8" x2="8" y2="24" />
+                </svg>
+            </button>
+            <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
+                <ul>
+                    <li><a href="#" aria-current="page">Accueil</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li id="menu-user-icon" style="display:none">
+                        <a href="pages/espace-membre.php" title="Espace membre" style="display:flex;align-items:center;gap:0.4em;">
+                            <span style="font-size:1.5em;">👤</span>
+                            <span id="menu-user-nom" style="font-size:1em;"></span>
+                        </a>
+                    </li>
+                    <li id="menu-login-link"><a href="auth/login.html">Connexion</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <script src="js/session-nav.js"></script>
+    <main>
+        <section class="hero">
+            <h1><span class="highlight" data-test-id="welcome-title">Bienvenue sur Trouvix</span></h1>
+            <p class="subtitle" data-test-id="welcome-subtitle">La plateforme avec une variété des services à votre.</p>
+        </section>
+
+        <section class="services-grid" aria-label="Services principaux">
+            <div class="service-card jeux" tabindex="0" role="button" aria-label="Jeux et Quiz"
+                aria-describedby="desc-jeux" data-link="jeux-quiz.html" data-test-id="card-jeux_quiz">
+                <div class="icon">🎲</div>
+                <h2>Jeux / Quiz</h2>
+                <p id="desc-jeux" class="visually-hidden">Quiz éducatifs, jeux de logique, progression, classement.
+                    Appuyez sur Entrée pour accéder à Jeux & Quiz.</p>
+                <a href="pages/jeux-quiz.html" class="card-link" tabindex="-1" aria-hidden="true"
+                    style="display:none"></a>
+                <span class="card-accent"></span>
+            </div>
+            <div class="service-card langues" tabindex="0" role="button" aria-label="Apprentissage des Langues"
+                aria-describedby="desc-langues" data-link="page-apprentissage-langues/index.html">
+                <div class="icon">🌍</div>
+                <h2>Apprentissage des Langues</h2>
+                <p id="desc-langues" class="visually-hidden">Cours, exercices, quiz et jeux pour apprendre l'anglais,
+                    l'espagnol, le français, l'italien et le swahili. Appuyez sur Entrée pour accéder à l'espace
+                    Apprentissage des Langues.</p>
+                <a href="page-apprentissage-langues/index.html" class="card-link" tabindex="-1" aria-hidden="true"
+                    style="display:none"></a>
+                <span class="card-accent"></span>
+            </div>
+            <div class="service-card forum" tabindex="0" role="button" aria-label="TV Garden" id="tv-garden"
+                aria-describedby="desc-forum" data-link="#">
+                <div class="icon">📺</div>
+                <h2>TV / Replay</h2>
+            </div>
+        </section>
+        <section id="contact" class="contact">
+            <h2>Contact</h2>
+            <form aria-label="Formulaire de contact">
+                <input type="text" placeholder="Nom" required aria-label="Votre nom">
+                <input type="email" placeholder="Email" required aria-label="Votre email">
+                <textarea placeholder="Message" required aria-label="Votre message"></textarea>
+                <button type="submit">Envoyer</button>
+            </form>
+        </section>
+    </main>
+    <script src="js/login-modal.js"></script>
+    <script src="js/login-modal-ui.js"></script>
+    <script src="js/tv-garden.js"></script>
+    <script src="js/card-navigation.js"></script>
+        <script>
+    // Le formulaire de contact est maintenant accessible à tous, même sans connexion.
+        </script>
+        <style>
+        #popin-access-denied-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(10,16,40,0.85); z-index: 2000; display: flex; align-items: center; justify-content: center;
+        }
+        #popin-access-denied {
+            background: #181c3a; padding: 2.2em 2.5em 2em 2.5em; border-radius: 1.2em;
+            box-shadow: 0 0 32px #00fff966, 0 0 0 2px #00fff933; text-align: center; max-width: 90vw;
+            animation: popinIn 0.3s cubic-bezier(.4,2,.6,1) both;
+        }
+        #popin-access-denied-title {
+            font-size: 1.3em; color: #00fff9; font-weight: bold; margin-bottom: 1.2em;
+            letter-spacing: 0.03em; text-shadow: 0 0 8px #00fff9, 0 0 24px #00fff9;
+        }
+        #popin-access-denied-msg {
+            color: #fff; font-size: 1.08em; margin-bottom: 2em;
+        }
+        #popin-access-denied-btn {
+            background: linear-gradient(90deg,#00fff9 60%,#ff00ff 100%); color: #181c3a;
+            border: none; border-radius: 0.7em; font-size: 1.1em; font-weight: bold;
+            padding: 0.6em 2.2em; cursor: pointer; box-shadow: 0 0 12px #00fff966;
+            transition: background 0.2s, color 0.2s;
+        }
+        @keyframes popinIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        </style>
+</body>
+<style>
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+    }
+</style>
+<footer>
+    <p>&copy; 2025 Trouvix. Tous droits réservés.</p>
+    </body>
+
+</html>

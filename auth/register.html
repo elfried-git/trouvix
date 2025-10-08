@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer un compte - Trouvix</title>
+    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="body">
+    <header>
+        <div class="header-row">
+            <div class="logo" tabindex="0" aria-label="Accueil Trouvix">
+                <span class="logo-text">Trouvix</span>
+            </div>
+            <button id="close-menu" class="close-menu" aria-label="Fermer le menu" style="display:none">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0ff1ce" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="8" y1="8" x2="24" y2="24" />
+                    <line x1="24" y1="8" x2="8" y2="24" />
+                </svg>
+            </button>
+            <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
+                <ul>
+                    <li><a href="../index.html">Accueil</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
+                    <li id="menu-user-icon" style="display:none">
+                        <a href="../pages/espace-membre.php" title="Espace membre" style="display:flex;align-items:center;gap:0.4em;">
+                            <span style="font-size:1.5em;">👤</span>
+                            <span id="menu-user-nom" style="font-size:1em;"></span>
+                        </a>
+                    </li>
+                    <li id="menu-login-link"><a href="login.html">Connexion</a></li>
+                    <li id="menu-logout-link" style="display:none"><form action="../pages/logout.php" method="post" style="display:inline;"><button type="submit" style="background:none;border:none;color:#0ff1ce;font-size:1em;cursor:pointer;">Déconnexion</button></form></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="hote-login-container">
+        <div class="hote-title">Créer un compte</div>
+        <form id="register-form" autocomplete="off">
+            <div class="form-group">
+                <label class="form-label" for="register-nom">Nom</label>
+                <input class="form-input" id="register-nom" name="nom" type="text" maxlength="32" placeholder="Nom" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="register-otp">OTP</label>
+                <input class="form-input" id="register-otp" name="otp" type="password" maxlength="8" placeholder="OTP" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="register-email">Email</label>
+                <input class="form-input" id="register-email" name="email" type="email" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="register-ville">Ville</label>
+                <input class="form-input" id="register-ville" name="ville" type="text" placeholder="Ville" required>
+            </div>
+            <div class="form-error" id="register-error"></div>
+            <div style="display:flex;gap:0.7em;justify-content:center;margin-top:1.2em;">
+                <button type="submit" class="hote-btn">Créer</button>
+                <a href="login.html" class="hote-btn quitter">Retour</a>
+            </div>
+            <div style="text-align:center; margin-top:1.2em;">
+                <a href="login.html" style="color:#0ff1ce; text-decoration:underline; font-weight:500;">J'ai déjà un compte</a>
+            </div>
+        </form>
+    </div>
+    <script>
+        document.getElementById('register-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const nom = document.getElementById('register-nom').value;
+            const email = document.getElementById('register-email').value;
+            const ville = document.getElementById('register-ville').value;
+            const otp = document.getElementById('register-otp').value;
+            const errorDiv = document.getElementById('register-error');
+            errorDiv.textContent = '';
+            try {
+                const response = await fetch('../backend/register.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ nom, email, ville, otp })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    errorDiv.style.color = 'green';
+                    errorDiv.textContent = data.message;
+                    document.getElementById('register-form').reset();
+                } else {
+                    errorDiv.style.color = 'red';
+                    errorDiv.textContent = data.error || 'Erreur lors de l\'inscription.';
+                }
+            } catch (err) {
+                errorDiv.style.color = 'red';
+                errorDiv.textContent = 'Erreur serveur.';
+            }
+        });
+    </script>
+</body>
+
+    <!-- Surveillance session utilisateur -->
+    <script src="../js/session-nav.js"></script>
+</html>

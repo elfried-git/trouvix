@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trouvix - Apprentissage des Langues</title>
+    <link rel="stylesheet" href="apprentissage.css">
+</head>
+<body>
+    <header class="lw-header">
+        <h1 id="lw-logo" style="cursor:pointer;">TrouvixWord</h1>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                document.getElementById('lw-logo').addEventListener('click', function () {
+                    window.location.href = '../index.html';
+                });
+            });
+        </script>
+        <nav>
+            <a href="#anglais">Anglais</a>
+            <a href="#espagnol">Espagnol</a>
+            <a href="#francais">Français</a>
+            <a href="#italien">Italien</a>
+            <a href="#swahili">Swahili</a>
+        </nav>
+    </header>
+    <main>
+        <section class="lw-intro">
+            <h2>Bienvenue sur TrouvixWord</h2>
+            <p>Plateforme interactive pour apprendre la langue de votre choix, et progresser à votre rythme !</p>
+        </section>
+        <section class="lw-languages">
+            <div class="lw-lang-card" id="anglais">
+                <h3>🇺🇸 Anglais Américain / 🇬🇧 Britannique</h3>
+                <ul>
+                    <li>Cours & Grammaire</li>
+                    <li>Exercices oraux & Prononciation</li>
+                    <li>Expressions du quotidien</li>
+                    <li>Culture & Contexte</li>
+                </ul>
+                <a class="lw-btn" href="anglais.html">Découvrir</a>
+            </div>
+            <div class="lw-lang-card" id="espagnol">
+                <h3>🇪🇸 Espagnol</h3>
+                <ul>
+                    <li>Cours & Grammaire</li>
+                    <li>Exercices oraux & Prononciation</li>
+                    <li>Expressions du quotidien</li>
+                    <li>Exercices pratiques</li>
+                    <li>Culture & Contexte</li>
+                </ul>
+                <a class="lw-btn" href="espagnol.html">Découvrir</a>
+            </div>
+            <div class="lw-lang-card" id="francais">
+                <h3>🇫🇷 Français</h3>
+                <ul>
+                    <li>Cours & Grammaire</li>
+                    <li>Exercices oraux & Prononciation</li>
+                    <li>Expressions du quotidien</li>
+                    <li>Exercices pratiques</li>
+                    <li>Culture & Contexte</li>
+                </ul>
+                <a class="lw-btn" href="francais.html">Découvrir</a>
+            </div>
+            <div class="lw-lang-card" id="italien">
+                <h3>🇮🇹 Italien</h3>
+                <ul>
+                    <li>Cours & Grammaire</li>
+                    <li>Exercices oraux & Prononciation</li>
+                    <li>Expressions du quotidien</li>
+                    <li>Exercices pratiques</li>
+                    <li>Culture & Contexte</li>
+                </ul>
+                <a class="lw-btn" href="italien.html">Découvrir</a>
+            </div>
+            <div class="lw-lang-card" id="swahili">
+                <h3>🇰🇪 Swahili</h3>
+                <ul>
+                    <li>Cours & Grammaire</li>
+                    <li>Exercices oraux & Prononciation</li>
+                    <li>Expressions du quotidien</li>
+                    <li>Exercices pratiques</li>
+                    <li>Culture & Contexte</li>
+                </ul>
+                <a class="lw-btn" href="swahili.html">Découvrir</a>
+            </div>
+        </section>
+    </main>
+    <footer class="lw-footer">
+        <p>&copy; 2025 TrouvixWord. Plateforme d'apprentissage multilingue.</p>
+    </footer>
+</body>
+<script src="../js/session-nav.js"></script>
+</html>

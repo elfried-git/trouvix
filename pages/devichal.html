@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeviChal - Jeu de Devinettes</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    body {
+      background: #10132a;
+      color: #fff;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+    .devichal-container {
+      max-width: 600px;
+      margin: 3rem auto 0 auto;
+      background: #181c3a;
+      border-radius: 1.5rem;
+      box-shadow: 0 0 32px #00fff966, 0 0 0 2px #00fff933;
+      padding: 2.5rem 2rem 2rem 2rem;
+      text-align: center;
+    }
+    .devichal-title {
+      font-size: 2.2rem;
+      color: #00fff9;
+      letter-spacing: 0.04em;
+      text-shadow: 0 0 8px #00fff9, 0 0 24px #00fff9;
+      margin-bottom: 0.5em;
+    }
+    .devichal-sub {
+      color: #ff00ff;
+      font-size: 1.1rem;
+      margin-bottom: 2em;
+      text-shadow: 0 0 8px #ff00ff44;
+    }
+    .devichal-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 2em;
+      flex-wrap: wrap;
+    }
+    .devichal-controls label {
+      color: #fff;
+      font-weight: 500;
+      margin-right: 0.5em;
+    }
+    .devichal-controls select, .devichal-controls input {
+      background: #181c3a;
+      color: #00fff9;
+      border: 2px solid #00fff9;
+      border-radius: 0.5em;
+      padding: 0.4em 1em;
+      font-size: 1.1em;
+      outline: none;
+      margin-right: 1em;
+      transition: border 0.2s;
+    }
+    .devichal-controls select:focus, .devichal-controls input:focus {
+      border: 2px solid #ff00ff;
+      box-shadow: 0 0 8px #ff00ff66;
+    }
+    .devichal-btn {
+      background: linear-gradient(90deg, #00fff9 60%, #ff00ff 100%);
+      color: #181c3a;
+      border: none;
+      border-radius: 0.7em;
+      font-size: 1.1em;
+      font-weight: bold;
+      padding: 0.7em 2.2em;
+      margin-top: 1em;
+      cursor: pointer;
+      box-shadow: 0 0 16px #00fff966;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      text-shadow: 0 0 8px #fff;
+    }
+    .devichal-btn:disabled {
+      background: #222;
+      color: #888;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+    .devichal-word {
+      font-size: 2.1rem;
+      letter-spacing: 0.5em;
+      color: #00fff9;
+      margin: 2em 0 1em 0;
+      text-shadow: 0 0 8px #00fff9, 0 0 24px #00fff9;
+    }
+    .devichal-letters {
+      margin: 1.5em 0 1em 0;
+      display: flex;
+      justify-content: center;
+      gap: 0.5em;
+      flex-wrap: wrap;
+    }
+    .devichal-letter {
+      background: #222;
+      color: #fff;
+      border: 2px solid #00fff9;
+      border-radius: 0.4em;
+      width: 2.2em;
+      height: 2.2em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3em;
+      font-weight: bold;
+      margin: 0 0.1em;
+      text-transform: uppercase;
+      box-shadow: 0 0 8px #00fff933;
+      transition: background 0.2s, color 0.2s, border 0.2s;
+    }
+    .devichal-letter.found {
+      background: #00fff9;
+      color: #181c3a;
+      border: 2px solid #ff00ff;
+      box-shadow: 0 0 16px #ff00ff99;
+      animation: neon-reveal 0.4s;
+    }
+    @keyframes neon-reveal {
+      0% { background: #222; color: #fff; }
+      100% { background: #00fff9; color: #181c3a; }
+    }
+    .devichal-input {
+      margin-top: 1.5em;
+      display: flex;
+      justify-content: center;
+      gap: 1em;
+    }
+    .devichal-input input {
+      background: #181c3a;
+      color: #00fff9;
+      border: 2px solid #00fff9;
+      border-radius: 0.5em;
+      padding: 0.4em 1em;
+      font-size: 1.1em;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .devichal-input input:focus {
+      border: 2px solid #ff00ff;
+      box-shadow: 0 0 8px #ff00ff66;
+    }
+    .devichal-input button {
+      background: linear-gradient(90deg, #00fff9 60%, #ff00ff 100%);
+      color: #181c3a;
+      border: none;
+      border-radius: 0.7em;
+      font-size: 1.1em;
+      font-weight: bold;
+      padding: 0.5em 1.5em;
+      cursor: pointer;
+      box-shadow: 0 0 8px #00fff966;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      text-shadow: 0 0 8px #fff;
+    }
+    .devichal-input button:disabled {
+      background: #222;
+      color: #888;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+    .devichal-message {
+      margin-top: 1.2em;
+      color: #ff00ff;
+      font-weight: bold;
+      min-height: 2em;
+      text-shadow: 0 0 8px #ff00ff44;
+    }
+    header {
+      background: #10132a;
+      padding: 1rem 0;
+      position: relative;
+      z-index: 1000;
+    }
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      width: 100%;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #00fff9;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+    .logo-text {
+      margin-left: 0.5rem;
+      text-shadow: 0 0 8px #00fff9, 0 0 24px #00fff9;
+    }
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.2s;
+    }
+    nav a:hover {
+      color: #ff00ff;
+    }
+    #menu-user-icon {
+      display: flex;
+      align-items: center;
+      gap: 0.4em;
+    }
+    #menu-user-nom {
+      font-size: 1rem;
+      color: #00fff9;
+    }
+    #menu-login-link a, #menu-logout-link form {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+    #menu-logout-link button {
+      background: none;
+      border: none;
+      color: #0ff1ce;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+    }
+    /* --- Fin styles menu universel --- */
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-row">
+      <div class="logo" tabindex="0" aria-label="Accueil Trouvix">
+        <span class="logo-text">Trouvix</span>
+      </div>
+      <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
+        <ul>
+          <li><a href="../index.html">Accueil</a></li>
+          <li><a href="../index.html#contact">Contact</a></li>
+          <li><a href="jeux-quiz.html">Jeux / Quiz</a></li>
+          <li><a href="../page-apprentissage-langues/index.html">Apprentissage des Langues</a></li>
+          <li><a href="tv-replay.html">TV / Replay</a></li>
+          <li id="menu-user-icon" style="display:none">
+            <a href="espace-membre.php" title="Espace membre" style="display:flex;align-items:center;gap:0.4em;">
+              <span style="font-size:1.5em;">👤</span>
+              <span id="menu-user-nom" style="font-size:1em;"></span>
+            </a>
+          </li>
+          <li id="menu-login-link"><a href="../auth/login.html">Connexion</a></li>
+          <li id="menu-logout-link" style="display:none"><form action="logout.php" method="post" style="display:inline;"><button type="submit" style="background:none;border:none;color:#0ff1ce;font-size:1em;cursor:pointer;">Déconnexion</button></form></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <div class="devichal-container">
+    <div class="devichal-title">DeviChal</div>
+    <div class="devichal-sub">Invitez vos amis à jouer, défiez-les dans l'arène des mots !</div>
+    <div style="display: flex; justify-content: center; gap: 2em; margin-bottom: 2em; margin-top: 1em;">
+  <button id="btn-hote" style="background:linear-gradient(90deg,#00fff9 60%,#ff00ff 100%);color:#181c3a;border:none;border-radius:0.7em;font-size:1em;font-weight:bold;padding:0.5em 2em;cursor:pointer;box-shadow:0 0 8px #00fff966;transition:background 0.2s;">Hôte</button>
+  <button id="btn-admin" style="background:linear-gradient(90deg,#ff00ff 60%,#00fff9 100%);color:#181c3a;border:none;border-radius:0.7em;font-size:1em;font-weight:bold;padding:0.5em 2em;cursor:pointer;box-shadow:0 0 8px #ff00ff66;transition:background 0.2s;">Admin</button>
+    </div>
+    <!-- Formulaire supprimé : Longueur du mot, liste déroulante et bouton Nouvelle Partie -->
+    <div class="devichal-word" id="devichal-word"></div>
+    <div class="devichal-letters" id="devichal-letters"></div>
+    <div class="devichal-input" id="devichal-input" style="display:none;">
+      <input type="text" id="devichal-guess" maxlength="1" placeholder="Lettre" autocomplete="off">
+      <button id="devichal-guess-btn">Proposer</button>
+    </div>
+    <div class="devichal-message" id="devichal-message"></div>
+
+    <div style="display: flex; justify-content: center; margin-top: 2.5em;">
+      <a href="jeux-quiz.html" style="text-decoration:none;">
+        <button style="background:linear-gradient(90deg,#00fff9 60%,#ff00ff 100%);color:#181c3a;border:none;border-radius:0.7em;font-size:1em;font-weight:bold;padding:0.5em 1.5em;cursor:pointer;box-shadow:0 0 8px #00fff966;transition:background 0.2s;">← Retour</button>
+      </a>
+    </div>
+  </div>
+  <script src="../mots.js"></script>
+  <script>
+    // Actions des boutons Hôte et Joueurs
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('btn-hote').addEventListener('click', function() {
+        window.location.href = 'creer-salon.html';
+      });
+      document.getElementById('btn-admin').addEventListener('click', function() {
+        window.location.href = 'admin-login.html';
+      });
+    });
+    // --- Logique du jeu DeviChal (mode solo, démo) ---
+    let motSecret = '';
+    let lettresTrouvees = [];
+    let lettresRatees = [];
+    let motADeviner = [];
+    let partieEnCours = false;
+
+    // Utilise la fonction getRandomWord(length) du fichier mots.js
+    function nouvellePartie(longueur) {
+      motSecret = getRandomWord(Number(longueur));
+      lettresTrouvees = [];
+      lettresRatees = [];
+      motADeviner = Array(motSecret.length).fill('');
+      partieEnCours = true;
+      afficherMot();
+      afficherLettres();
+      document.getElementById('devichal-input').style.display = '';
+      document.getElementById('devichal-message').textContent = '';
+      document.getElementById('devichal-guess').value = '';
+      document.getElementById('devichal-guess').focus();
+    }
+
+    function afficherMot() {
+      const mot = motSecret.split('').map((lettre, i) =>
+        lettresTrouvees.includes(lettre) ? `<span class='devichal-letter found'>${lettre}</span>` : `<span class='devichal-letter'>_</span>`
+      ).join(' ');
+      document.getElementById('devichal-word').innerHTML = mot;
+    }
+
+    function afficherLettres() {
+      const lettres = [...lettresTrouvees, ...lettresRatees].map(l =>
+        `<span class='devichal-letter${lettresTrouvees.includes(l) ? ' found' : ''}'>${l}</span>`
+      ).join(' ');
+      document.getElementById('devichal-letters').innerHTML = lettres;
+    }
+
+    document.getElementById('devichal-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const longueur = document.getElementById('word-length').value;
+      nouvellePartie(longueur);
+    });
+
+    document.getElementById('devichal-guess-btn').addEventListener('click', function(e) {
+      e.preventDefault();
+      if (!partieEnCours) return;
+      const guess = document.getElementById('devichal-guess').value.trim().toLowerCase();
+      if (!guess || guess.length !== 1 || !/^[a-zA-Zàâçéèêëîïôûùüÿñæœ]$/.test(guess)) {
+        document.getElementById('devichal-message').textContent = 'Veuillez entrer une lettre valide.';
+        return;
+      }
+      if (lettresTrouvees.includes(guess) || lettresRatees.includes(guess)) {
+        document.getElementById('devichal-message').textContent = 'Lettre déjà proposée.';
+        return;
+      }
+      if (motSecret.includes(guess)) {
+        lettresTrouvees.push(guess);
+        document.getElementById('devichal-message').textContent = 'Bonne lettre !';
+      } else {
+        lettresRatees.push(guess);
+        document.getElementById('devichal-message').textContent = 'Raté !';
+      }
+      afficherMot();
+      afficherLettres();
+      document.getElementById('devichal-guess').value = '';
+      document.getElementById('devichal-guess').focus();
+      // Vérifier victoire
+      if (motSecret.split('').every(l => lettresTrouvees.includes(l))) {
+        partieEnCours = false;
+        document.getElementById('devichal-message').textContent = 'Bravo ! Mot trouvé : ' + motSecret.toUpperCase();
+        document.getElementById('devichal-input').style.display = 'none';
+      }
+    });
+  </script>
+</body>
+<script src="../js/session-nav.js"></script>
+</html>

@@ -1,0 +1,184 @@
+/* Forcer le texte des descriptions de cards en blanc */
+.lw-lang-card p {
+  color: #fff;
+  font-weight: 500;
+  font-size: 1.08em;
+  margin-top: 0.7em;
+  margin-bottom: 0.5em;
+}
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  background: #10132a;
+  color: #fff;
+  min-height: 100vh;
+}
+.lw-header {
+  background: #181c3a;
+  color: #fff;
+  padding: 1.5rem 0 1rem 0;
+  text-align: center;
+  box-shadow: 0 2px 12px #00eaff22;
+}
+.lw-header h1 {
+  margin: 0 0 0.5em 0;
+  font-size: 2.5rem;
+  letter-spacing: 0.04em;
+  color: #00eaff;
+}
+.lw-header nav a {
+  color: #00eaff;
+  text-decoration: none;
+  margin: 0 1.2em;
+  font-weight: 500;
+  font-size: 1.1em;
+  transition: color 0.2s;
+}
+.lw-header nav a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+.lw-intro {
+  max-width: 700px;
+  margin: 2.5em auto 2em auto;
+  background: #181c3a;
+  border-radius: 1.2em;
+  box-shadow: 0 0 24px #00eaff11;
+  padding: 2em 2em 1.5em 2em;
+  text-align: center;
+}
+.lw-intro h2 {
+  margin-top: 0;
+  color: #00eaff;
+}
+.lw-languages {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2em;
+  margin: 2em auto 3em auto;
+  max-width: 1200px;
+}
+.lw-lang-card {
+  background: #181c3a;
+  border-radius: 1.2em;
+  box-shadow: 0 0 16px #00eaff11;
+  padding: 2em 1.5em 1.5em 1.5em;
+  width: 260px;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 2px solid #222b44;
+}
+.lw-lang-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 8px 32px #00eaff33;
+  border-color: #00eaff;
+}
+.lw-lang-card h3 {
+  margin-top: 0;
+  color: #00eaff;
+  font-size: 1.3em;
+}
+
+/* Supprimer les puces des listes dans les cards */
+.lw-lang-card ul {
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+/* Bloc vidéos (10 vidéos, 2 lignes de 5) */
+#videos-bloc {
+  margin-top: 2em;
+  margin-bottom: 2em;
+  max-width: 1100px;
+  text-align: center;
+}
+.videos-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  margin-bottom: 1em;
+  justify-content: center;
+}
+.videos-row video {
+  background: #222;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #00eaff33;
+  width: 200px;
+  height: 120px;
+  object-fit: cover;
+  transition: transform 0.2s;
+}
+.videos-row video:hover {
+  transform: scale(1.04);
+  box-shadow: 0 4px 16px #00eaff55;
+}
+#btn-retour-langues {
+  display: block;
+  margin: 2em auto 0 auto;
+  max-width: 350px;
+  background: #00eaff;
+  color: #181c3a;
+  font-weight: bold;
+  border-radius: 8px;
+  text-align: center;
+  text-decoration: none;
+  padding: 0.8em 1.2em;
+  font-size: 1.1em;
+  transition: background 0.2s, color 0.2s;
+}
+#btn-retour-langues:hover {
+  background: #181c3a;
+  color: #00eaff;
+  border: 2px solid #00eaff;
+}
+
+.lw-lang-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 1em 0 1.5em 0;
+}
+.lw-lang-card li {
+  margin: 0.4em 0;
+  color: #b3eaff;
+  font-size: 1em;
+}
+.lw-btn {
+  display: inline-block;
+  background: linear-gradient(90deg, #00eaff 60%, #a259ff 100%);
+  color: #181c3a;
+  border: none;
+  border-radius: 0.7em;
+  font-size: 1.1em;
+  font-weight: bold;
+  padding: 0.6em 2em;
+  cursor: pointer;
+  box-shadow: 0 0 12px #00eaff33;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.lw-btn:hover {
+  background: linear-gradient(90deg, #a259ff 60%, #00eaff 100%);
+  color: #fff;
+}
+.lw-footer {
+  background: #181c3a;
+  color: #fff;
+  text-align: center;
+  padding: 1.2em 0 1em 0;
+  font-size: 1em;
+  margin-top: 2em;
+  box-shadow: 0 -2px 12px #00eaff22;
+}
+@media (max-width: 900px) {
+  .lw-languages {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5em;
+  }
+  .lw-lang-card {
+    width: 90%;
+    max-width: 400px;
+  }
+}

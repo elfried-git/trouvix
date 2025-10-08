@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Trouvix</title>
+    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body class="body">
+    <header>
+        <div class="header-row">
+            <div class="logo" tabindex="0" aria-label="Accueil Trouvix">
+                <span class="logo-text">Trouvix</span>
+            </div>
+            <button id="close-menu" class="close-menu" aria-label="Fermer le menu" style="display:none">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0ff1ce" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="8" y1="8" x2="24" y2="24" />
+                    <line x1="24" y1="8" x2="8" y2="24" />
+                </svg>
+            </button>
+            <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
+                <ul>
+                    <li><a href="../index.html">Accueil</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
+                    <li id="menu-user-icon" style="display:none">
+                        <a href="../pages/espace-membre.php" title="Espace membre" style="display:flex;align-items:center;gap:0.4em;">
+                            <span style="font-size:1.5em;">👤</span>
+                            <span id="menu-user-nom" style="font-size:1em;"></span>
+                        </a>
+                    </li>
+                    <li id="menu-login-link"><a href="login.html">Connexion</a></li>
+                    <li id="menu-logout-link" style="display:none"><form action="../pages/logout.php" method="post" style="display:inline;"><button type="submit" style="background:none;border:none;color:#0ff1ce;font-size:1em;cursor:pointer;">Déconnexion</button></form></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <!-- Formulaire de connexion (modal affiché en page dédiée) -->
+    <div class="hote-login-container">
+        <div class="hote-title">Connexion Hôte</div>
+        <form id="hote-login-form" autocomplete="off">
+            <div class="form-group">
+                <label class="form-label" for="register-email">Email</label>
+                <input class="form-input" id="register-email" name="email" type="email" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="hote-otp">OTP</label>
+                <input class="form-input" id="hote-otp" name="otp" type="password" maxlength="8" placeholder="OTP" required>
+            </div>
+            <div style="display:flex;gap:0.7em;justify-content:center;margin-top:1.2em;">
+                <button type="submit" class="hote-btn" id="hote-btn"
+                    style="flex:1; min-width:110px; max-width:180px; height:42px; font-size:1.08em; padding:0; display:flex; align-items:center; justify-content:center;">Connecter</button>
+                <a href="../index.html" class="hote-btn quitter" style="flex:1; min-width:110px; max-width:180px; height:42px; font-size:1.08em; padding:0; display:flex; align-items:center; justify-content:center; text-align:center; text-decoration:none;">Retour</a>
+            </div>
+            <div id="hote-error" style="color:red;text-align:center;margin-top:1em;"></div>
+            <div style="text-align:center; margin-top:1.2em;">
+                <a href="register.html" style="color:#0ff1ce; text-decoration:underline; font-weight:500;">Je n'ai pas de compte</a>
+            </div>
+        </form>
+    </div>
+    <script>
+document.getElementById('hote-login-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const email = document.getElementById('register-email').value;
+    const otp = document.getElementById('hote-otp').value;
+    const errorDiv = document.getElementById('hote-error');
+    errorDiv.textContent = '';
+    try {
+        const response = await fetch('../backend/login.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ email, otp }),
+            credentials: 'include'
+        });
+        const text = await response.text();
+        console.log('RAW RESPONSE:', text);
+        const data = JSON.parse(text);
+        if (data.success) {
+            errorDiv.style.color = 'green';
+            errorDiv.textContent = data.message;
+            // Stocke le nom de l'utilisateur pour affichage menu
+            if (data.user_nom) {
+                sessionStorage.setItem('user_nom', data.user_nom);
+            }
+            console.log('Redirection...');
+            setTimeout(() => { window.location.href = '../index.html'; }, 800);
+        } else {
+            errorDiv.style.color = 'red';
+            errorDiv.textContent = data.error || 'Erreur lors de la connexion.';
+        }
+    } catch (err) {
+        errorDiv.style.color = 'red';
+        errorDiv.textContent = 'Erreur serveur.';
+    }
+});
+</script>
+</body>
+    <!-- Surveillance session utilisateur -->
+    <script src="../js/session-nav.js"></script>
+</html>

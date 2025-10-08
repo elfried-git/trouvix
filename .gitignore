@@ -1,0 +1,60 @@
+# Ignore node_modules (if using Node.js)
+node_modules/
+
+# Ignore Composer dependencies (if using PHP Composer)
+vendor/
+
+# Ignore log files
+*.log
+
+# Ignore environment files
+.env
+.env.*
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE/project files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Ignore XAMPP specific files
+xampp/
+
+# Ignore cache and session files
+cache/
+session/
+
+# Ignore compiled files
+*.class
+*.pyc
+*.o
+*.so
+
+# Ignore backup files
+*~
+*.bak
+*.tmp
+
+# Ignore uploads or user-generated content (customize as needed)
+uploads/
+
+# Ignore other sensitive or temporary files
+*.swp
+*.swo
+
+# Ignore Windows specific files
+Desktop.ini
+
+# Ignore PHPStorm and JetBrains IDEs
+.idea/
+
+# Ignore test output
+coverage/
+
+# Ignore build output
+dist/
+build/

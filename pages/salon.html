@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salon en cours - DeviChal</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    body {
+      background: #10132a;
+      color: #fff;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .lobby-container {
+      max-width: 700px;
+      margin: 3.5rem auto;
+      background: #181c3a;
+      border-radius: 1.5rem;
+      box-shadow: 0 0 32px #00fff966, 0 0 0 2px #00fff933;
+      padding: 2.5rem 2rem 2.5rem 2rem;
+      text-align: center;
+      position: relative;
+    }
+    .lobby-title {
+      font-size: 2rem;
+      color: #00fff9;
+      letter-spacing: 0.04em;
+      text-shadow: 0 0 8px #00fff9, 0 0 24px #00fff9;
+      margin-bottom: 1.2em;
+    }
+    .players-list {
+      display: flex;
+      justify-content: center;
+      gap: 2.5em;
+      margin-bottom: 2em;
+      flex-wrap: wrap;
+    }
+    .player-slot {
+      text-align: center;
+      min-width: 90px;
+    }
+    .avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 2.5px solid #00fff9;
+      object-fit: cover;
+      background: #222;
+      margin: 0 auto 0.5em auto;
+      box-shadow: 0 0 12px #00fff966;
+    }
+    .empty-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #222 url('../assets/avatar-default.png') center/60% no-repeat;
+      border: 2.5px dashed #888;
+      margin: 0 auto 0.5em auto;
+      opacity: 0.5;
+    }
+    .player-name {
+      color: #00fff9;
+      font-size: 1em;
+      margin-bottom: 0.2em;
+      word-break: break-word;
+    }
+    .player-role {
+      color: #ff00ff;
+      font-size: 0.95em;
+      font-weight: bold;
+      margin-bottom: 0.2em;
+    }
+    .lobby-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1.5em;
+      margin-top: 2em;
+    }
+    .btn-lobby {
+      background: linear-gradient(90deg, #00fff9 60%, #ff00ff 100%);
+      color: #181c3a;
+      border: none;
+      border-radius: 0.7em;
+      font-size: 1.15em;
+      font-weight: bold;
+      padding: 0.7em 2.2em;
+      cursor: pointer;
+      box-shadow: 0 0 16px #00fff966;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      text-shadow: 0 0 8px #fff;
+    }
+    .btn-lobby:disabled {
+      background: #222;
+      color: #888;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+    @media (max-width: 600px) {
+      .lobby-container { padding: 1.2rem 0.5rem; }
+      .players-list { gap: 1em; }
+      .player-slot { min-width: 70px; }
+    }
+  </style>
+</head>
+<body>
+    <header>
+        <div class="header-row">
+            <div class="logo" tabindex="0" aria-label="Accueil Trouvix">
+                <span class="logo-text">Trouvix</span>
+            </div>
+            <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
+                <ul>
+                    <li><a href="../index.html">Accueil</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
+                    <li><a href="jeux-quiz.html">Jeux / Quiz</a></li>
+                    <li><a href="../page-apprentissage-langues/index.html">Apprentissage des Langues</a></li>
+                    <li><a href="tv-replay.html">TV / Replay</a></li>
+                    <li id="menu-user-icon" style="display:none">
+                        <a href="espace-membre.php" title="Espace membre" style="display:flex;align-items:center;gap:0.4em;">
+                            <span style="font-size:1.5em;">👤</span>
+                            <span id="menu-user-nom" style="font-size:1em;"></span>
+                        </a>
+                    </li>
+                    <li id="menu-login-link"><a href="../auth/login.html">Connexion</a></li>
+                    <li id="menu-logout-link" style="display:none"><form action="logout.php" method="post" style="display:inline;"><button type="submit" style="background:none;border:none;color:#0ff1ce;font-size:1em;cursor:pointer;">Déconnexion</button></form></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+  <div class="lobby-container">
+  <div class="lobby-title" id="lobby-title">Salon</div>
+  <div id="host-name" style="color:#ff00ff;font-size:1.1em;margin-bottom:1em;"></div>
+    <div class="players-list" id="players-list"></div>
+    <div class="lobby-actions">
+      <button class="btn-lobby" id="btn-start" disabled>DÉMARRER</button>
+      <button class="btn-lobby" id="btn-quit">QUITTER</button>
+    </div>
+    <div style="margin-top:2em;">
+      <a href="creer-salon.html" class="btn-lobby" style="text-decoration:none;display:inline-block;">&#8592; Retour aux salons</a>
+    </div>
+  </div>
+  <script>
+  // --- Paramètres du salon (à récupérer dynamiquement dans une vraie app) ---
+    // Récupération du salon courant depuis le localStorage (créé par l'hôte)
+    function getSalonCourant() {
+      const salons = JSON.parse(localStorage.getItem('DEVITAL_SALONS') || '[]');
+      const salonId = localStorage.getItem('last_created_salon_id');
+      return salons.find(s => s.id === salonId) || salons[0] || {
+        nom: 'Titre du Salon',
+        maxJoueurs: 4,
+        joueurs: [
+          { nom: 'Hôte', photo: '../assets/avatar-default.png', estHote: true }
+        ]
+      };
+    }
+    const salon = getSalonCourant();
+    const isHote = true; // À adapter selon l'utilisateur courant
+    const minJoueurs = 2;
+
+    // --- Affichage du titre ---
+    document.getElementById('lobby-title').textContent = salon.nom;
+    // Affichage du nom de l'hôte
+    const host = salon.joueurs.find(j => j.estHote);
+    if (host) {
+      document.getElementById('host-name').textContent = `Hôte : ${host.nom}`;
+    }
+
+    // --- Affichage des joueurs et places vides ---
+    function renderPlayers() {
+      const playersList = document.getElementById('players-list');
+      playersList.innerHTML = '';
+      for (let i = 0; i < salon.maxJoueurs; i++) {
+        const joueur = salon.joueurs[i];
+        const slot = document.createElement('div');
+        slot.className = 'player-slot';
+        if (joueur) {
+          slot.innerHTML = `
+            <div style="display:flex;justify-content:center;align-items:center;">
+              <img src="${joueur.photo || '../assets/avatar-default.png'}" class="avatar" alt="Avatar" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2.5px solid #00fff9;background:#222;box-shadow:0 0 12px #00fff966;" />
+            </div>
+            ${joueur.estHote ? '<div class=\"player-role\" style=\"color:#ff00ff;font-weight:bold;font-size:1.15em;margin-top:0.3em;\">Hôte</div>' : `<div class=\"player-name\">${joueur.nom}</div>`}
+          `;
+        } else {
+          slot.innerHTML = `
+            <div class="empty-avatar"></div>
+            <div class="player-name">Place disponible</div>
+          `;
+        }
+        playersList.appendChild(slot);
+      }
+    }
+    renderPlayers();
+
+    // --- Bouton DÉMARRER ---
+    const btnStart = document.getElementById('btn-start');
+    function updateStartButton() {
+      btnStart.disabled = !(
+        isHote && salon.joueurs.length >= minJoueurs
+      );
+    }
+    updateStartButton();
+
+    btnStart.addEventListener('click', function() {
+      if (isHote && salon.joueurs.length >= minJoueurs) {
+        // Logique de démarrage du jeu pour tous (à implémenter)
+        alert('Le jeu commence !');
+      }
+    });
+
+    // --- Bouton SUPPRIMER (pour l'hôte) ---
+
+    // --- Bouton QUITTER ---
+    document.getElementById('btn-quit').addEventListener('click', function() {
+      window.location.href = 'creer-salon.html';
+    });
+  </script>
+</body>
+<script src="../js/session-nav.js"></script>
+</html>

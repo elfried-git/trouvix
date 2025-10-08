@@ -1,0 +1,138 @@
+Conception d’un site d’apprentissage de langues multilingue et interactif
+🎯 Objectif général
+
+Créer une plateforme web d’apprentissage linguistique complète, interactive et immersive, nommée LinguaWorld (nom modifiable).
+L’objectif est de permettre aux utilisateurs d’apprendre plusieurs langues étrangères (Anglais Américain, Anglais Britannique, Espagnol, Français, Italien et Swahili) à travers des cours pratiques, des exercices oraux, des expressions idiomatiques, des cas d’usage concrets, et des évaluations régulières.
+
+🌍 Langues disponibles
+
+🇺🇸 Anglais Américain
+
+🇬🇧 Anglais Britannique
+
+🇪🇸 Espagnol
+
+🇫🇷 Français
+
+🇮🇹 Italien
+
+🇰🇪 Swahili
+
+Chaque langue doit avoir ses propres rubriques, contenus audio, vidéos, et exercices spécifiques.
+
+🧩 Rubriques principales par langue
+1. Cours & Grammaire
+
+Leçons structurées par niveau (A1 à C2).
+
+Explications grammaticales claires, illustrées avec exemples concrets.
+
+Quiz rapide à la fin de chaque module.
+
+Option d’écoute pour entendre la prononciation correcte.
+
+Suivi de progression individuel (barre de progression + pourcentage d’acquisition).
+
+2. Exercices oraux & Prononciation
+
+Interface avec reconnaissance vocale (speech-to-text).
+
+Comparaison de la voix de l’utilisateur avec celle d’un locuteur natif (analyse du ton, rythme, accent).
+
+Répétition guidée de phrases clés.
+
+Score automatique basé sur la justesse de la prononciation.
+
+Enregistrements audio disponibles pour chaque mot/phrase.
+
+Mode “écoute passive” (lecture en continu des mots/phrases à mémoriser).
+
+3. Expressions du quotidien
+
+Catégories :
+
+Salutations et politesse
+
+Achats et restaurant
+
+Voyages et transport
+
+Travail et études
+
+Urgences et santé
+
+Loisirs et vie sociale
+
+Chaque expression est :
+
+Traduites et expliquée.
+
+Accompagnée d’un exemple de dialogue.
+
+Enregistrée par un locuteur natif.
+
+Ajout d’un bouton “Favoris” pour enregistrer les expressions préférées.
+
+Mini quiz sur l’usage correct des expressions.
+
+4. Exercices pratiques (cas concrets)
+
+30 exercices minimum par série, par langue.
+
+Types d’exercices :
+
+Choix multiple
+
+Trouver le mot manquant
+
+Traduction dirigée
+
+Compréhension orale
+
+Dialogue interactif simulé (l’utilisateur répond à une voix virtuelle)
+
+Jeux éducatifs : “trouve le mot”, “mots croisés linguistiques”, “phrases mélangées”.
+
+Système de points et de badges à chaque réussite.
+
+Classement général (gamification).
+
+Correction détaillée avec explication linguistique.
+
+5. Rubrique “Culture & Contexte”
+
+Informations sur la culture associée à la langue (coutumes, accents, expressions régionales).
+
+Podcasts courts sur la vie quotidienne dans les pays concernés.
+
+Quiz culturel à la fin de chaque module.
+
+💬 Fonctionnalités globales du site
+
+Interface bilingue (français/anglais pour commencer).
+
+Mode sombre / clair.
+
+Comptes utilisateurs avec :
+
+Suivi de progression.
+
+Statistiques personnalisées (temps d’étude, score global, langues suivies).
+
+Système de badges et de récompenses.
+
+Notifications de rappel pour pratiquer quotidiennement.
+
+Espace communautaire :
+
+Forum d’échange entre apprenants.
+
+Challenge hebdomadaire (ex : “20 phrases à prononcer sans faute”).
+
+Option d’abonnement premium :
+
+Accès illimité à tous les exercices.
+
+Certification de fin de niveau.
+
+Téléchargement des leçons PDF et audios.

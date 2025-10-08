@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer un Salon - DeviChal</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .card-form-group {
+            display: flex;
+            gap: 2.5rem;
+            justify-content: center;
+            align-items: flex-start;
+            background: #181c3a;
+            border-radius: 1.5rem;
+            box-shadow: 0 0 32px #00fff966, 0 0 0 2px #00fff933;
+            padding: 2.5rem 2rem;
+            margin: 3.5rem auto 0 auto;
+            max-width: 900px;
+        }
+
+        @media (max-width: 900px) {
+            .card-form-group {
+                flex-direction: column;
+                align-items: center;
+                padding: 1.2rem 0.5rem;
+            }
+        }
+
+        .triple-flex {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            margin-bottom: 2.5rem;
+        }
+
+        .salons-container,
+        .card-form {
+            background: #181c3a;
+            border-radius: 1.5rem;
+            box-shadow: 0 0 32px #00fff966, 0 0 0 2px #00fff933;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .salons-container {
+            min-width: 280px;
+            max-width: 350px;
+            width: 100%;
+            padding: 1.2rem 1rem 1.5rem 1rem;
+        }
+
+        .card-form {
+            min-width: 260px;
+            max-width: 320px;
+            width: 100%;
+            padding: 1.2rem 1rem 1.5rem 1rem;
+            text-align: center;
+            transition: box-shadow 0.2s;
+        }
+
+        @media (max-width: 1200px) {
+            .triple-flex {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .salons-container,
+            .card-form {
+                max-width: 95vw;
+            }
+        }
+
+        /* (Styles CSS conservés) */
+        body {
+            background: #10132a;
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .creer-salon-container {
+            max-width: 480px;
+            margin: 3.5rem auto 0 auto;
+            background: #181c3a;
+            border-radius: 1.5rem;
+            box-shadow: 0 0 32px #00fff966, 0 0 0 2px #00fff933;
+            padding: 2.5rem 2rem 2.5rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .creer-salon-title {
+            font-size: 2rem;
+            color: #00fff9;
+            letter-spacing: 0.04em;
+            text-shadow: 0 0 8px #00fff9, 0 0 24px #00fff9;
+            margin-bottom: 1.2em;
+        }
+
+        .form-group {
+            margin-bottom: 1.5em;
+            text-align: left;
+            position: relative;
+        }
+
+        .form-label {
+            color: #fff;
+            font-weight: 500;
+            margin-bottom: 0.3em;
+            display: block;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            background: #181c3a;
+            color: #00fff9;
+            border: 2px solid #00fff9;
+            border-radius: 0.5em;
+            padding: 0.6em 2.8em 0.6em 1em;
+            font-size: 1.1em;
+            outline: none;
+            margin-top: 0.2em;
+            transition: border 0.2s;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            border: 2px solid #ff00ff;
+            box-shadow: 0 0 8px #ff00ff66;
+        }
+
+        .form-error {
+            color: #ff00ff;
+            font-size: 0.98em;
+            margin-top: 0.2em;
+            font-weight: bold;
+        }
+
+        .creer-btn {
+            width: 100%;
+            background: linear-gradient(90deg, #00fff9 60%, #ff00ff 100%);
+            color: #181c3a;
+            border: none;
+            border-radius: 0.7em;
+            font-size: 1.2em;
+            font-weight: bold;
+            padding: 0.8em 0;
+            margin-top: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 0 16px #00fff966;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            text-shadow: 0 0 8px #fff;
+            opacity: 0.7;
+        }
+
+        .creer-btn.active {
+            opacity: 1;
+        }
+
+        .creer-btn:disabled {
+            background: #222;
+            color: #888;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Table salons */
+        .salons-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: #181c3a;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 0 24px #00fff966;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #fff;
+        }
+
+        th,
+        td {
+            padding: 0.7em 1em;
+            border-bottom: 1px solid #00fff933;
+            text-align: left;
+        }
+
+        th {
+            color: #00fff9;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+
+        td img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #00fff9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav id="main-nav" class="main-nav" aria-label="Navigation principale" style="margin-bottom:2em;">
+        <ul>
+            <li><a href="../index.html">Accueil</a></li>
+            <li><a href="../index.html#contact">Contact</a></li>
+            <li><a href="jeux-quiz.html">Jeux / Quiz</a></li>
+            <li><a href="../page-apprentissage-langues/index.html">Apprentissage des Langues</a></li>
+            <li><a href="tv-replay.html">TV / Replay</a></li>
+            <li id="menu-user-icon" style="display:none">
+                <a href="espace-membre.php" title="Espace membre" style="display:flex;align-items:center;gap:0.4em;">
+                    <span style="font-size:1.5em;">👤</span>
+                    <span id="menu-user-nom" style="font-size:1em;"></span>
+                </a>
+            </li>
+            <li id="menu-login-link"><a href="../auth/login.html">Connexion</a></li>
+            <li id="menu-logout-link" style="display:none"><form action="logout.php" method="post" style="display:inline;"><button type="submit" style="background:none;border:none;color:#0ff1ce;font-size:1em;cursor:pointer;">Déconnexion</button></form></li>
+        </ul>
+    </nav>
+    <script src="../js/session-nav.js"></script>
+    <div class="card-form-group">
+        <div class="card-form">
+            <div class="creer-salon-title">Créer un Salon</div>
+            <form id="creer-salon-form" autocomplete="off">
+                <div class="form-group">
+                    <label class="form-label" for="nom-salon">Nom du Salon</label>
+                    <input class="form-input" id="nom-salon" maxlength="20" required pattern="^[^<>;]*$" type="text"
+                        placeholder="Nom du salon">
+                    <div class="form-error" id="nom-salon-error"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="nom-hote">Nom de l'hôte</label>
+                    <input class="form-input" id="nom-hote" maxlength="15" required type="text" placeholder="Votre nom">
+                    <div class="form-error" id="nom-hote-error"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Photo</label>
+                    <div style="display:flex;justify-content:center;align-items:center;">
+                        <label id="avatar-upload-label"
+                            style="width:64px;height:64px;border-radius:50%;border:3px solid #00fff9;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;position:relative;background:#222;">
+                            <input type="file" id="avatar-upload" accept="image/*" style="display:none;" required>
+                            <span id="avatar-placeholder" style="color:#00fff9;font-size:2em;opacity:0.7;">+</span>
+                            <img id="avatar-preview" src="" alt="Aperçu photo"
+                                style="display:none;width:100%;height:100%;object-fit:cover;">
+                        </label>
+                    </div>
+                    <div class="form-error" id="avatar-error"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="nb-joueurs">Nombre de joueurs</label>
+                    <select class="form-select" id="nb-joueurs" required>
+                        <option value="2">2</option>
+                        <option value="3" selected>3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="longueur-mot">Longueur du mot</label>
+                    <select class="form-select" id="longueur-mot" required>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8" selected>8</option>
+                        <option value="9">9</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 0.7em; justify-content: center; margin-top: 1.2em;">
+                    <button type="submit" class="creer-btn" id="creer-btn" disabled
+                        style="flex:1; min-width:120px; max-width:220px; height:44px; font-size:1.1em; padding:0; display:flex; align-items:center; justify-content:center;">Créer
+                        Salon</button>
+                    <a href="../index.html" class="creer-btn" id="accueil-link"
+                        style="flex:1; min-width:120px; max-width:220px; height:44px; font-size:1.1em; padding:0; display:flex; align-items:center; justify-content:center; text-align:center; text-decoration:none; opacity:1; background:#444; color:#fff; font-weight:bold;">
+                        &#8592; Accueil
+                    </a>
+                </div>
+                <div id="dashboard-link-container" style="display:none; text-align:center; margin-top: 1.5em;">
+                    <a href="dashboard-hote.html" class="creer-btn"
+                        style="display:block;margin-top:0;text-align:center;text-decoration:none;opacity:1;">
+                        Aller au Dashboard Hôte
+                    </a>
+                </div>
+            </form>
+            <div class="form-error" id="form-global-error" style="margin-top:1.2em;"></div>
+        </div>
+    </div>
+    <div class="salons-container">
+        <div class="creer-salon-title" style="margin-top:0;margin-bottom:1.5em;font-size:1.5rem;">Salons Actifs
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Hôte</th>
+                    <th>Nom du Salon</th>
+                    <th>Code</th>
+                    <th>Joueurs</th>
+                    <th>Mot (Long.)</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="salons-list">
+            </tbody>
+        </table>
+        <div id="no-salons-message"
+            style="text-align:center;margin-top:1em;color:#ff00ff;font-weight:bold;display:none;">
+            Aucun salon actif pour le moment.
+        </div>
+    </div>
+
+    <script>
+        // --- Gestion avatar pour le formulaire Rejoindre un Salon ---
+        const avatarUploadRejoindre = document.getElementById('avatar-upload-rejoindre');
+        const avatarPreviewRejoindre = document.getElementById('avatar-preview-rejoindre');
+        const avatarPlaceholderRejoindre = document.getElementById('avatar-placeholder-rejoindre');
+        if (avatarUploadRejoindre && avatarPreviewRejoindre && avatarPlaceholderRejoindre) {
+            avatarUploadRejoindre.addEventListener('change', function () {
+                if (avatarUploadRejoindre.files && avatarUploadRejoindre.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        avatarPreviewRejoindre.src = e.target.result;
+                        avatarPreviewRejoindre.style.display = 'block';
+                        avatarPlaceholderRejoindre.style.display = 'none';
+                    };
+                    reader.readAsDataURL(avatarUploadRejoindre.files[0]);
+                } else {
+                    avatarPreviewRejoindre.src = '';
+                    avatarPreviewRejoindre.style.display = 'none';
+                    avatarPlaceholderRejoindre.style.display = 'block';
+                }
+            });
+        }
+        function checkRejoindreFormValidity() {
+            const hasCode = codeSalonRejoindreInput && codeSalonRejoindreInput.value.trim().length > 0;
+            const hasName = nomJoueurRejoindreInput && nomJoueurRejoindreInput.value.trim().length > 0;
+            const hasPhoto = avatarUploadRejoindre && avatarUploadRejoindre.files && avatarUploadRejoindre.files.length > 0;
+            const isValid = hasCode && hasName && hasPhoto;
+            if (rejoindreBtn) {
+                rejoindreBtn.disabled = !isValid;
+                if (isValid) {
+                    rejoindreBtn.classList.add('active');
+                } else {
+                    rejoindreBtn.classList.remove('active');
+                }
+            }
+            // Affichage du message d'erreur photo obligatoire
+            const avatarErrorRejoindre = document.getElementById('avatar-error-rejoindre');
+            if (avatarErrorRejoindre) {
+                if (!hasPhoto) {
+                    avatarErrorRejoindre.textContent = 'La photo est obligatoire.';
+                } else {
+                    avatarErrorRejoindre.textContent = '';
+                }
+            }
+        }
+        // Clé unique pour stocker tous les salons dans localStorage
+        const LOCAL_SALONS_KEY = 'DEVITAL_SALONS';
+        // Clé pour stocker l'ID du dernier salon créé (pour le dashboard hôte)
+        const HOST_SALON_ID_KEY = 'last_created_salon_id';
+
+        // --- Récupération des éléments DOM ---
+        const avatarUpload = document.getElementById('avatar-upload');
+        const avatarPreview = document.getElementById('avatar-preview');
+        const avatarPlaceholder = document.getElementById('avatar-placeholder');
+        const creerBtn = document.getElementById('creer-btn');
+        const nomSalonInput = document.getElementById('nom-salon');
+        const nomHoteInput = document.getElementById('nom-hote');
+        const salonsList = document.getElementById('salons-list');
+        const noSalonsMessage = document.getElementById('no-salons-message');
+        const formGlobalError = document.getElementById('form-global-error');
+        const dashboardLinkContainer = document.getElementById('dashboard-link-container');
+
+        // --- Fonctions Utilitaires ---
+
+        function checkFormValidity() {
+            const hasSalonName = nomSalonInput.value.trim() !== '';
+            const hasHostName = nomHoteInput.value.trim() !== '';
+            const hasPhoto = avatarUpload.files && avatarUpload.files.length > 0;
+            const isFormValid = hasSalonName && hasHostName && hasPhoto;
+
+            creerBtn.disabled = !isFormValid;
+            if (isFormValid) {
+                creerBtn.classList.add('active');
+            } else {
+                creerBtn.classList.remove('active');
+            }
+            // Affichage d'un message d'erreur si la photo est manquante
+            const avatarError = document.getElementById('avatar-error');
+            if (!hasPhoto) {
+                avatarError.textContent = 'La photo est obligatoire.';
+            } else {
+                avatarError.textContent = '';
+            }
+        }
+
+        function updateAvatarPreview() {
+            if (avatarUpload.files && avatarUpload.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    avatarPreview.src = e.target.result;
+                    avatarPreview.style.display = 'block';
+                    avatarPlaceholder.style.display = 'none';
+                    checkFormValidity();
+                };
+                reader.readAsDataURL(avatarUpload.files[0]);
+            } else {
+                avatarPreview.src = '';
+                avatarPreview.style.display = 'none';
+                avatarPlaceholder.style.display = 'block';
+                checkFormValidity();
+            }
+        }
+
+        function getBase64Image(file) {
+            return new Promise((resolve) => {
+                if (!file) {
+                    resolve('');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => resolve(''); // Évite le crash
+            });
+        }
+
+        function genCode(length = 6) {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let code = '';
+            for (let i = 0; i < length; i++) {
+                code += chars[Math.floor(Math.random() * chars.length)];
+            }
+            return code;
+        }
+
+        // --- Logique de Base de Données (Local Storage) ---
+
+        /**
+         * Récupère tous les salons du localStorage.
+         * @returns {Array} Tableau d'objets salons.
+         */
+        function getAllSalons() {
+            try {
+                const data = localStorage.getItem(LOCAL_SALONS_KEY);
+                return data ? JSON.parse(data) : [];
+            } catch (error) {
+                console.error("Erreur de lecture du localStorage:", error);
+                return [];
+            }
+        }
+
+        /**
+         * Met à jour la liste complète des salons dans le localStorage.
+         * Déclenche l'événement 'storage' dans les autres onglets.
+         * @param {Array} salons La nouvelle liste de salons.
+         */
+        function setAllSalons(salons) {
+            try {
+                localStorage.setItem(LOCAL_SALONS_KEY, JSON.stringify(salons));
+                // L'écriture dans localStorage déclenche automatiquement l'événement 'storage'
+                // dans les autres onglets ouverts sur le même domaine.
+            } catch (error) {
+                console.error("Erreur d'écriture du localStorage:", error);
+                formGlobalError.textContent = "Erreur: Le stockage local est plein ou non disponible.";
+            }
+        }
+
+        // --- Logique d'affichage des Salons ---
+
+        function renderSalons(salons) {
+            salonsList.innerHTML = '';
+
+            if (!salons || salons.length === 0) {
+                noSalonsMessage.style.display = 'block';
+                return;
+            }
+
+            noSalonsMessage.style.display = 'none';
+
+            salons.forEach((salon) => {
+                const joueurs = Array.isArray(salon.joueurs) ? salon.joueurs : [];
+
+                const host = joueurs.find(j => j.estHote) || joueurs[0] || { nom: 'Inconnu', photo: '../assets/avatar-default.png' };
+                const hostPhoto = host.photo && host.photo.startsWith('data:image') ? host.photo : '../assets/avatar-default.png';
+                const salonId = salon.id;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <img src="${hostPhoto}" alt="${host.nom}">
+                        <span style="display:block;margin-top:0.3em;font-size:0.9em;color:#00fff9;">${host.nom}</span>
+                    </td>
+                    <td>${salon.nom}</td>
+                    <td><strong style="color:#ff00ff;font-size:1.1em;">${salon.code}</strong></td>
+                    <td>${joueurs.length} / ${salon.maxJoueurs}</td>
+                    <td>${salon.longueurMot}</td>
+                    <td>
+                        <button onclick="rejoindreSalon('${salonId}', '${salon.code}')" class="creer-btn" 
+                                 style="width:auto;padding:0.4em 0.8em;font-size:0.9em;margin:0;opacity:1;box-shadow:none;">
+                            Rejoindre
+                        </button>
+                    </td>
+                `;
+                salonsList.appendChild(tr);
+            });
+            formGlobalError.textContent = '';
+        }
+
+        // --- Logique de Création de Salon (Local Storage SET) ---
+
+        const creerSalonForm = document.getElementById('creer-salon-form');
+        creerSalonForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            formGlobalError.textContent = '';
+            creerBtn.disabled = true;
+            creerBtn.textContent = 'Création...';
+
+            try {
+                const nomSalon = nomSalonInput.value.trim();
+                const nomHote = nomHoteInput.value.trim();
+                const maxJoueurs = parseInt(document.getElementById('nb-joueurs').value, 10);
+                const longueurMot = parseInt(document.getElementById('longueur-mot').value, 10);
+                if (!avatarUpload.files || avatarUpload.files.length === 0) {
+                    document.getElementById('avatar-error').textContent = 'La photo est obligatoire.';
+                    creerBtn.disabled = false;
+                    creerBtn.textContent = 'Créer Salon';
+                    return;
+                }
+                const photoBase64 = await getBase64Image(avatarUpload.files[0]);
+                const newSalonId = 's_' + Date.now().toString(); // ID unique basé sur le temps
+                const salonCode = genCode();
+
+                const newSalon = {
+                    id: newSalonId,
+                    nom: nomSalon,
+                    code: salonCode,
+                    maxJoueurs: maxJoueurs,
+                    longueurMot: longueurMot,
+                    statut: 'en attente',
+                    joueurs: [{
+                        nom: nomHote,
+                        photo: photoBase64 || '../assets/avatar-default.png',
+                        estHote: true,
+                        id: 'host_' + newSalonId
+                    }],
+                    createdAt: Date.now()
+                };
+
+                // 1. Récupérer la liste actuelle, ajouter le nouveau salon
+                const currentSalons = getAllSalons();
+                currentSalons.push(newSalon);
+
+                // 2. Écrire dans le localStorage (déclenche l'événement 'storage')
+                setAllSalons(currentSalons);
+
+                creerBtn.textContent = 'Salon Créé ! 🎉';
+
+                // 3. Stocker l'ID dans le localStorage (pour le Dashboard Hôte)
+                localStorage.setItem(HOST_SALON_ID_KEY, newSalonId);
+
+                // 4. Mettre à jour l'affichage dans cet onglet (l'événement 'storage' ne se déclenche pas dans l'onglet qui écrit)
+                renderSalons(currentSalons);
+
+                // 5. AFFICHE LE LIEN VERS LE DASHBOARD. PAS DE REDIRECTION AUTOMATIQUE.
+                if (dashboardLinkContainer) {
+                    dashboardLinkContainer.style.display = 'block';
+                }
+
+            } catch (error) {
+                console.error("Erreur de création de salon (Local Storage):", error);
+                formGlobalError.textContent = `Erreur: Échec de la création. ${error.message}`;
+                creerBtn.disabled = false;
+                creerBtn.textContent = 'Créer Salon';
+                checkFormValidity();
+            }
+        });
+
+        // Ajout du HTML pour la popin de confirmation
+        const popinHtml = `
+  <div id="popin-overlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(10,16,40,0.85);z-index:1000;display:flex;align-items:center;justify-content:center;">
+    <div id="popin-confirm" style="background:#181c3a;padding:2.2em 2.5em 2em 2.5em;border-radius:1.2em;box-shadow:0 0 32px #00fff966,0 0 0 2px #00fff933;text-align:center;max-width:90vw;">
+      <div style="font-size:1.25em;color:#00fff9;font-weight:bold;margin-bottom:1.2em;">Confirmation</div>
+      <div style="color:#fff;font-size:1.1em;margin-bottom:2em;">Voulez-vous vraiment rejoindre ce salon ?</div>
+      <button id="btn-popin-oui" style="background:linear-gradient(90deg,#00fff9 60%,#ff00ff 100%);color:#181c3a;border:none;border-radius:0.7em;font-size:1.1em;font-weight:bold;padding:0.6em 2.2em;cursor:pointer;box-shadow:0 0 12px #00fff966;margin-right:1.2em;">Oui</button>
+      <button id="btn-popin-non" style="background:#222;color:#fff;border:none;border-radius:0.7em;font-size:1.1em;font-weight:bold;padding:0.6em 2.2em;cursor:pointer;box-shadow:0 0 8px #00fff966;">Non</button>
+    </div>
+  </div>
+`;
+
+        function showPopinConfirmationSalon(onYes, onNo) {
+            // Supprime une popin existante si besoin
+            const old = document.getElementById('popin-overlay');
+            if (old) old.remove();
+            document.body.insertAdjacentHTML('beforeend', popinHtml);
+            document.getElementById('btn-popin-oui').onclick = function () {
+                document.getElementById('popin-overlay').remove();
+                onYes();
+            };
+            document.getElementById('btn-popin-non').onclick = function () {
+                document.getElementById('popin-overlay').remove();
+                if (onNo) onNo();
+            };
+        }
+
+        function rejoindreSalon(salonId, code) {
+            showPopinConfirmationSalon(
+                function () { window.location.href = 'salon.html'; },
+                function () { /* rien, reste sur la page */ }
+            );
+        }
+
+        // --- Gestion des mises à jour entre les onglets ---
+        window.addEventListener('storage', (event) => {
+            // Se met à jour uniquement si la clé des salons est modifiée
+            if (event.key === LOCAL_SALONS_KEY) {
+                console.log("Événement 'storage' détecté. Mise à jour des salons.");
+                // Pas besoin de parser event.newValue, on utilise getAllSalons()
+                renderSalons(getAllSalons());
+            }
+        });
+
+        // --- Initialisation ---
+
+        nomSalonInput.addEventListener('input', checkFormValidity);
+        nomHoteInput.addEventListener('input', checkFormValidity);
+        avatarUpload.addEventListener('change', updateAvatarPreview);
+
+        checkFormValidity();
+        renderSalons(getAllSalons()); // Chargement initial
+    </script>
+</body>
+<script src="../js/session-nav.js"></script>
+</html>
