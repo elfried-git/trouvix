@@ -174,7 +174,18 @@
             <div id="notifications-panel" style="display:none;position:fixed;top:70px;right:40px;z-index:3000;background:#181c3a;border-radius:1em;box-shadow:0 0 24px #00fff966;padding:1.5em 2em;min-width:340px;max-width:90vw;max-height:70vh;overflow-y:auto;">
                 <div style="font-size:1.2em;color:#0ff1ce;font-weight:bold;margin-bottom:1em;">Notifications</div>
                 <div id="notifications-list"></div>
-                <button onclick="document.getElementById('notifications-panel').style.display='none'" style="margin-top:1em;background:#222;color:#fff;border:none;padding:0.5em 1.5em;border-radius:0.5em;cursor:pointer;">Fermer</button>
+                <button id="btn-fermer-notif-panel" style="margin-top:1em;background:#222;color:#fff;border:none;padding:0.5em 1.5em;border-radius:0.5em;cursor:pointer;">Fermer</button>
+            <script>
+            // ...existing code...
+            document.getElementById('btn-fermer-notif-panel').onclick = async function() {
+                // Marquer toutes les notifications comme lues côté serveur
+                await fetch('../backend/mark_notifications_read.php');
+                // Vider la liste côté client
+                document.getElementById('notifications-list').innerHTML = '';
+                document.getElementById('notif-badge').style.display = 'none';
+                document.getElementById('notifications-panel').style.display = 'none';
+            };
+            </script>
             </div>
             <!-- Header -->
             <header class="admin-header">
