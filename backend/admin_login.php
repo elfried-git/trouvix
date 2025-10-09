@@ -14,6 +14,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($row['is_admin'] == 1 && password_verify($password, $row['otp'])) {
             $_SESSION['admin_id'] = $row['id'];
             $_SESSION['is_admin'] = true;
+            $_SESSION['user_id'] = $row['id']; // Pour la détection online
+            // Récupère le nom et l'email pour la session
+            $stmt2 = $conn->prepare('SELECT nom, email FROM users WHERE id = ? LIMIT 1');
+            $stmt2->bind_param('i', $row['id']);
+            $stmt2->execute();
+            $result2 = $stmt2->get_result();
+            if ($result2 && $row2 = $result2->fetch_assoc()) {
+                $_SESSION['user_nom'] = $row2['nom'];
+                $_SESSION['user_email'] = $row2['email'];
+            }
             header('Location: ../admin-dashboard.php');
             exit();
         } else {

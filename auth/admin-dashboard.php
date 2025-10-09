@@ -164,7 +164,7 @@
             <a href="#" class="hote-btn">Dashboard</a>
             <a href="#" class="hote-btn" id="btn-utilisateurs">Utilisateurs</a>
             <a href="#" class="hote-btn">Contenus</a>
-            <a href="#" class="hote-btn">Statistiques</a>
+            <a href="#" class="hote-btn" id="btn-salons">Salons</a>
             <a href="#" class="hote-btn">Paramètres</a>
         </nav>
         <!-- Main content -->
@@ -172,33 +172,36 @@
             <!-- Header -->
             <header class="admin-header">
                 <h1 style="color:#0ff1ce;font-size:2em;margin:0;">Espace Administration</h1>
-                <div style="display:flex;align-items:center;gap:1.5em;">
-                    <span style="color:#eaf6fb;font-size:1.1em;">Bienvenue, Administrateur</span>
-                    <span id="admin-status" style="font-weight:bold;font-size:1.1em;"></span>
-                    <a href="../backend/logout.php" class="hote-btn quitter" style="background:#e74c3c;color:#fff;padding:0.35em 1em;border-radius:0.4em;font-weight:600;font-size:1em;min-width:unset;">Déconnexion</a>
+                <div style="display:flex;align-items:center;gap:2em;margin-right:6vw;">
+                    <div id="admin-info" style="color:#eaf6fb;font-size:1.08em;"></div>
+                    <a href="../backend/logout.php" class="hote-btn" style="margin-left:1.5em;max-width:180px;min-width:120px;text-align:center;">Déconnexion</a>
                 </div>
             </header>
             <!-- Stat cards -->
             <div class="admin-cards">
-                <div class="admin-card">
-                    <div style="font-size:2.2em;font-weight:bold;color:#0ff1ce;" id="stat-users">...</div>
-                    <div style="color:#eaf6fb;">Utilisateurs inscrits</div>
+                <div style="display:flex;gap:2em;width:100%;">
+                    <div class="admin-card">
+                        <div style="font-size:2.2em;font-weight:bold;color:#0ff1ce;" id="stat-users">...</div>
+                        <div style="color:#eaf6fb;">Utilisateurs inscrits</div>
+                    </div>
+                    <div class="admin-card">
+                        <div style="font-size:2.2em;font-weight:bold;color:#0ff1ce;" id="stat-online">...</div>
+                        <div style="color:#eaf6fb;">Connectés en temps réel</div>
+                    </div>
+                    <div class="admin-card">
+                        <div style="font-size:2.2em;font-weight:bold;color:#0ff1ce;">...</div>
+                        <div style="color:#eaf6fb;">Contenus publiés</div>
+                    </div>
                 </div>
-                <div class="admin-card">
-                    <div style="font-size:2.2em;font-weight:bold;color:#0ff1ce;" id="stat-online">...</div>
-                    <div style="color:#eaf6fb;">Connectés en temps réel</div>
-                </div>
-                <div class="admin-card">
-                    <div style="font-size:2.2em;font-weight:bold;color:#0ff1ce;">...</div>
-                    <div style="color:#eaf6fb;">Contenus publiés</div>
-                </div>
-                <div class="admin-card">
-                    <div style="font-size:2.2em;font-weight:bold;color:#0ff1ce;">...</div>
-                    <div style="color:#eaf6fb;">Statistiques</div>
+                <div style="display:flex;gap:2em;width:100%;margin-top:2em;">
+                    <div class="admin-card">
+                        <div style="font-size:2.2em;font-weight:bold;color:#0ff1ce;">...</div>
+                        <div style="color:#eaf6fb;">Salons</div>
+                    </div>
                 </div>
             </div>
-            <!-- Utilisateurs connectés -->
-            <section class="admin-table-section">
+            <!-- Utilisateurs connectés (en haut) -->
+            <section class="admin-table-section" id="users-section">
                 <h2>Utilisateurs connectés (temps réel)</h2>
                 <div class="admin-table-container">
                     <table class="admin-table" id="online-users-table">
@@ -216,16 +219,61 @@
                     </table>
                 </div>
             </section>
+            <!-- Section Salons créés par les hôtes (en bas) -->
+            <section class="admin-table-section" id="salons-section" style="display:none;">
+                <h2>Salons créés par les hôtes</h2>
+                <div class="admin-table-container">
+                    <table class="admin-table" id="salons-table">
+                        <thead>
+                            <tr>
+                                <th>Nom du salon</th>
+                                <th>Code</th>
+                                <th>Hôte</th>
+                                <th>Max joueurs</th>
+                                <th>Date de création</th>
+                                <th>Modifier</th>
+                                <th>Supprimer</th>
+                            </tr>
+                        </thead>
+                        <tbody id="salons-tbody">
+                            <tr><td colspan="7" style="text-align:center;">Chargement...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
         </div>
     </div>
     <script>
-        // Charge la session admin pour le JS (nom/email)
+    // Gestion du menu latéral pour afficher/masquer les sections
+    document.addEventListener('DOMContentLoaded', function() {
+        const btnUtilisateurs = document.getElementById('btn-utilisateurs');
+        const btnSalons = document.getElementById('btn-salons');
+        const usersSection = document.getElementById('users-section');
+        const salonsSection = document.getElementById('salons-section');
+        // Par défaut, utilisateurs connectés visible, salons masqué
+        usersSection.style.display = '';
+        salonsSection.style.display = 'none';
+        btnUtilisateurs.addEventListener('click', function(e) {
+            e.preventDefault();
+            usersSection.style.display = '';
+            salonsSection.style.display = 'none';
+        });
+        btnSalons.addEventListener('click', function(e) {
+            e.preventDefault();
+            salonsSection.style.display = '';
+            usersSection.style.display = 'none';
+            fetchSalons();
+        });
+    });
+        // Affiche le nom et l'email de l'admin connecté et stocke l'email pour l'identification dans le tableau
         var ADMIN_SESSION = null;
         fetch('../backend/get_user_info.php')
             .then(res => res.ok ? res.json() : null)
             .then(data => {
                 if (data && data.nom && data.email) {
                     ADMIN_SESSION = data;
+                    document.getElementById('admin-info').innerHTML =
+                        `<span style="color:#0ff1ce;font-weight:bold;">${data.nom}</span> <span style="color:#fff;">(${data.email})</span>`;
                 }
             });
     function fetchOnlineUsers() {
@@ -236,29 +284,52 @@
                 tbody.innerHTML = '';
                 let totalOnline = 0;
                 let adminOnline = false;
-                let adminEmail = ADMIN_SESSION && ADMIN_SESSION.email ? ADMIN_SESSION.email.toLowerCase() : null;
+                // Email admin en dur pour identification fiable
+                let adminEmail = 'atexotest20@gmail.com';
                 if (users.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Aucun utilisateur</td></tr>';
                 } else {
+                    // Sépare admin et autres utilisateurs
+                    let adminUser = null;
+                    let otherUsers = [];
                     users.forEach(user => {
-                        let isAdmin = false;
-                        if (adminEmail && user.email && user.email.toLowerCase() === adminEmail) isAdmin = true;
+                        if (adminEmail && user.email && user.email.toLowerCase() === adminEmail) {
+                            adminUser = user;
+                        } else {
+                            otherUsers.push(user);
+                        }
+                    });
+                    // Affiche l'admin en premier
+                    if (adminUser) {
+                        let nomCell = `<span style='color:#e74c3c;font-weight:bold;'>${adminUser.nom}</span>`;
+                        let emailCell = `<span style='color:#e74c3c;font-weight:bold;'>${adminUser.email}</span>`;
+                        let statut = '';
+                        if (adminUser.is_online) {
+                            statut = '<span class="online-dot" style="background:#e74c3c;box-shadow:0 0 8px #e74c3c;"></span> <span style="color:#e74c3c;font-weight:bold;">En ligne</span>';
+                        }
+                        let last = adminUser.last_activity ? adminUser.last_activity : '-';
+                        tbody.innerHTML += `<tr>
+                            <td>${nomCell}</td>
+                            <td>${emailCell}</td>
+                            <td>${statut}</td>
+                            <td>${adminUser.is_online ? '-' : last}</td>
+                        </tr>`;
+                    }
+                    // Puis les autres utilisateurs
+                    otherUsers.forEach(user => {
+                        let nomCell = user.nom;
+                        let emailCell = user.email;
                         let statut;
                         if (user.is_online) {
-                            if (isAdmin) {
-                                statut = '<span class="online-dot" style="background:#e74c3c;box-shadow:0 0 8px #e74c3c;"></span> <span style="color:#e74c3c;font-weight:bold;">En ligne</span>';
-                                adminOnline = true;
-                            } else {
-                                statut = '<span class="online-dot"></span> <span style="color:#0f0;font-weight:bold;">En ligne</span>';
-                                totalOnline++;
-                            }
+                            statut = '<span class="online-dot"></span> <span style="color:#0f0;font-weight:bold;">En ligne</span>';
+                            totalOnline++;
                         } else {
                             statut = '<span style="color:#aaa;">Hors ligne</span>';
                         }
                         let last = user.last_activity ? user.last_activity : '-';
                         tbody.innerHTML += `<tr>
-                            <td>${user.nom}</td>
-                            <td>${user.email}</td>
+                            <td>${nomCell}</td>
+                            <td>${emailCell}</td>
                             <td>${statut}</td>
                             <td>${user.is_online ? '-' : last}</td>
                         </tr>`;
@@ -283,6 +354,19 @@
     }
     fetchOnlineUsers();
     setInterval(fetchOnlineUsers, 1000);
+    // Ping régulier pour que l'admin soit vu comme en ligne (et tous les utilisateurs)
+    setInterval(function() {
+        fetch('../backend/update_activity.php', { credentials: 'include' });
+    }, 5000);
+
+    // Déconnexion propre à la fermeture de l'onglet/fenêtre
+    window.addEventListener('beforeunload', function() {
+        if (navigator.sendBeacon) {
+            navigator.sendBeacon('../backend/logout.php');
+        } else {
+            fetch('../backend/logout.php', { method: 'POST', credentials: 'include', keepalive: true });
+        }
+    });
     </script>
     <script src="../js/admin-dashboard.js"></script>
 </body>

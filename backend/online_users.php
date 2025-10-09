@@ -23,7 +23,7 @@ foreach ($users as &$user) {
     } elseif ($user['last_activity']) {
         $last = new DateTime($user['last_activity']);
         $diff = $now->getTimestamp() - $last->getTimestamp();
-        if ($diff <= 120) {
+        if ($diff <= 20) { // 20 secondes pour plus de réactivité
             $user['is_online'] = true;
         }
     }

@@ -9,5 +9,5 @@ if (isset($_SESSION['user_id'])) {
 }
 session_unset();
 session_destroy();
-header('Location: ../auth/login.html');
+header('Location: ../auth/admin-login.html');
 exit();

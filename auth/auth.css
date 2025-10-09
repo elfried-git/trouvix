@@ -111,20 +111,7 @@ body .logo {
     padding: 0.6em 0;
     width: 100%;
 }
-.hote-btn.quitter {
-    background: none;
-    color: #00fff9;
-    border: 2px solid #00fff9;
-    box-shadow: none;
-    text-shadow: none;
-    font-weight: bold;
-    transition: background 0.2s, color 0.2s, border 0.2s;
-}
-.hote-btn.quitter:hover {
-    background: #00fff933;
-    color: #fff;
-    border-color: #a259ff;
-}
+/* .hote-btn.quitter supprimé : le bouton déconnexion reprend le style général .hote-btn */
 .hote-btn:disabled {
     background: #222;
     color: #888;
