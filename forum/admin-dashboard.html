@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Admin - Forum</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+        // Configuration Tailwind pour les couleurs de la RDC, nécessaires pour les boutons
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            500: '#009B3A',
+                            600: '#008030',
+                        },
+                        secondary: {
+                            500: '#FBDE4A',
+                            600: '#F0D030',
+                        },
+                        accent: {
+                            500: '#DC241F',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: #f4f6f8;
+        }
+
+        nav {
+            background: linear-gradient(90deg, #009B3A 0%, #FBDE4A 50%, #DC241F 100%);
+            box-shadow: 0 2px 12px 0 #009b3a22;
+        }
+
+        nav span {
+            font-family: 'Orbitron', 'Segoe UI', Arial, sans-serif;
+            letter-spacing: 0.06em;
+        }
+
+        #logout-btn {
+            background: #fff;
+            color: #009B3A;
+            border: none;
+            font-weight: 700;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1.2rem;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        #logout-btn:hover {
+            background: #009B3A;
+            color: #fff;
+        }
+
+        main {
+            margin-top: 2rem;
+        }
+
+        #admin-topics-list>div {
+            border: 2px solid #e5e7eb;
+            border-radius: 1rem;
+            background: #fff;
+            box-shadow: 0 2px 12px 0 #009b3a11;
+            margin-bottom: 1.5rem;
+            padding: 2rem 1.5rem;
+            transition: box-shadow 0.2s, border 0.2s;
+        }
+
+        #admin-topics-list>div:hover {
+            border-color: #009B3A;
+            box-shadow: 0 4px 24px 0 #009b3a22;
+        }
+
+        .validate-btn {
+            background: #009B3A;
+            /* primary-500 */
+            color: #fff;
+            font-weight: 600;
+            border: none;
+            border-radius: 0.4rem;
+            padding: 0.4rem 1.1rem;
+            margin-right: 0.5rem;
+            transition: background 0.2s;
+        }
+
+        .validate-btn:not([disabled]):hover {
+            background: #008030;
+            /* primary-600 */
+        }
+
+        .delete-btn {
+            background: #DC241F;
+            /* accent-500 */
+            color: #fff;
+            font-weight: 600;
+            border: none;
+            border-radius: 0.4rem;
+            padding: 0.4rem 1.1rem;
+            transition: background 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #A91D1A;
+        }
+
+        .text-pending {
+            color: #FBDE4A;
+            /* secondary-500 */
+        }
+
+        .bg-pending {
+            background-color: #fefce8;
+            /* yellow-50 */
+        }
+    </style>
+</head>
+
+<body class="font-sans">
+    <!-- Modal de déconnexion -->
+    <div id="logout-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden" style="background:rgba(0,0,0,0.45);">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center animate-fadeIn relative">
+            <div class="flex justify-center mb-3">
+                <svg width="48" height="48" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#FBDE4A"/><path d="M16 17l-4 4m0 0l-4-4m4 4V3" stroke="#DC241F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h2 class="text-2xl font-bold mb-2 text-primary-600">Déconnexion</h2>
+            <p class="text-gray-700 mb-6">Voulez-vous vraiment vous déconnecter et quitter l'espace admin ?</p>
+            <div class="flex justify-center gap-4">
+                <button id="logout-yes" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-semibold shadow transition">Oui, quitter</button>
+                <button id="logout-no" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-lg font-semibold shadow transition">Annuler</button>
+            </div>
+            <button id="logout-close" class="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-2xl leading-none">&times;</button>
+        </div>
+    </div>
+    <style>
+    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95);} to { opacity: 1; transform: scale(1);} }
+    .animate-fadeIn { animation: fadeIn 0.25s; }
+    </style>
+    <nav>
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <span class="font-extrabold text-2xl tracking-wide text-white">Tableau de bord Admin</span>
+            <button id="logout-btn" type="button">
+                Retour au Forum
+            </button>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">Gestion des Sujets du Forum</h1>
+
+        <section id="validation-section" class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-700 mb-6 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="#009B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-check-square mr-2 text-primary-500">
+                    <polyline points="9 11 12 14 22 4"></polyline>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                </svg> Sujets en attente de validation
+            </h2>
+
+            <div id="admin-topics-list" class="space-y-6">
+            </div>
+        </section>
+
+        <hr class="my-10 border-gray-300">
+
+        <section id="validated-topics-section">
+            <h2 class="text-2xl font-bold text-gray-700 mb-6 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-list mr-2 text-blue-600">
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg> Tous les sujets (Validés et en attente)
+            </h2>
+            <div id="all-admin-topics-list" class="space-y-6">
+            </div>
+        </section>
+    </main>
+<script>
+// Gestion de la modal de déconnexion
+window.addEventListener('DOMContentLoaded', function() {
+    var logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.onclick = function() {
+            const modal = document.getElementById('logout-modal');
+            modal.classList.remove('hidden');
+            const yesBtn = document.getElementById('logout-yes');
+            const noBtn = document.getElementById('logout-no');
+            const closeBtn = document.getElementById('logout-close');
+            function cleanup() {
+                modal.classList.add('hidden');
+                yesBtn.onclick = null;
+                noBtn.onclick = null;
+                closeBtn.onclick = null;
+            }
+            yesBtn.onclick = function() {
+                cleanup();
+                window.location.href = '../index.html';
+            };
+            noBtn.onclick = cleanup;
+            closeBtn.onclick = cleanup;
+        };
+    }
+});
+</script>
+
+    <script>
+        // --- Utilities et Data Management ---
+        let topics = []; // Variable globale pour stocker les sujets
+
+        function loadTopics() {
+            // Charge TOUS les sujets, y compris non validés
+            topics = JSON.parse(localStorage.getItem('forumTopics') || '[]');
+        }
+
+        function saveTopics() {
+            localStorage.setItem('forumTopics', JSON.stringify(topics));
+            // Après sauvegarde, on rafraîchit les deux listes du dashboard
+            renderAdminTopics();
+            renderAllAdminTopics();
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/[&<>"]/g, function (c) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+            });
+        }
+
+        function categoryLabel(cat) {
+            switch (cat) {
+                case 'general': return 'Général';
+                case 'annonces': return 'Annonces';
+                case 'entraide': return 'Entraide';
+                case 'divers': return 'Divers';
+                default: return cat;
+            }
+        }
+
+        // --- Admin Actions ---
+
+        // Modal de validation personnalisée
+        let validateModal = null;
+        let validateModalCallback = null;
+        function showValidateModal(topic, onConfirm) {
+            if (!validateModal) {
+                validateModal = document.createElement('div');
+                validateModal.innerHTML = `
+                    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                      <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center animate-fade-in">
+                        <h3 class="text-xl font-bold mb-2 text-green-800">Validation de publication</h3>
+                        <p class="mb-6 text-gray-700">Valider le sujet <span class='font-semibold' id='validate-modal-title'></span> ?</p>
+                        <div class="flex justify-center gap-4">
+                          <button id="validate-modal-ok" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded font-semibold transition">Valider</button>
+                          <button id="validate-modal-cancel" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded font-semibold transition">Annuler</button>
+                        </div>
+                      </div>
+                    </div>
+                `;
+                document.body.appendChild(validateModal);
+            }
+            validateModal.querySelector('#validate-modal-title').textContent = `"${topic.title}"`;
+            validateModal.style.display = '';
+            validateModalCallback = onConfirm;
+            validateModal.querySelector('#validate-modal-ok').onclick = function() {
+                validateModal.style.display = 'none';
+                if (validateModalCallback) validateModalCallback();
+            };
+            validateModal.querySelector('#validate-modal-cancel').onclick = function() {
+                validateModal.style.display = 'none';
+            };
+        }
+
+        function validateTopic(id) {
+            const topic = topics.find(t => t.id === id);
+            if (topic) {
+                showValidateModal(topic, function() {
+                    topic.validated = true;
+                    saveTopics();
+                    // Optionnel : afficher une notification de succès
+                });
+            }
+        }
+
+        // Modal de suppression personnalisée
+        let deleteModal = null;
+        let deleteModalCallback = null;
+        function showDeleteModal(onConfirm) {
+            if (!deleteModal) {
+                deleteModal = document.createElement('div');
+                deleteModal.innerHTML = `
+                    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                      <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center animate-fade-in">
+                        <h3 class="text-xl font-bold mb-2 text-red-700">Suppression de sujet</h3>
+                        <p class="mb-6 text-gray-700">Êtes-vous sûr de vouloir supprimer ce sujet ?</p>
+                        <div class="flex justify-center gap-4">
+                          <button id="delete-modal-ok" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded font-semibold transition">Supprimer</button>
+                          <button id="delete-modal-cancel" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded font-semibold transition">Annuler</button>
+                        </div>
+                      </div>
+                    </div>
+                `;
+                document.body.appendChild(deleteModal);
+            }
+            deleteModal.style.display = '';
+            deleteModalCallback = onConfirm;
+            deleteModal.querySelector('#delete-modal-ok').onclick = function() {
+                deleteModal.style.display = 'none';
+                if (deleteModalCallback) deleteModalCallback();
+            };
+            deleteModal.querySelector('#delete-modal-cancel').onclick = function() {
+                deleteModal.style.display = 'none';
+            };
+        }
+
+        function deleteTopic(id) {
+            showDeleteModal(function() {
+                topics = topics.filter(t => t.id !== id);
+                saveTopics();
+                // Optionnel : afficher une notification de succès
+            });
+        }
+
+        // --- Rendering Functions ---
+
+        /** Affiche les sujets en attente de validation. */
+        function renderAdminTopics() {
+            loadTopics();
+            const list = document.getElementById('admin-topics-list');
+            list.innerHTML = '';
+
+            const pendingTopics = topics.filter(t => !t.validated).slice().reverse();
+
+            if (pendingTopics.length === 0) {
+                list.innerHTML = '<div class="text-gray-500 p-4 bg-white rounded-lg border border-gray-200">Aucun sujet en attente de validation.</div>';
+                return;
+            }
+
+            pendingTopics.forEach(topic => {
+                const div = document.createElement('div');
+                div.className = 'bg-pending p-6 rounded-xl shadow-md border-secondary-500 border-2';
+                let attachmentHtml = '';
+                if (topic.attachment) {
+                    const file = topic.attachment;
+                    const ext = file.name.split('.').pop().toLowerCase();
+                    let downloadBtn = `<a href='${file.url}' download='${file.name}' class='ml-2 bg-primary-500 hover:bg-primary-600 text-white px-3 py-1 rounded text-xs font-semibold transition' title='Télécharger'>Télécharger</a>`;
+                    let openBtn = `<a href='${file.url}' target='_blank' rel='noopener' class='ml-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs font-semibold transition' title='Ouvrir dans un nouvel onglet'>Ouvrir</a>`;
+                    if (["jpg","jpeg","png","gif","bmp","webp"].includes(ext)) {
+                        attachmentHtml = `<div class='mb-4'><span class='text-xs text-blue-600'>Image :</span><br><img src='${file.url}' alt='${file.name}' class='max-h-40 rounded border mt-1'>${downloadBtn}${openBtn}</div>`;
+                    } else if (["pdf"].includes(ext)) {
+                        attachmentHtml = `<div class='mb-4'><span class='text-xs text-blue-600'>PDF :</span><br><embed src='${file.url}' type='application/pdf' class='w-full' style='height:320px;'/><br>${downloadBtn}${openBtn}</div>`;
+                    } else if (["mp4","webm","ogg","avi","mov","mkv"].includes(ext)) {
+                        attachmentHtml = `<div class='mb-4'><span class='text-xs text-blue-600'>Vidéo :</span><br><video src='${file.url}' controls class='w-full max-h-56 rounded mt-1'></video><br>${downloadBtn}${openBtn}</div>`;
+                    } else if (file.url && (file.url.startsWith('http://') || file.url.startsWith('https://'))) {
+                        attachmentHtml = `<div class='mb-4'><span class='text-xs text-blue-600'>Lien :</span> <a href='${file.url}' target='_blank' rel='noopener' class='underline text-primary-500'>${file.name}</a> ${openBtn}</div>`;
+                    } else {
+                        attachmentHtml = `<div class='mb-4'><span class='text-xs text-blue-600'>Fichier :</span> <a href='${file.url}' download='${file.name}' class='underline text-primary-500'>${file.name}</a> ${downloadBtn}${openBtn}</div>`;
+                    }
+                }
+                div.innerHTML = `
+                    <div class="flex items-center mb-2">
+                        <span class="text-xs bg-primary-100 text-primary-500 px-2 py-1 rounded-full mr-2">${categoryLabel(topic.category)}</span>
+                        <span class="text-xs text-gray-500">${topic.date}</span>
+                        <span class="ml-auto text-sm font-semibold text-pending">EN ATTENTE</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-1">${escapeHtml(topic.title)}</h3>
+                    <p class="text-gray-700 mb-4">${escapeHtml(topic.content).slice(0, 200)}${topic.content.length > 200 ? '...' : ''}</p>
+                    <div class="flex justify-between items-center text-gray-500 text-sm mb-4">
+                        <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline w-4 h-4 mr-1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> ${escapeHtml(topic.author || 'Anonyme')}</span>
+                        <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline w-4 h-4 mr-1"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> ${topic.replies.length} réponse(s)</span>
+                    </div>
+                    ${topic.video ? `<p class="text-xs text-blue-600 mb-4">Contient une vidéo : ${topic.video.slice(0, 50)}...</p>` : ''}
+                    ${attachmentHtml}
+                    <div class="flex justify-end mt-4">
+                        <button class="validate-btn" onclick="validateTopic(${topic.id})">Valider</button>
+                        <button class="delete-btn" onclick="deleteTopic(${topic.id})">Supprimer</button>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+            feather.replace(); // Remplace les icônes si elles sont utilisées
+        }
+
+        /** Affiche TOUS les sujets (validés et non validés) dans une autre liste. */
+        function renderAllAdminTopics() {
+            const allList = document.getElementById('all-admin-topics-list');
+            allList.innerHTML = '';
+
+            topics.slice().reverse().forEach(topic => {
+                const statusClass = topic.validated ? 'border-primary-500' : 'bg-pending border-secondary-500';
+                const statusText = topic.validated ?
+                    '<span class="ml-auto text-sm font-semibold text-primary-500">VALIDÉ</span>' :
+                    '<span class="ml-auto text-sm font-semibold text-pending">EN ATTENTE</span>';
+
+                const div = document.createElement('div');
+                div.className = `p-4 rounded-xl shadow-md border-2 ${statusClass}`;
+                div.innerHTML = `
+                    <div class="flex items-center mb-2">
+                        <span class="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full mr-2">${categoryLabel(topic.category)}</span>
+                        <span class="text-xs text-gray-400">${topic.date}</span>
+                        ${statusText}
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-1">${escapeHtml(topic.title)}</h3>
+                    <div class="flex justify-end mt-4">
+                        <button class="validate-btn" onclick="validateTopic(${topic.id})" ${topic.validated ? 'disabled' : ''}>${topic.validated ? 'Validé' : 'Valider'}</button>
+                        <button class="delete-btn" onclick="deleteTopic(${topic.id})">Supprimer</button>
+                    </div>
+                `;
+                allList.appendChild(div);
+            });
+        }
+
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAdminTopics();
+            renderAllAdminTopics();
+            feather.replace();
+        });
+    </script>
+</body>
+
+</html>

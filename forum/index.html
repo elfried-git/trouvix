@@ -55,79 +55,137 @@
         }
 
         .cat-card {
-            position: relative;
-            background: #10131a;
-            border-radius: 1.5rem;
-            border: 2px solid transparent;
-            box-shadow: 0 0 24px 0 #00fff966, 0 0 0 2px #00fff933;
-            transition: box-shadow 0.25s, border 0.25s, transform 0.18s;
-            overflow: hidden;
-            min-height: 120px;
+            background: #fff;
+            border-radius: 1rem;
+            border: 2px solid #e5e7eb;
+            transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+            min-height: 110px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             margin-bottom: 0.5rem;
-        }
-
-        .cat-general {
-            border-color: #00ff99;
-            box-shadow: 0 0 24px #00ff9966, 0 0 0 2px #00ff9933;
-            color: #00ff99;
-        }
-
-        .cat-annonces {
-            border-color: #eab308;
-            box-shadow: 0 0 24px #eab30866, 0 0 0 2px #eab30833;
-            color: #eab308;
-        }
-
-        .cat-entraide {
-            border-color: #7c3aed;
-            box-shadow: 0 0 24px #7c3aed66, 0 0 0 2px #7c3aed33;
-            color: #7c3aed;
-        }
-
-        .cat-divers {
-            border-color: #ff3b3b;
-            box-shadow: 0 0 24px #ff3b3b66, 0 0 0 2px #ff3b3b33;
-            color: #ff3b3b;
+            box-shadow: 0 2px 8px 0 #0001;
+            cursor: pointer;
         }
 
         .cat-card .font-bold {
-            font-size: 1.2em;
-            letter-spacing: 0.04em;
+            font-size: 1.1em;
             font-family: 'Orbitron', 'Segoe UI', Arial, sans-serif;
-            text-shadow: 0 0 8px currentColor, 0 0 24px currentColor;
+            letter-spacing: 0.03em;
+            text-shadow: none;
         }
 
-        .cat-card .text-primary-500 {
-            filter: drop-shadow(0 0 6px currentColor);
+        .cat-general {
+            border-color: #009B3A;
+        }
+
+        .cat-annonces {
+            border-color: #FBDE4A;
+        }
+
+        .cat-entraide {
+            border-color: #4F46E5;
+        }
+
+        .cat-divers {
+            border-color: #DC241F;
+        }
+
+        .cat-general .font-bold {
+            color: #009B3A;
+        }
+
+        .cat-annonces .font-bold {
+            color: #B89B0A;
+        }
+
+        .cat-entraide .font-bold {
+            color: #4F46E5;
+        }
+
+        .cat-divers .font-bold {
+            color: #DC241F;
         }
 
         .cat-card:hover {
-            transform: scale(1.04) translateY(-2px);
-            z-index: 2;
-            border-width: 3px;
-            background: linear-gradient(120deg, #181c3a 80%, #00fff933 100%);
-            box-shadow: 0 0 48px 0 #00fff9cc, 0 0 0 4px #00fff966;
+            border-color: #009B3A;
+            box-shadow: 0 4px 16px 0 #009b3a22;
+            transform: translateY(-2px) scale(1.03);
         }
     </style>
 </head>
 
-<body class="bg-gray-50 font-sans">
+<body class="font-sans" style="background:linear-gradient(135deg,#009B3A 0%,#FBDE4A 50%,#DC241F 100%);min-height:100vh;">
+    <!-- Modal de confirmation publication -->
+    <div id="publish-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden" style="background:rgba(0,0,0,0.45);">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center animate-fadeIn relative">
+            <div class="flex justify-center mb-3">
+                <svg width="48" height="48" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#009B3A"/><path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h2 class="text-2xl font-bold mb-2 text-primary-600">Sujet soumis !</h2>
+            <p class="text-gray-700 mb-6">Votre sujet a été soumis et sera visible après validation par un administrateur.</p>
+            <button id="close-publish-modal" class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2 rounded-lg font-semibold shadow transition">Fermer</button>
+        </div>
+    </div>
+    <style>
+    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95);} to { opacity: 1; transform: scale(1);} }
+    .animate-fadeIn { animation: fadeIn 0.25s; }
+    </style>
     <!-- Navigation simplifiée -->
     <nav class="bg-primary-500 text-white shadow-lg">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <span style="display:inline-block;width:2.5rem;height:2.5rem;border-radius:50%;overflow:hidden;border:2px solid #009B3A;box-shadow:0 0 8px #009B3A55;vertical-align:middle;background:linear-gradient(135deg,#009B3A 0 33%,#FBDE4A 33% 66%,#DC241F 66% 100%);"></span>
-                <span class="font-bold text-xl">Unité - Travail - Progrès</span>
+        <div class="w-full" style="background: linear-gradient(90deg, #009B3A 0%, #FBDE4A 50%, #DC241F 100%);">
+            <div class="container mx-auto px-4 py-5 flex flex-col items-center justify-center relative">
+                <div class="flex flex-row items-center w-full justify-start pl-2 pr-10 relative"
+                    style="min-height:3.5rem;">
+
+                    <!-- <span style="display:inline-block;width:2.2rem;height:2.2rem;border-radius:50%;overflow:hidden;border:2px solid #fff;box-shadow:0 0 8px #009B3A88;vertical-align:middle;background:linear-gradient(135deg,#009B3A 0 33%,#FBDE4A 33% 66%,#DC241F 66% 100%);margin-right:0.7rem;"></span> -->
+                    <span
+                        class="font-extrabold text-lg sm:text-xl md:text-2xl tracking-wide whitespace-nowrap overflow-hidden text-ellipsis"
+                        style="color:#fff;font-family:'Orbitron','Segoe UI',Arial,sans-serif;letter-spacing:0.08em;max-width:60vw;text-align:left;line-height:1.2;">Rép.
+                        du Congo</span>
+                    <button id="burger-btn"
+                        class="absolute right-2 top-1 flex flex-col justify-center items-center w-10 h-10 rounded focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white shadow md:hidden"
+                        aria-label="Ouvrir le menu">
+                        <span class="block w-6 h-0.5 bg-primary-500 mb-1 rounded transition"></span>
+                        <span class="block w-6 h-0.5 bg-primary-500 mb-1 rounded transition"></span>
+                        <span class="block w-6 h-0.5 bg-primary-500 rounded transition"></span>
+                    </button>
+                </div>
+                <div class="flex flex-col items-start w-full pl-2 mt-1">
+                    <span class="font-extrabold text-base md:text-lg text-left"
+                        style="color:#fff;font-family:'Orbitron','Segoe UI',Arial,sans-serif;letter-spacing:0.08em;max-width:90vw;line-height:1.2;">Unité
+                        - Travail - Progrès</span>
+                    <span
+                        style="display:block;width:120px;height:5px;border-radius:4px;margin-top:1.1rem;background:linear-gradient(90deg,#009B3A 0 33%,#FBDE4A 33% 66%,#DC241F 66% 100%);"></span>
+                </div>
             </div>
-            <div class="hidden md:flex space-x-6">
-                <a href="../index.html" class="hover:text-secondary-500 transition">Accueil</a>
-                <a href="#categories" class="hover:text-secondary-500 transition">Catégories</a>
-                <a href="#recents" class="hover:text-secondary-500 transition">Sujets récents</a>
+            <div class="container mx-auto px-4 flex justify-center md:justify-between items-center pb-2">
+                <div class="hidden md:flex space-x-8 ml-auto" id="main-menu">
+                    <a href="../index.html" class="hover:text-secondary-500 font-extrabold text-white transition"
+                        style="font-family:'Orbitron','Segoe UI',Arial,sans-serif;letter-spacing:0.08em;line-height:1.2;">Accueil</a>
+                    <a href="#categories" class="hover:text-secondary-500 font-extrabold text-white transition"
+                        style="font-family:'Orbitron','Segoe UI',Arial,sans-serif;letter-spacing:0.08em;line-height:1.2;">Catégories</a>
+                    <a href="#recents" class="hover:text-secondary-500 font-extrabold text-white transition"
+                        style="font-family:'Orbitron','Segoe UI',Arial,sans-serif;letter-spacing:0.08em;line-height:1.2;">Sujets
+                        récents</a>
+                </div>
+                <!-- Mobile menu -->
+                <div id="mobile-menu"
+                    class="md:hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-40 z-50 hidden">
+                    <div class="bg-white w-64 h-full shadow-lg p-6 flex flex-col absolute right-0 top-0">
+                        <button id="close-mobile-menu" class="self-end mb-6 text-gray-400 hover:text-gray-700"><i
+                                data-feather="x"></i></button>
+                        <a href="../index.html"
+                            class="mb-4 text-lg font-medium text-primary-500 hover:text-secondary-500 transition">Accueil</a>
+                        <a href="#categories"
+                            class="mb-4 text-lg font-medium text-primary-500 hover:text-secondary-500 transition">Catégories</a>
+                        <a href="#recents"
+                            class="mb-4 text-lg font-medium text-primary-500 hover:text-secondary-500 transition">Sujets
+                            récents</a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
@@ -234,37 +292,40 @@
     </div>
 
     <script>
-        // Forum data (en mémoire, remplaçable par backend ou localStorage)
-        let topics = [
-            {
-                id: 1,
-                title: "Bienvenue sur le forum !",
-                content: "Présentez-vous, posez vos questions, partagez vos idées.",
-                author: "Admin",
-                category: "general",
-                date: "2025-10-09 09:00",
-                replies: [
-                    { author: "Visiteur", content: "Merci pour ce forum !", date: "2025-10-09 09:10" }
-                ]
-            },
-            {
-                id: 2,
-                title: "Annonce : Nouvelle fonctionnalité",
-                content: "Nous venons d'ajouter la section Entraide.",
-                author: "Admin",
-                category: "annonces",
-                date: "2025-10-09 08:00",
-                replies: []
-            }
-        ];
-        let currentCategory = null;
+    // Forum data (en mémoire, remplaçable par backend ou localStorage)
+    // Mode admin activé définitivement
+    let isAdmin = true;
+        // Charge les sujets depuis le localStorage (pour la validation)
+        let topics = JSON.parse(localStorage.getItem('forumTopics') || `[{
+            "id": 1,
+            "title": "Bienvenue sur le forum !",
+            "content": "Présentez-vous, posez vos questions, partagez vos idées.",
+            "author": "Admin",
+            "category": "general",
+            "date": "2025-10-09 09:00",
+            "replies": [
+                { "author": "Visiteur", "content": "Merci pour ce forum !", "date": "2025-10-09 09:10" }
+            ],
+            "validated": true
+        }, {
+            "id": 2,
+            "title": "Annonce : Nouvelle fonctionnalité",
+            "content": "Nous venons d'ajouter la section Entraide.",
+            "author": "Admin",
+            "category": "annonces",
+            "date": "2025-10-09 08:00",
+            "replies": [],
+            "validated": true
+        }]`);
 
+        let currentCategory = null;
         function renderTopics() {
             const list = document.getElementById('topics-list');
             list.innerHTML = '';
-            let filtered = topics;
+            // Seuls les sujets validés sont affichés
+            let filtered = topics.filter(t => t.validated);
             if (currentCategory) {
-                filtered = topics.filter(t => t.category === currentCategory);
+                filtered = filtered.filter(t => t.category === currentCategory);
             }
             if (filtered.length === 0) {
                 list.innerHTML = '<div class="text-gray-500">Aucun sujet pour cette catégorie.</div>';
@@ -272,11 +333,15 @@
             }
             filtered.slice().reverse().forEach(topic => {
                 const div = document.createElement('div');
-                div.className = 'bg-white rounded-xl shadow-md p-6 cursor-pointer hover:shadow-lg transition';
+                div.className = 'bg-white rounded-xl shadow-md p-6 cursor-pointer hover:shadow-lg transition relative';
                 div.innerHTML = `
                     <div class="flex items-center mb-2">
                         <span class="text-xs bg-primary-100 text-primary-500 px-2 py-1 rounded-full mr-2">${categoryLabel(topic.category)}</span>
                         <span class="text-xs text-gray-400">${topic.date}</span>
+                        ${isAdmin ? `<span class='ml-auto flex gap-2'>
+                            <button class='edit-topic-btn text-blue-600 hover:underline text-xs' data-id='${topic.id}'>Éditer</button>
+                            <button class='delete-topic-btn text-red-600 hover:underline text-xs' data-id='${topic.id}'>Supprimer</button>
+                        </span>` : ''}
                     </div>
                     <h3 class="text-lg font-bold text-gray-800 mb-1">${escapeHtml(topic.title)}</h3>
                     <div class="text-gray-600 mb-2">${escapeHtml(topic.content).slice(0, 120)}${topic.content.length > 120 ? '...' : ''}</div>
@@ -285,14 +350,37 @@
                         <span><i data-feather="message-square" class="inline w-4 h-4 mr-1"></i> ${topic.replies.length} réponse(s)</span>
                     </div>
                 `;
-                div.onclick = () => openThread(topic.id);
+                div.onclick = (e) => {
+                    // Ne pas ouvrir le thread si on clique sur un bouton admin
+                    if (e.target.classList.contains('edit-topic-btn') || e.target.classList.contains('delete-topic-btn')) return;
+                    openThread(topic.id);
+                };
                 list.appendChild(div);
             });
+            // Actions admin : suppression/édition
+            if (isAdmin) {
+                document.querySelectorAll('.delete-topic-btn').forEach(btn => {
+                    btn.onclick = function (e) {
+                        e.stopPropagation();
+                        const id = Number(this.getAttribute('data-id'));
+                        if (confirm('Supprimer ce sujet ?')) {
+                            topics = topics.filter(t => t.id !== id);
+                            renderTopics();
+                        }
+                    };
+                });
+                document.querySelectorAll('.edit-topic-btn').forEach(btn => {
+                    btn.onclick = function (e) {
+                        e.stopPropagation();
+                        alert('Fonction édition à implémenter');
+                    };
+                });
+            }
             feather.replace();
         }
 
         function categoryLabel(cat) {
-            switch(cat) {
+            switch (cat) {
                 case 'general': return 'Général';
                 case 'annonces': return 'Annonces';
                 case 'entraide': return 'Entraide';
@@ -302,8 +390,8 @@
         }
 
         function escapeHtml(text) {
-            return text.replace(/[&<>"]/g, function(c) {
-                return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];
+            return text.replace(/[&<>"]/g, function (c) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
             });
         }
 
@@ -313,14 +401,14 @@
         }
 
         // Nouveau sujet
-        document.getElementById('new-topic-btn').onclick = function() {
+        document.getElementById('new-topic-btn').onclick = function () {
             document.getElementById('topic-modal').classList.remove('hidden');
             feather.replace();
         };
-        document.getElementById('close-modal').onclick = function() {
+        document.getElementById('close-modal').onclick = function () {
             document.getElementById('topic-modal').classList.add('hidden');
         };
-        document.getElementById('topic-form').onsubmit = function(e) {
+        document.getElementById('topic-form').onsubmit = function (e) {
             e.preventDefault();
             const title = document.getElementById('topic-title').value.trim();
             const content = document.getElementById('topic-content').value.trim();
@@ -339,18 +427,25 @@
                 content,
                 author,
                 category: category,
-                date: new Date().toISOString().slice(0,16).replace('T',' '),
+                date: new Date().toISOString().slice(0, 16).replace('T', ' '),
                 video: video || null,
                 attachment: attachment ? {
                     name: attachment.name,
                     url: URL.createObjectURL(attachment)
                 } : null,
-                replies: []
+                replies: [],
+                validated: false // Par défaut, en attente de validation
             };
             topics.push(newTopic);
+            localStorage.setItem('forumTopics', JSON.stringify(topics));
             document.getElementById('topic-modal').classList.add('hidden');
             document.getElementById('topic-form').reset();
             renderTopics();
+            // Affiche la modal de confirmation stylée
+            document.getElementById('publish-modal').classList.remove('hidden');
+            document.getElementById('close-publish-modal').onclick = function() {
+                document.getElementById('publish-modal').classList.add('hidden');
+            };
         };
 
         // Thread (sujet + réponses)
@@ -363,6 +458,10 @@
                     <div class="flex items-center mb-2">
                         <span class="text-xs bg-primary-100 text-primary-500 px-2 py-1 rounded-full mr-2">${categoryLabel(topic.category)}</span>
                         <span class="text-xs text-gray-400">${topic.date}</span>
+                        ${isAdmin ? `<span class='ml-auto flex gap-2'>
+                            <button class='edit-topic-btn text-blue-600 hover:underline text-xs' data-id='${topic.id}'>Éditer</button>
+                            <button class='delete-topic-btn text-red-600 hover:underline text-xs' data-id='${topic.id}'>Supprimer</button>
+                        </span>` : ''}
                     </div>
                     <h3 class="text-lg font-bold text-gray-800 mb-1">${escapeHtml(topic.title)}</h3>
                     <div class="text-gray-600 mb-2">${escapeHtml(topic.content)}</div>
@@ -384,13 +483,19 @@
                     <h4 class="font-bold mb-2 text-primary-600">Réponses</h4>
                     <div id="replies-list">
                         ${topic.replies.length === 0 ? '<div class="text-gray-500">Aucune réponse pour l\'instant.</div>' : ''}
-                        ${topic.replies.map(r => `
-                            <div class="bg-gray-100 rounded-lg p-3 mb-2">
-                                <div class="flex items-center mb-1">
-                                    <span class="font-bold text-primary-500 mr-2">${escapeHtml(r.author || 'Anonyme')}</span>
-                                    <span class="text-xs text-gray-400">${r.date}</span>
+                        ${topic.replies.map((r, idx) => `
+                            <div class="bg-gray-100 rounded-lg p-3 mb-2 flex justify-between items-center">
+                                <div>
+                                    <div class="flex items-center mb-1">
+                                        <span class="font-bold text-primary-500 mr-2">${escapeHtml(r.author || 'Anonyme')}</span>
+                                        <span class="text-xs text-gray-400">${r.date}</span>
+                                    </div>
+                                    <div class="text-gray-700">${escapeHtml(r.content)}</div>
                                 </div>
-                                <div class="text-gray-700">${escapeHtml(r.content)}</div>
+                                ${isAdmin ? `<div class='flex flex-col gap-1 ml-2'>
+                                    <button class='edit-reply-btn text-blue-600 hover:underline text-xs' data-topic='${topic.id}' data-reply='${idx}'>Éditer</button>
+                                    <button class='delete-reply-btn text-red-600 hover:underline text-xs' data-topic='${topic.id}' data-reply='${idx}'>Supprimer</button>
+                                </div>` : ''}
                             </div>
                         `).join('')}
                     </div>
@@ -406,9 +511,30 @@
                     </div>
                 </form>
             `;
+            // Actions admin sur réponses
+            if (isAdmin) {
+                document.querySelectorAll('.delete-reply-btn').forEach(btn => {
+                    btn.onclick = function (e) {
+                        e.stopPropagation();
+                        const topicId = Number(this.getAttribute('data-topic'));
+                        const replyIdx = Number(this.getAttribute('data-reply'));
+                        const t = topics.find(t => t.id === topicId);
+                        if (t && confirm('Supprimer cette réponse ?')) {
+                            t.replies.splice(replyIdx, 1);
+                            openThread(topicId);
+                        }
+                    };
+                });
+                document.querySelectorAll('.edit-reply-btn').forEach(btn => {
+                    btn.onclick = function (e) {
+                        e.stopPropagation();
+                        alert('Fonction édition de réponse à implémenter');
+                    };
+                });
+            }
             document.getElementById('thread-modal').classList.remove('hidden');
             feather.replace();
-            document.getElementById('reply-form').onsubmit = function(e) {
+            document.getElementById('reply-form').onsubmit = function (e) {
                 e.preventDefault();
                 const content = document.getElementById('reply-content').value.trim();
                 const author = document.getElementById('reply-author').value.trim() || 'Anonyme';
@@ -416,12 +542,12 @@
                 topic.replies.push({
                     author,
                     content,
-                    date: new Date().toISOString().slice(0,16).replace('T',' ')
+                    date: new Date().toISOString().slice(0, 16).replace('T', ' ')
                 });
                 openThread(id);
             };
         }
-        document.getElementById('close-thread').onclick = function() {
+        document.getElementById('close-thread').onclick = function () {
             document.getElementById('thread-modal').classList.add('hidden');
         };
 
@@ -444,8 +570,38 @@
         }
 
         // Initial rendering
-        renderTopics();
-        feather.replace();
+        // Recharge les sujets depuis le localStorage à chaque affichage
+        function reloadTopics() {
+            topics = JSON.parse(localStorage.getItem('forumTopics') || '[]');
+            renderTopics();
+            feather.replace();
+        }
+        reloadTopics();
+
+        // Mobile menu toggle
+        document.getElementById('burger-btn').onclick = function () {
+            document.getElementById('mobile-menu').classList.remove('hidden');
+        };
+        document.getElementById('close-mobile-menu').onclick = function () {
+            document.getElementById('mobile-menu').classList.add('hidden');
+        };
+        // Burger menu mobile
+        const burgerBtn = document.getElementById('burger-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const closeMobileMenu = document.getElementById('close-mobile-menu');
+        burgerBtn && burgerBtn.addEventListener('click', function () {
+            mobileMenu.classList.remove('hidden');
+            feather.replace();
+        });
+        closeMobileMenu && closeMobileMenu.addEventListener('click', function () {
+            mobileMenu.classList.add('hidden');
+        });
+        // Fermer le menu mobile si on clique en dehors
+        mobileMenu && mobileMenu.addEventListener('click', function (e) {
+            if (e.target === mobileMenu) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
     </script>
 </body>
 

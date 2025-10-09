@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion Admin</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: #f4f6f8;
+        }
+        .admin-login-box {
+            background: #fff;
+            border-radius: 1.25rem;
+            box-shadow: 0 4px 32px 0 #009b3a22;
+            padding: 2.5rem 2rem;
+            width: 100%;
+            max-width: 370px;
+            margin: 0 auto;
+        }
+        .admin-login-box h1 {
+            color: #009B3A;
+            font-family: 'Orbitron', 'Segoe UI', Arial, sans-serif;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+        .admin-login-box label {
+            color: #222;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            display: block;
+        }
+        .admin-login-box input[type="text"],
+        .admin-login-box input[type="password"] {
+            width: 100%;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.2rem;
+            font-size: 1rem;
+            background: #f8fafc;
+            color: #222;
+            transition: border 0.2s;
+        }
+        .admin-login-box input:focus {
+            border-color: #009B3A;
+            outline: none;
+            background: #fff;
+        }
+        .admin-login-box button[type="submit"] {
+            background: #009B3A;
+            color: #fff;
+            font-weight: 700;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.75rem 0;
+            width: 100%;
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .admin-login-box button[type="submit"]:hover {
+            background: #008030;
+        }
+        #admin-login-error {
+            color: #dc2626;
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen" style="background:linear-gradient(135deg,#009B3A 0%,#FBDE4A 50%,#DC241F 100%);">
+    <div class="admin-login-box">
+        <h1 class="text-2xl font-bold mb-6 text-center">Connexion Admin</h1>
+        <form id="admin-login-form">
+            <label for="admin-username">Nom d'utilisateur</label>
+            <input type="text" id="admin-username" autocomplete="username" required>
+            <label for="admin-password">Mot de passe</label>
+            <input type="password" id="admin-password" autocomplete="current-password" required>
+            <button type="submit">Se connecter</button>
+            <div id="admin-login-error" class="hidden text-center"></div>
+        </form>
+    </div>
+    <script>
+        // Simple login (à remplacer par backend sécurisé)
+        const ADMIN_USER = 'admin';
+        const ADMIN_PASS = 'admin123';
+        document.getElementById('admin-login-form').onsubmit = function(e) {
+            e.preventDefault();
+            const user = document.getElementById('admin-username').value.trim();
+            const pass = document.getElementById('admin-password').value;
+            if(user === ADMIN_USER && pass === ADMIN_PASS) {
+                localStorage.setItem('isAdmin', 'true');
+                window.location.href = 'admin-dashboard.html';
+            } else {
+                document.getElementById('admin-login-error').textContent = 'Identifiants incorrects.';
+                document.getElementById('admin-login-error').classList.remove('hidden');
+            }
+        };
+    </script>
+</body>
+</html>
