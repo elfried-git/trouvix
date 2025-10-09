@@ -211,10 +211,11 @@
                                 <th>Email</th>
                                 <th>Statut</th>
                                 <th>Dernière connexion</th>
+                            <th>Supprimer</th>
                             </tr>
                         </thead>
                         <tbody id="online-users-tbody">
-                            <tr><td colspan="4" style="text-align:center;">Chargement...</td></tr>
+                            <tr><td colspan="5" style="text-align:center;">Chargement...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -287,7 +288,7 @@
                 // Email admin en dur pour identification fiable
                 let adminEmail = 'atexotest20@gmail.com';
                 if (users.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Aucun utilisateur</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Aucun utilisateur</td></tr>';
                 } else {
                     // Sépare admin et autres utilisateurs
                     let adminUser = null;
@@ -313,6 +314,7 @@
                             <td>${emailCell}</td>
                             <td>${statut}</td>
                             <td>${adminUser.is_online ? '-' : last}</td>
+                            <td></td>
                         </tr>`;
                     }
                     // Puis les autres utilisateurs
@@ -327,14 +329,62 @@
                             statut = '<span style="color:#aaa;">Hors ligne</span>';
                         }
                         let last = user.last_activity ? user.last_activity : '-';
-                        tbody.innerHTML += `<tr>
+                        tbody.innerHTML += `<tr data-email="${user.email}">
                             <td>${nomCell}</td>
                             <td>${emailCell}</td>
                             <td>${statut}</td>
                             <td>${user.is_online ? '-' : last}</td>
+                            <td><button class="btn-supprimer-user" style="background:#e74c3c;color:#fff;border:none;padding:0.4em 0.8em;border-radius:0.4em;cursor:pointer;">Supprimer</button></td>
                         </tr>`;
                     });
                 }
+                // Ajout du handler de suppression utilisateur
+                tbody.querySelectorAll('.btn-supprimer-user').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const tr = this.closest('tr');
+                        const email = tr.getAttribute('data-email');
+                        if (!email) return;
+                        // Modale personnalisée
+                        let modal = document.getElementById('modal-suppr-user');
+                        if (modal) modal.remove();
+                        modal = document.createElement('div');
+                        modal.id = 'modal-suppr-user';
+                        modal.style = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(10,16,40,0.85);z-index:2000;display:flex;align-items:center;justify-content:center;';
+                        modal.innerHTML = `
+                            <div style="background:#181c3a;padding:2em 2.5em 2em 2.5em;border-radius:1.2em;box-shadow:0 0 32px #00fff966,0 0 0 2px #00fff933;text-align:center;max-width:90vw;min-width:320px;">
+                                <div style="font-size:1.3em;color:#e74c3c;font-weight:bold;margin-bottom:1.2em;letter-spacing:0.02em;">Supprimer cet utilisateur ?</div>
+                                <div style="color:#eaf6fb;margin-bottom:1.5em;">Cette action est irréversible.</div>
+                                <button id="btn-confirmer-suppr-user" style="background:#e74c3c;color:#fff;border:none;padding:0.6em 1.5em;border-radius:0.5em;font-weight:600;font-size:1em;cursor:pointer;margin-right:1em;">Supprimer</button>
+                                <button id="btn-annuler-suppr-user" style="background:#aaa;color:#181c3a;border:none;padding:0.6em 1.5em;border-radius:0.5em;font-weight:600;font-size:1em;cursor:pointer;">Annuler</button>
+                            </div>
+                        `;
+                        document.body.appendChild(modal);
+                        document.getElementById('btn-annuler-suppr-user').onclick = function() {
+                            modal.remove();
+                        };
+                        document.getElementById('btn-confirmer-suppr-user').onclick = function() {
+                            fetch('../backend/delete_user.php', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ email })
+                            })
+                            .then(r => r.json())
+                            .then(res => {
+                                if (res.success) {
+                                    tr.remove();
+                                    modal.remove();
+                                } else {
+                                    alert(res.error || 'Erreur lors de la suppression');
+                                    modal.remove();
+                                }
+                            })
+                            .catch(() => {
+                                alert('Erreur réseau');
+                                modal.remove();
+                            });
+                        };
+                    });
+                });
                 // Statistiques dynamiques
                 document.getElementById('stat-users').textContent = users.length;
                 document.getElementById('stat-online').textContent = totalOnline;
