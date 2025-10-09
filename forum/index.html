@@ -314,13 +314,13 @@
     <script>
     // Forum data (en mémoire, remplaçable par backend ou localStorage)
     // Mode admin activé définitivement
-    let isAdmin = true;
+    // let isAdmin = true; // SUPPRIMÉ : le mode admin ne doit pas être activé en dur
         // Charge les sujets depuis le localStorage (pour la validation)
         let topics = JSON.parse(localStorage.getItem('forumTopics') || `[{
             "id": 1,
             "title": "Bienvenue sur le forum !",
             "content": "Présentez-vous, posez vos questions, partagez vos idées.",
-            "author": "Admin",
+            "author": "",
             "category": "general",
             "date": "2025-10-09 09:00",
             "replies": [
@@ -331,7 +331,7 @@
             "id": 2,
             "title": "Annonce : Nouvelle fonctionnalité",
             "content": "Nous venons d'ajouter la section Entraide.",
-            "author": "Admin",
+            "author": "",
             "category": "annonces",
             "date": "2025-10-09 08:00",
             "replies": [],
@@ -358,10 +358,6 @@
                     <div class="flex items-center mb-2">
                         <span class="text-xs bg-primary-100 text-primary-500 px-2 py-1 rounded-full mr-2">${categoryLabel(topic.category)}</span>
                         <span class="text-xs text-gray-400">${topic.date}</span>
-                        ${isAdmin ? `<span class='ml-auto flex gap-2'>
-                            <button class='edit-topic-btn text-blue-600 hover:underline text-xs' data-id='${topic.id}'>Éditer</button>
-                            <button class='delete-topic-btn text-red-600 hover:underline text-xs' data-id='${topic.id}'>Supprimer</button>
-                        </span>` : ''}
                     </div>
                     <h3 class="text-lg font-bold text-gray-800 mb-1">${escapeHtml(topic.title)}</h3>
                     <div class="text-gray-600 mb-2">${escapeHtml(topic.content).slice(0, 120)}${topic.content.length > 120 ? '...' : ''}</div>
@@ -378,24 +374,7 @@
                 list.appendChild(div);
             });
             // Actions admin : suppression/édition
-            if (isAdmin) {
-                document.querySelectorAll('.delete-topic-btn').forEach(btn => {
-                    btn.onclick = function (e) {
-                        e.stopPropagation();
-                        const id = Number(this.getAttribute('data-id'));
-                        if (confirm('Supprimer ce sujet ?')) {
-                            topics = topics.filter(t => t.id !== id);
-                            renderTopics();
-                        }
-                    };
-                });
-                document.querySelectorAll('.edit-topic-btn').forEach(btn => {
-                    btn.onclick = function (e) {
-                        e.stopPropagation();
-                        alert('Fonction édition à implémenter');
-                    };
-                });
-            }
+            // SUPPRIMÉ : pas d'actions admin JS côté client
             feather.replace();
         }
 
@@ -531,27 +510,7 @@
                     </div>
                 </form>
             `;
-            // Actions admin sur réponses
-            if (isAdmin) {
-                document.querySelectorAll('.delete-reply-btn').forEach(btn => {
-                    btn.onclick = function (e) {
-                        e.stopPropagation();
-                        const topicId = Number(this.getAttribute('data-topic'));
-                        const replyIdx = Number(this.getAttribute('data-reply'));
-                        const t = topics.find(t => t.id === topicId);
-                        if (t && confirm('Supprimer cette réponse ?')) {
-                            t.replies.splice(replyIdx, 1);
-                            openThread(topicId);
-                        }
-                    };
-                });
-                document.querySelectorAll('.edit-reply-btn').forEach(btn => {
-                    btn.onclick = function (e) {
-                        e.stopPropagation();
-                        alert('Fonction édition de réponse à implémenter');
-                    };
-                });
-            }
+            // SUPPRIMÉ : pas d'actions admin JS côté client
             document.getElementById('thread-modal').classList.remove('hidden');
             feather.replace();
             document.getElementById('reply-form').onsubmit = function (e) {

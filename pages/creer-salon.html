@@ -615,17 +615,19 @@
                     const res = await fetch('../backend/get_user_info.php');
                     if (res.ok) {
                         const data = await res.json();
-                        nomHote = data.nom;
-                        emailHote = data.email;
+                        nomHote = data.nom && data.nom.trim() ? data.nom.trim() : '';
+                        emailHote = data.email || '';
                     }
                 } catch (e) { }
+                // Toujours prioriser le nom de session si disponible
+                const nomFinal = nomHote || (nomHoteInput.value && nomHoteInput.value.trim()) || 'Inconnu';
                 const newSalon = {
                     nom: nomSalon,
                     code: salonCode,
                     maxJoueurs: maxJoueurs,
                     longueurMot: longueurMot,
                     joueurs: [{
-                        nom: nomHote || nomHoteInput.value || 'Inconnu',
+                        nom: nomFinal,
                         email: emailHote || '',
                         photo: photoBase64 || '../assets/avatar-default.png',
                         estHote: true

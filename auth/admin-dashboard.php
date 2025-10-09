@@ -160,12 +160,12 @@
     <div style="display:flex;min-height:100vh;">
         <!-- Sidebar -->
         <nav class="admin-sidebar">
-            <div class="logo-text">TROUVIX</div>
-            <a href="#" class="hote-btn">Dashboard</a>
-            <a href="#" class="hote-btn" id="btn-utilisateurs">Utilisateurs</a>
-            <a href="#" class="hote-btn">Forum</a>
-            <a href="#" class="hote-btn" id="btn-salons">Salons</a>
-            <a href="#" class="hote-btn">Paramètres</a>
+        <div class="logo-text">TROUVIX</div>
+        <a href="#" class="hote-btn">Dashboard</a>
+        <a href="#" class="hote-btn" id="btn-utilisateurs">Utilisateurs</a>
+        <a href="#" class="hote-btn" id="forum-link" target="_blank" rel="noopener">Forum</a>
+        <a href="#" class="hote-btn" id="btn-salons">Salons</a>
+        <a href="#" class="hote-btn">Paramètres</a>
         </nav>
         <!-- Main content -->
         <div class="admin-main">
@@ -245,7 +245,7 @@
         </div>
     </div>
     <script>
-    // Gestion du menu latéral pour afficher/masquer les sections
+    // Gestion du menu latéral pour afficher/masquer les sections et Forum
     document.addEventListener('DOMContentLoaded', function() {
         const btnUtilisateurs = document.getElementById('btn-utilisateurs');
         const btnSalons = document.getElementById('btn-salons');
@@ -264,6 +264,20 @@
             salonsSection.style.display = '';
             usersSection.style.display = 'none';
             fetchSalons();
+        });
+
+        // Lien Forum : transmet les infos admin via localStorage/sessionStorage puis ouvre le forum
+        const forumLink = document.getElementById('forum-link');
+        forumLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (window.ADMIN_SESSION && ADMIN_SESSION.nom) {
+                // On ne transmet JAMAIS le mot de passe en clair, mais si vous souhaitez le faire, ajoutez-le ici
+                // let adminData = { nom: ADMIN_SESSION.nom, password: ADMIN_SESSION.password };
+                let adminData = { nom: ADMIN_SESSION.nom };
+                // Utilisez localStorage ou sessionStorage selon le besoin
+                localStorage.setItem('ADMIN_SESSION', JSON.stringify(adminData));
+            }
+            window.open('http://localhost/Trouvix/forum/admin-login.html', '_blank');
         });
     });
         // Affiche le nom et l'email de l'admin connecté et stocke l'email pour l'identification dans le tableau

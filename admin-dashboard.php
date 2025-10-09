@@ -44,9 +44,10 @@ if (!isset($_SESSION['admin_id']) || !isset($_SESSION['is_admin']) || $_SESSION[
         <?php endif; ?>
         <p>Vous avez tous les droits sur la plateforme.</p>
         <ul>
-            <li><a href="#">Gérer les utilisateurs</a></li>
-            <li><a href="#">Gérer les contenus</a></li>
-            <li><a href="#">Voir les statistiques</a></li>
+            <li><span style="color:#888;cursor:not-allowed;">Gérer les utilisateurs</span></li>
+            <li><span style="color:#888;cursor:not-allowed;">Gérer les contenus</span></li>
+            <li><span style="color:#888;cursor:not-allowed;">Voir les statistiques</span></li>
+            <li><a href="http://localhost/Trouvix/forum/index.php" target="_blank" rel="noopener">Forum</a></li>
             <li><a href="logout.php">Déconnexion</a></li>
         </ul>
     </div>

@@ -133,6 +133,16 @@
             <p class="text-gray-700 mb-6">Voulez-vous vraiment vous déconnecter et quitter l'espace admin ?</p>
             <div class="flex justify-center gap-4">
                 <button id="logout-yes" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-semibold shadow transition">Oui, quitter</button>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var yesBtn = document.getElementById('logout-yes');
+    if (yesBtn) {
+        yesBtn.onclick = function() {
+            window.location.href = '../auth/admin-dashboard.php';
+        };
+    }
+});
+</script>
                 <button id="logout-no" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-lg font-semibold shadow transition">Annuler</button>
             </div>
             <button id="logout-close" class="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-2xl leading-none">&times;</button>
@@ -146,7 +156,7 @@
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <span class="font-extrabold text-2xl tracking-wide text-white">Tableau de bord Admin</span>
             <button id="logout-btn" type="button">
-                Retour au Forum
+                Retour au Dashboard
             </button>
         </div>
     </nav>
@@ -193,23 +203,7 @@ window.addEventListener('DOMContentLoaded', function() {
     var logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
         logoutBtn.onclick = function() {
-            const modal = document.getElementById('logout-modal');
-            modal.classList.remove('hidden');
-            const yesBtn = document.getElementById('logout-yes');
-            const noBtn = document.getElementById('logout-no');
-            const closeBtn = document.getElementById('logout-close');
-            function cleanup() {
-                modal.classList.add('hidden');
-                yesBtn.onclick = null;
-                noBtn.onclick = null;
-                closeBtn.onclick = null;
-            }
-            yesBtn.onclick = function() {
-                cleanup();
-                window.location.href = '../index.html';
-            };
-            noBtn.onclick = cleanup;
-            closeBtn.onclick = cleanup;
+            window.location.href = '../auth/admin-dashboard.php';
         };
     }
 });

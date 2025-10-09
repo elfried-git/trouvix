@@ -12,7 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($row) {
         if ($row['is_admin'] == 1 && password_verify($password, $row['otp'])) {
             $_SESSION['admin_id'] = $row['id'];
-            $_SESSION['is_admin'] = true;
             $_SESSION['admin_name'] = !empty($row['nom']) ? $row['nom'] : 'Administrateur';
             header('Location: admin-dashboard.php');
             exit();

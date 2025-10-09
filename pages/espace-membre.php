@@ -64,15 +64,16 @@ $user_email = $_SESSION['user_email'];
             <h3>Votre espace membre</h3>
             <ul class="client-features">
                 <li>Bientôt disponible ...</li>
-                <!-- <li>Gestion de votre profil</li>
-                <li>Support et assistance dédiés</li>
-                <li>Actualités et nouveautés Trouvix</li> -->
             </ul>
         </div>
     </div>
 </body>
+<script>
+
+</script>
 </html>
 <style>
+
 .client-space-container {
     min-height: 100vh;
     display: flex;

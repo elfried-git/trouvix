@@ -72,6 +72,20 @@
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen" style="background:linear-gradient(135deg,#009B3A 0%,#FBDE4A 50%,#DC241F 100%);">
+    <script>
+    // Si l'admin est déjà connecté (session PHP), on redirige directement vers le dashboard admin du forum
+    fetch('admin_login.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ checkSession: true })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data && data.session_active) {
+            window.location.href = 'admin-dashboard.html';
+        }
+    });
+    </script>
     <div class="admin-login-box">
         <h1 class="text-2xl font-bold mb-6 text-center">Connexion Admin</h1>
         <form id="admin-login-form">
@@ -84,19 +98,48 @@
         </form>
     </div>
     <script>
-        // Simple login (à remplacer par backend sécurisé)
-        const ADMIN_USER = 'admin';
-        const ADMIN_PASS = 'admin123';
-        document.getElementById('admin-login-form').onsubmit = function(e) {
+        // Préremplissage du formulaire si les infos sont transmises via localStorage/sessionStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            // On tente de récupérer les infos admin transmises depuis le dashboard
+            let adminInfo = null;
+            try {
+                adminInfo = JSON.parse(localStorage.getItem('ADMIN_SESSION')) || JSON.parse(sessionStorage.getItem('ADMIN_SESSION'));
+            } catch (e) { adminInfo = null; }
+            if (adminInfo && adminInfo.nom) {
+                document.getElementById('admin-username').value = adminInfo.nom;
+                // Si le mot de passe est transmis (ce qui n'est pas recommandé pour la sécurité), on le préremplit aussi
+                if (adminInfo.password) {
+                    document.getElementById('admin-password').value = adminInfo.password;
+                }
+            }
+        });
+
+        document.getElementById('admin-login-form').onsubmit = async function(e) {
             e.preventDefault();
             const user = document.getElementById('admin-username').value.trim();
             const pass = document.getElementById('admin-password').value;
-            if(user === ADMIN_USER && pass === ADMIN_PASS) {
-                localStorage.setItem('isAdmin', 'true');
-                window.location.href = 'admin-dashboard.html';
-            } else {
-                document.getElementById('admin-login-error').textContent = 'Identifiants incorrects.';
-                document.getElementById('admin-login-error').classList.remove('hidden');
+            const errorDiv = document.getElementById('admin-login-error');
+            errorDiv.classList.add('hidden');
+            errorDiv.textContent = '';
+            try {
+                const res = await fetch('admin_login.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+                if (res.ok) {
+                    // Nettoyage des infos sensibles après login
+                    localStorage.removeItem('ADMIN_SESSION');
+                    sessionStorage.removeItem('ADMIN_SESSION');
+                    window.location.href = 'admin-dashboard.html';
+                } else {
+                    const data = await res.json();
+                    errorDiv.textContent = data.error || 'Erreur de connexion.';
+                    errorDiv.classList.remove('hidden');
+                }
+            } catch (err) {
+                errorDiv.textContent = 'Erreur serveur.';
+                errorDiv.classList.remove('hidden');
             }
         };
     </script>
