@@ -161,14 +161,21 @@
         <!-- Sidebar -->
         <nav class="admin-sidebar">
         <div class="logo-text">TROUVIX</div>
-        <a href="#" class="hote-btn">Dashboard</a>
-        <a href="#" class="hote-btn" id="btn-utilisateurs">Utilisateurs</a>
-        <a href="#" class="hote-btn" id="forum-link" target="_blank" rel="noopener">Forum</a>
-        <a href="#" class="hote-btn" id="btn-salons">Salons</a>
-        <a href="#" class="hote-btn">Paramètres</a>
+    <a href="#" class="hote-btn" id="btn-notifications" style="position:relative;">Notifications <span id="notif-badge" style="display:none;background:#ff2d55;color:#fff;border-radius:50%;padding:0.2em 0.6em;font-size:0.9em;position:absolute;right:-1.2em;top:0.2em;">0</span></a>
+    <a href="#" class="hote-btn">Dashboard</a>
+    <a href="#" class="hote-btn" id="btn-utilisateurs">Utilisateurs</a>
+    <a href="#" class="hote-btn" id="forum-link" target="_blank" rel="noopener">Forum</a>
+    <a href="#" class="hote-btn" id="btn-salons">Salons</a>
+    <a href="#" class="hote-btn">Paramètres</a>
         </nav>
         <!-- Main content -->
         <div class="admin-main">
+            <!-- Notifications Popup -->
+            <div id="notifications-panel" style="display:none;position:fixed;top:70px;right:40px;z-index:3000;background:#181c3a;border-radius:1em;box-shadow:0 0 24px #00fff966;padding:1.5em 2em;min-width:340px;max-width:90vw;max-height:70vh;overflow-y:auto;">
+                <div style="font-size:1.2em;color:#0ff1ce;font-weight:bold;margin-bottom:1em;">Notifications</div>
+                <div id="notifications-list"></div>
+                <button onclick="document.getElementById('notifications-panel').style.display='none'" style="margin-top:1em;background:#222;color:#fff;border:none;padding:0.5em 1.5em;border-radius:0.5em;cursor:pointer;">Fermer</button>
+            </div>
             <!-- Header -->
             <header class="admin-header">
                 <h1 style="color:#0ff1ce;font-size:2em;margin:0;">Espace Administration</h1>
@@ -178,6 +185,66 @@
                 </div>
             </header>
             <!-- Stat cards -->
+            <script>
+            async function fetchNotifications() {
+                const res = await fetch('../backend/get_notifications.php');
+                if (!res.ok) return [];
+                return await res.json();
+            }
+            function renderNotifications(notifs) {
+                const list = document.getElementById('notifications-list');
+                list.innerHTML = '';
+                let unreadCount = 0;
+                notifs.forEach(n => {
+                    const notifDiv = document.createElement('div');
+                    notifDiv.className = 'notif-item';
+                    notifDiv.style = 'margin-bottom:1.2em;padding:1em 1em 1em 1.5em;border-radius:0.7em;background:' + (n.is_read==0 ? '#232a4d' : '#20243a') + ';position:relative;box-shadow:0 0 8px #00fff933;';
+                    if (n.is_read==0) {
+                        notifDiv.innerHTML = `<span style="display:inline-block;width:12px;height:12px;background:#ff2d55;border-radius:50%;position:absolute;left:-18px;top:1.2em;animation:blink 1s infinite;"></span>`;
+                        notifDiv.style.animation = 'notif-blink 1s infinite';
+                        unreadCount++;
+                    }
+                    notifDiv.innerHTML += `<b style='color:#0ff1ce;'>${n.host}</b> (<span style='color:#fff;'>Salon: ${extractSalonCode(n.message)}</span>)<br><span style='color:#fff;'>${n.message}</span><br><span style='font-size:0.9em;color:#aaa;'>${formatDate(n.created_at)}</span>`;
+                    list.appendChild(notifDiv);
+                });
+                // Badge
+                const badge = document.getElementById('notif-badge');
+                if (unreadCount > 0) {
+                    badge.textContent = unreadCount;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+            function extractSalonCode(msg) {
+                // Extrait le code du salon du message si présent
+                const match = msg.match(/code\s*:?\s*([A-Z0-9]{4,})/i);
+                return match ? match[1] : '-';
+            }
+            function formatDate(dt) {
+                const d = new Date(dt);
+                return d.toLocaleString('fr-FR');
+            }
+            // Clignotement CSS
+            const style = document.createElement('style');
+            style.innerHTML = `@keyframes notif-blink {0%{box-shadow:0 0 8px #ff2d55;}50%{box-shadow:0 0 24px #ff2d55;}100%{box-shadow:0 0 8px #ff2d55;}}`;
+            document.head.appendChild(style);
+            // Ouvre/ferme le panneau
+            document.getElementById('btn-notifications').onclick = async function(e) {
+                e.preventDefault();
+                const panel = document.getElementById('notifications-panel');
+                panel.style.display = (panel.style.display==='none'||!panel.style.display)?'block':'none';
+                if (panel.style.display==='block') {
+                    const notifs = await fetchNotifications();
+                    renderNotifications(notifs);
+                }
+            };
+            // Rafraîchissement auto toutes les 5s
+            setInterval(async ()=>{
+                const notifs = await fetchNotifications();
+                renderNotifications(notifs);
+            }, 5000);
+            </script>
             <div class="admin-cards">
                 <div style="display:flex;gap:2em;width:100%;">
                     <div class="admin-card">

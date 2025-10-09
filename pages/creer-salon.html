@@ -565,11 +565,28 @@
                     document.getElementById('btn-fermer-modal-hote-salon').onclick = function() {
                         modal.remove();
                     };
-                    document.getElementById('btn-demander-suppression-salon').onclick = function() {
-                        // Remove any existing confirmation message
+                    document.getElementById('btn-demander-suppression-salon').onclick = async function() {
+                        // Récupérer le nom de l'hôte connecté
+                        let nomHote = '';
+                        try {
+                            const res = await fetch('../backend/get_user_info.php');
+                            if (res.ok) {
+                                const data = await res.json();
+                                nomHote = data.nom || '';
+                            }
+                        } catch (e) {}
+                        // Envoyer la notification à l'admin
+                        await fetch('../backend/notify_admin.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                host: nomHote,
+                                message: 'Demande de suppression de salon par l\'hôte: ' + nomHote
+                            })
+                        });
+                        // Afficher la confirmation
                         let oldMsg = document.getElementById('demande-confirm-msg');
                         if (oldMsg) oldMsg.remove();
-                        // Create confirmation message
                         const msg = document.createElement('div');
                         msg.id = 'demande-confirm-msg';
                         msg.textContent = "Votre demande de suppression a été envoyée à l'administrateur.";
@@ -587,7 +604,7 @@
                         setTimeout(() => {
                             msg.remove();
                             modal.remove();
-                        }, 2200); // Show for ~2 seconds
+                        }, 2200);
                     };
                 return;
             }
