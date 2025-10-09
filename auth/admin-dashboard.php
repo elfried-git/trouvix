@@ -63,7 +63,7 @@
         }
         .admin-card .hote-btn { margin-bottom: 0.7em; }
         .admin-table-section {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto 2em auto;
         }
         .admin-table-section h2 {
@@ -74,21 +74,70 @@
         .admin-table-container {
             background: rgba(0,255,249,0.07);
             border-radius: 1em;
-            padding: 1.5em;
+            padding: 2em 2em 2em 2em;
             box-shadow: 0 0 16px #00fff933;
+            overflow-x: auto;
         }
         .admin-table {
             width: 100%;
+            min-width: 1100px;
             border-collapse: collapse;
             color: #eaf6fb;
             font-size: 1.1em;
         }
         .admin-table th, .admin-table td {
-            padding: 0.7em 0.5em;
+            padding: 0.9em 0.7em;
             text-align: center;
         }
         .admin-table thead tr {
             background: rgba(0,255,249,0.15);
+        }
+
+        .btn-modifier {
+            background: #0ff1ce;
+            color: #181c3a;
+            border: none;
+            padding: 0.45em 1.1em;
+            border-radius: 0.4em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-modifier:hover {
+            background: #00bfae;
+        }
+        .btn-supprimer {
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 0.45em 1.1em;
+            border-radius: 0.4em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-supprimer:hover {
+            background: #c0392b;
+        }
+        .btn-valider {
+            background: #27ae60;
+            color: #fff;
+            border: none;
+            padding: 0.35em 0.9em;
+            border-radius: 0.4em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 0.3em;
+        }
+        .btn-annuler {
+            background: #aaa;
+            color: #181c3a;
+            border: none;
+            padding: 0.35em 0.9em;
+            border-radius: 0.4em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 0.3em;
         }
         .online-dot {
             display:inline-block;
@@ -113,18 +162,21 @@
         <nav class="admin-sidebar">
             <div class="logo-text">TROUVIX</div>
             <a href="#" class="hote-btn">Dashboard</a>
-            <a href="#" class="hote-btn">Utilisateurs</a>
+            <a href="#" class="hote-btn" id="btn-utilisateurs">Utilisateurs</a>
             <a href="#" class="hote-btn">Contenus</a>
             <a href="#" class="hote-btn">Statistiques</a>
             <a href="#" class="hote-btn">Paramètres</a>
-            <a href="../backend/logout.php" class="hote-btn quitter" style="margin-top:auto;">Déconnexion</a>
         </nav>
         <!-- Main content -->
         <div class="admin-main">
             <!-- Header -->
             <header class="admin-header">
                 <h1 style="color:#0ff1ce;font-size:2em;margin:0;">Espace Administration</h1>
-                <span style="color:#eaf6fb;font-size:1.1em;">Bienvenue, Administrateur</span>
+                <div style="display:flex;align-items:center;gap:1.5em;">
+                    <span style="color:#eaf6fb;font-size:1.1em;">Bienvenue, Administrateur</span>
+                    <span id="admin-status" style="font-weight:bold;font-size:1.1em;"></span>
+                    <a href="../backend/logout.php" class="hote-btn quitter" style="background:#e74c3c;color:#fff;padding:0.35em 1em;border-radius:0.4em;font-weight:600;font-size:1em;min-width:unset;">Déconnexion</a>
+                </div>
             </header>
             <!-- Stat cards -->
             <div class="admin-cards">
@@ -167,6 +219,15 @@
         </div>
     </div>
     <script>
+        // Charge la session admin pour le JS (nom/email)
+        var ADMIN_SESSION = null;
+        fetch('../backend/get_user_info.php')
+            .then(res => res.ok ? res.json() : null)
+            .then(data => {
+                if (data && data.nom && data.email) {
+                    ADMIN_SESSION = data;
+                }
+            });
     function fetchOnlineUsers() {
         fetch('../backend/online_users.php')
             .then(response => response.json())
@@ -174,15 +235,27 @@
                 const tbody = document.getElementById('online-users-tbody');
                 tbody.innerHTML = '';
                 let totalOnline = 0;
+                let adminOnline = false;
+                let adminEmail = ADMIN_SESSION && ADMIN_SESSION.email ? ADMIN_SESSION.email.toLowerCase() : null;
                 if (users.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Aucun utilisateur</td></tr>';
                 } else {
                     users.forEach(user => {
-                        let statut = user.is_online
-                            ? '<span class="online-dot"></span> <span style="color:#0f0;font-weight:bold;">En ligne</span>'
-                            : '<span style="color:#aaa;">Hors ligne</span>';
+                        let isAdmin = false;
+                        if (adminEmail && user.email && user.email.toLowerCase() === adminEmail) isAdmin = true;
+                        let statut;
+                        if (user.is_online) {
+                            if (isAdmin) {
+                                statut = '<span class="online-dot" style="background:#e74c3c;box-shadow:0 0 8px #e74c3c;"></span> <span style="color:#e74c3c;font-weight:bold;">En ligne</span>';
+                                adminOnline = true;
+                            } else {
+                                statut = '<span class="online-dot"></span> <span style="color:#0f0;font-weight:bold;">En ligne</span>';
+                                totalOnline++;
+                            }
+                        } else {
+                            statut = '<span style="color:#aaa;">Hors ligne</span>';
+                        }
                         let last = user.last_activity ? user.last_activity : '-';
-                        if (user.is_online) totalOnline++;
                         tbody.innerHTML += `<tr>
                             <td>${user.nom}</td>
                             <td>${user.email}</td>
@@ -194,6 +267,15 @@
                 // Statistiques dynamiques
                 document.getElementById('stat-users').textContent = users.length;
                 document.getElementById('stat-online').textContent = totalOnline;
+                // Statut admin header
+                const adminStatus = document.getElementById('admin-status');
+                if (adminStatus) {
+                    if (adminOnline) {
+                        adminStatus.innerHTML = '<span style="color:#e74c3c;">●</span> <span style="color:#e74c3c;">En ligne (admin)</span>';
+                    } else {
+                        adminStatus.innerHTML = '<span style="color:#aaa;">●</span> <span style="color:#aaa;">Hors ligne (admin)</span>';
+                    }
+                }
             })
             .catch(() => {
                 document.getElementById('online-users-tbody').innerHTML = '<tr><td colspan="4" style="text-align:center;">Erreur de chargement</td></tr>';
@@ -202,5 +284,6 @@
     fetchOnlineUsers();
     setInterval(fetchOnlineUsers, 1000);
     </script>
+    <script src="../js/admin-dashboard.js"></script>
 </body>
 </html>

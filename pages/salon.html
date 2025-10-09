@@ -340,7 +340,15 @@
   // Appel initial
   chargerSalonEtAfficher();
   // Rafraîchissement automatique toutes les 2 secondes
+
   setInterval(chargerSalonEtAfficher, 2000);
+
+  // Rafraîchissement instantané si suppression admin (signal localStorage)
+  window.addEventListener('storage', function(e) {
+    if (e.key === 'salon-supprime') {
+      chargerSalonEtAfficher();
+    }
+  });
 
     // --- Bouton DÉMARRER ---
     const btnStart = document.getElementById('btn-start');
