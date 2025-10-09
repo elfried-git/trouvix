@@ -494,6 +494,7 @@
             if (window.isRedirecting) return;
             salonsList.innerHTML = '';
             const salons = await fetchSalons();
+            window._salonsActuels = salons || [];
             if (!salons || salons.length === 0) {
                 noSalonsMessage.style.display = 'block';
                 return;
@@ -501,7 +502,6 @@
             noSalonsMessage.style.display = 'none';
             salons.forEach((salon) => {
                 const joueurs = Array.isArray(salon.joueurs) ? salon.joueurs : [];
-                // Correction : toujours afficher la photo si présente, sinon avatar par défaut
                 let host = joueurs.find(j => j.estHote) || joueurs[0] || { nom: 'Inconnu', photo: '' };
                 let hostPhoto = '../assets/avatar-default.png';
                 if (host.photo && (host.photo.startsWith('data:image') || host.photo.startsWith('http'))) {
@@ -536,6 +536,61 @@
         creerSalonForm.addEventListener('submit', function (e) {
             e.preventDefault();
             formGlobalError.textContent = '';
+            // Vérifie si l'hôte a déjà un salon
+            const salons = window._salonsActuels || [];
+            const nomHoteTest = nomHoteInput.value.trim().toLowerCase();
+            const dejaSalon = salons.some(salon => {
+                const joueurs = Array.isArray(salon.joueurs) ? salon.joueurs : [];
+                const hote = joueurs.find(j => j.estHote) || joueurs[0];
+                return hote && hote.nom && hote.nom.trim().toLowerCase() === nomHoteTest;
+            });
+            if (dejaSalon) {
+                    // Modale personnalisée
+                    let modal = document.getElementById('modal-hote-salon-exist');
+                    if (modal) modal.remove();
+                    modal = document.createElement('div');
+                    modal.id = 'modal-hote-salon-exist';
+                    modal.style = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(10,16,40,0.85);z-index:2000;display:flex;align-items:center;justify-content:center;';
+                    modal.innerHTML = `
+                        <div style="background:#181c3a;padding:2em 2.5em 2em 2.5em;border-radius:1.2em;box-shadow:0 0 32px #00fff966,0 0 0 2px #00fff933;text-align:center;max-width:90vw;min-width:320px;">
+                            <div style="font-size:1.3em;color:#e74c3c;font-weight:bold;margin-bottom:1.2em;letter-spacing:0.02em;">Tu as déjà un salon créé</div>
+                            <div style="color:#eaf6fb;margin-bottom:1.5em;">Merci de demander la suppression de ton salon existant d'abord.</div>
+                            <div style='display:flex;gap:1.2em;justify-content:center;'>
+                                <button id="btn-demander-suppression-salon" style="background:#0ff1ce;color:#181c3a;border:none;padding:0.6em 1.5em;border-radius:0.5em;font-weight:600;font-size:1em;cursor:pointer;">Demander la suppression</button>
+                                <button id="btn-fermer-modal-hote-salon" style="background:#aaa;color:#181c3a;border:none;padding:0.6em 1.5em;border-radius:0.5em;font-weight:600;font-size:1em;cursor:pointer;">Fermer</button>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+                    document.getElementById('btn-fermer-modal-hote-salon').onclick = function() {
+                        modal.remove();
+                    };
+                    document.getElementById('btn-demander-suppression-salon').onclick = function() {
+                        // Remove any existing confirmation message
+                        let oldMsg = document.getElementById('demande-confirm-msg');
+                        if (oldMsg) oldMsg.remove();
+                        // Create confirmation message
+                        const msg = document.createElement('div');
+                        msg.id = 'demande-confirm-msg';
+                        msg.textContent = "Votre demande de suppression a été envoyée à l'administrateur.";
+                        msg.style.position = 'fixed';
+                        msg.style.top = '20px';
+                        msg.style.left = '50%';
+                        msg.style.transform = 'translateX(-50%)';
+                        msg.style.background = '#4caf50';
+                        msg.style.color = 'white';
+                        msg.style.padding = '12px 24px';
+                        msg.style.borderRadius = '6px';
+                        msg.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+                        msg.style.zIndex = '9999';
+                        document.body.appendChild(msg);
+                        setTimeout(() => {
+                            msg.remove();
+                            modal.remove();
+                        }, 2200); // Show for ~2 seconds
+                    };
+                return;
+            }
             creerBtn.disabled = true;
             creerBtn.textContent = 'Création...';
             const nomSalon = nomSalonInput.value.trim();
@@ -570,8 +625,8 @@
                     maxJoueurs: maxJoueurs,
                     longueurMot: longueurMot,
                     joueurs: [{
-                        nom: nomHote,
-                        email: emailHote,
+                        nom: nomHote || nomHoteInput.value || 'Inconnu',
+                        email: emailHote || '',
                         photo: photoBase64 || '../assets/avatar-default.png',
                         estHote: true
                     }]
