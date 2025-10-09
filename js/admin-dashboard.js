@@ -57,7 +57,9 @@ function fetchSalons() {
             salons.forEach(salon => {
                 let hote = '-';
                 if (Array.isArray(salon.joueurs) && salon.joueurs.length > 0) {
-                    hote = salon.joueurs[0].nom || '-';
+                    hote = salon.joueurs[0].nom && salon.joueurs[0].nom.trim() ? salon.joueurs[0].nom : 'Inconnu';
+                } else {
+                    hote = 'Inconnu';
                 }
                 const date = new Date(salon.created_at * 1000);
                 tbody.innerHTML += `<tr data-id="${salon.id}">
