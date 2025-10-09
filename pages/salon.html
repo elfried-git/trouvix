@@ -143,8 +143,7 @@
       <button class="btn-lobby" id="btn-quit">QUITTER</button>
     </div>
     <div style="margin-top:2em;">
-      <a href="creer-salon.html" class="btn-lobby" style="text-decoration:none;display:inline-block;">&#8592; Retour aux
-        salons</a>
+      <a href="../index.html" class="btn-lobby" style="text-decoration:none;display:inline-block;">&#8592; Retour à l'accueil</a>
     </div>
   </div>
   <script>
@@ -169,7 +168,7 @@
       try {
         const res = await fetch('../backend/salons.php');
         if (res.ok) salons = await res.json();
-      } catch (e) {}
+      } catch (e) { }
       salon = salons.find(s => s.code === codeSalon);
       if (!salon || !Array.isArray(salon.joueurs)) {
         document.getElementById('lobby-title').textContent = 'Salon introuvable';
@@ -277,7 +276,7 @@
           const data = await res.json();
           userNom = data.nom;
         }
-      } catch (e) {}
+      } catch (e) { }
       for (let i = 0; i < salon.maxJoueurs; i++) {
         let joueur = salon.joueurs[i];
         const slot = document.createElement('div');
@@ -326,7 +325,7 @@
                       joueurs: salon.joueurs
                     })
                   });
-                } catch (e) {}
+                } catch (e) { }
                 await chargerSalonEtAfficher();
               });
             };
@@ -337,27 +336,21 @@
         playersList.appendChild(slot);
       }
     }
-  // Appel initial
-  chargerSalonEtAfficher();
-  // Rafraîchissement automatique toutes les 2 secondes
-
-  setInterval(chargerSalonEtAfficher, 2000);
-
-  // Rafraîchissement instantané si suppression admin (signal localStorage)
-  window.addEventListener('storage', function(e) {
-    if (e.key === 'salon-supprime') {
-      chargerSalonEtAfficher();
-    }
-  });
+    chargerSalonEtAfficher();
+    window.addEventListener('storage', function (e) {
+      if (e.key === 'salon-supprime') {
+        chargerSalonEtAfficher();
+      }
+    });
 
     // --- Bouton DÉMARRER ---
     const btnStart = document.getElementById('btn-start');
     function updateStartButton() {
-  if (!salon || !Array.isArray(salon.joueurs)) return;
-  // Démarrer si toutes les places sont prises
-  btnStart.disabled = !(salon.joueurs.length === salon.maxJoueurs);
-  if (!btnStart.disabled) btnStart.classList.add('active');
-  else btnStart.classList.remove('active');
+      if (!salon || !Array.isArray(salon.joueurs)) return;
+      // Démarrer si toutes les places sont prises
+      btnStart.disabled = !(salon.joueurs.length === salon.maxJoueurs);
+      if (!btnStart.disabled) btnStart.classList.add('active');
+      else btnStart.classList.remove('active');
     }
     updateStartButton();
 
