@@ -163,7 +163,7 @@
             <div class="logo-text">TROUVIX</div>
             <a href="#" class="hote-btn">Dashboard</a>
             <a href="#" class="hote-btn" id="btn-utilisateurs">Utilisateurs</a>
-            <a href="#" class="hote-btn">Contenus</a>
+            <a href="#" class="hote-btn">Forum</a>
             <a href="#" class="hote-btn" id="btn-salons">Salons</a>
             <a href="#" class="hote-btn">Paramètres</a>
         </nav>
@@ -190,7 +190,7 @@
                     </div>
                     <div class="admin-card">
                         <div style="font-size:2.2em;font-weight:bold;color:#0ff1ce;">...</div>
-                        <div style="color:#eaf6fb;">Contenus publiés</div>
+                        <div style="color:#eaf6fb;">Publications Forum</div>
                     </div>
                 </div>
                 <div style="display:flex;gap:2em;width:100%;margin-top:2em;">
