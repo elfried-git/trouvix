@@ -17,16 +17,37 @@
             flex-direction: column;
             align-items: center;
             padding: 2.5em 1em 1em 1em;
+            gap: 1.1em;
         }
         .admin-sidebar .logo-text {
             font-size: 2em;
             color: #a259ff;
             letter-spacing: 0.08em;
-            margin-bottom: 2.5em;
+            margin-bottom: 1.5em;
+        }
+        .avatar-round {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #fff;
+            box-shadow: 0 0 12px #FFD60099;
+            background: #222;
+        }
         }
         .admin-sidebar a {
             width: 100%;
-            margin-bottom: 1.2em;
+            margin-bottom: 0;
+            padding: 0.85em 1.1em;
+            display: block;
+            text-align: left;
+            font-size: 1.13em;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            transition: background 0.2s;
+        }
+        .admin-sidebar a:last-child {
+            margin-bottom: 0;
         }
         .admin-header {
             width: 100%;
@@ -161,6 +182,7 @@
         <!-- Sidebar -->
         <nav class="admin-sidebar">
         <div class="logo-text">TROUVIX</div>
+        <img src="../assets/avatar-default.png" alt="Avatar" class="avatar-round" style="display:block;margin:0 auto 1.5em auto;">
     <a href="#" class="hote-btn" id="btn-notifications" style="position:relative;">Notifications <span id="notif-badge" style="display:none;background:#ff2d55;color:#fff;border-radius:50%;padding:0.2em 0.6em;font-size:0.9em;position:absolute;right:-1.2em;top:0.2em;">0</span></a>
     <a href="#" class="hote-btn">Dashboard</a>
     <a href="#" class="hote-btn" id="btn-utilisateurs">Utilisateurs</a>
@@ -168,13 +190,35 @@
     <a href="#" class="hote-btn" id="btn-salons">Salons</a>
     <a href="#" class="hote-btn">Paramètres</a>
         </nav>
+        <script>
+        // Ouvre la popin notifications dans un nouvel onglet
+        document.addEventListener('DOMContentLoaded', function() {
+            var notifBtn = document.getElementById('btn-notifications');
+            if (notifBtn) {
+                notifBtn.onclick = function(e) {
+                    e.preventDefault();
+                    window.open('../pages/notifications-admin.html', '_blank', 'noopener');
+                };
+            }
+            var badge = document.getElementById('notif-badge');
+            if (badge) {
+                badge.onclick = function(e) {
+                    e.preventDefault();
+                    window.open('../pages/notifications-admin.html', '_blank', 'noopener');
+                };
+                badge.style.cursor = 'pointer';
+            }
+        });
+        </script>
         <!-- Main content -->
         <div class="admin-main">
             <!-- Notifications Popup -->
-            <div id="notifications-panel" style="display:none;position:fixed;top:70px;right:40px;z-index:3000;background:#181c3a;border-radius:1em;box-shadow:0 0 24px #00fff966;padding:1.5em 2em;min-width:340px;max-width:90vw;max-height:70vh;overflow-y:auto;">
-                <div style="font-size:1.2em;color:#0ff1ce;font-weight:bold;margin-bottom:1em;">Notifications</div>
-                <div id="notifications-list"></div>
-                <button id="btn-fermer-notif-panel" style="margin-top:1em;background:#222;color:#fff;border:none;padding:0.5em 1.5em;border-radius:0.5em;cursor:pointer;">Fermer</button>
+            <div id="notifications-panel" style="display:none;position:fixed;top:70px;right:40px;z-index:3000;background:#181c3a;border-radius:1em;box-shadow:0 0 24px #00fff966;min-width:340px;max-width:90vw;max-height:70vh;overflow:hidden;">
+                <div style="position:sticky;top:0;z-index:10;background:rgba(24,28,58,0.98);border-radius:1em 1em 0 0;padding:1.2em 2em 0.7em 2em;display:flex;justify-content:space-between;align-items:center;gap:1em;">
+                    <button id="btn-delete-all-notifs" style="background:#ff2d55;color:#fff;border:none;padding:0.4em 1.2em;border-radius:0.5em;cursor:pointer;font-size:1em;">Supprimer</button>
+                    <button id="btn-fermer-notif-panel" style="background:#222;color:#fff;border:none;padding:0.4em 1.2em;border-radius:0.5em;cursor:pointer;font-size:1em;">Fermer</button>
+                </div>
+                <div id="notifications-list" style="padding:1.5em 2em 1.5em 2em;max-height:calc(70vh - 70px);overflow-y:auto;"></div>
             <script>
             // ...existing code...
             document.getElementById('btn-fermer-notif-panel').onclick = async function() {
@@ -185,6 +229,34 @@
                 document.getElementById('notif-badge').style.display = 'none';
                 document.getElementById('notifications-panel').style.display = 'none';
             };
+                        document.getElementById('btn-delete-all-notifs').onclick = function() {
+                                // Crée une modale personnalisée
+                                let modal = document.getElementById('modal-confirm-delete-notifs');
+                                if (modal) modal.remove();
+                                modal = document.createElement('div');
+                                modal.id = 'modal-confirm-delete-notifs';
+                                modal.style = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(10,16,40,0.7);z-index:4000;display:flex;align-items:center;justify-content:center;';
+                                modal.innerHTML = `
+                                    <div style="background:#181c3a;padding:2em 2.5em 2em 2.5em;border-radius:1.2em;box-shadow:0 0 32px #00fff966,0 0 0 2px #00fff933;text-align:center;max-width:90vw;min-width:320px;">
+                                        <div style='font-size:1.2em;color:#ff2d55;font-weight:bold;margin-bottom:1.2em;'>Supprimer toutes les notifications ?</div>
+                                        <div style='color:#eaf6fb;margin-bottom:1.5em;'>Voulez-vous vraiment supprimer tout l'historique des notifications ?</div>
+                                        <div style='display:flex;gap:1.2em;justify-content:center;'>
+                                            <button id="btn-confirm-delete-notifs" style="background:#ff2d55;color:#fff;border:none;padding:0.6em 1.5em;border-radius:0.5em;font-weight:600;font-size:1em;cursor:pointer;">Oui, supprimer</button>
+                                            <button id="btn-cancel-delete-notifs" style="background:#aaa;color:#181c3a;border:none;padding:0.6em 1.5em;border-radius:0.5em;font-weight:600;font-size:1em;cursor:pointer;">Annuler</button>
+                                        </div>
+                                    </div>
+                                `;
+                                document.body.appendChild(modal);
+                                document.getElementById('btn-cancel-delete-notifs').onclick = function() {
+                                    modal.remove();
+                                };
+                                document.getElementById('btn-confirm-delete-notifs').onclick = async function() {
+                                    await fetch('../backend/delete_all_notifications.php');
+                                    document.getElementById('notifications-list').innerHTML = '';
+                                    document.getElementById('notif-badge').style.display = 'none';
+                                    modal.remove();
+                                };
+                        };
             </script>
             </div>
             <!-- Header -->
@@ -192,7 +264,22 @@
                 <h1 style="color:#0ff1ce;font-size:2em;margin:0;">Espace Administration</h1>
                 <div style="display:flex;align-items:center;gap:2em;margin-right:6vw;">
                     <div id="admin-info" style="color:#eaf6fb;font-size:1.08em;"></div>
-                    <a href="../backend/logout.php" class="hote-btn" style="margin-left:1.5em;max-width:180px;min-width:120px;text-align:center;">Déconnexion</a>
+                    <a href="../backend/logout.php" class="hote-btn" style="
+                        margin-left:1.5em;
+                        max-width:220px;
+                        min-width:140px;
+                        text-align:center;
+                        background: linear-gradient(90deg, #00fff9 0%, #a259ff 100%);
+                        color: #181c3a;
+                        font-size: 1.35em;
+                        font-weight: 700;
+                        border-radius: 1em;
+                        box-shadow: 0 0 18px #00fff966;
+                        padding: 0.6em 1.5em;
+                        border: none;
+                        text-decoration: none;
+                        transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+                    " onmouseover="this.style.background='linear-gradient(90deg,#a259ff 0%,#00fff9 100%)';this.style.color='#181c3a';" onmouseout="this.style.background='linear-gradient(90deg,#00fff9 0%,#a259ff 100%)';this.style.color='#181c3a';">Déconnexion</a>
                 </div>
             </header>
             <!-- Stat cards -->

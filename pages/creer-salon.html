@@ -545,43 +545,61 @@
                 return hote && hote.nom && hote.nom.trim().toLowerCase() === nomHoteTest;
             });
             if (dejaSalon) {
-                    // Modale personnalisée
-                    let modal = document.getElementById('modal-hote-salon-exist');
-                    if (modal) modal.remove();
-                    modal = document.createElement('div');
-                    modal.id = 'modal-hote-salon-exist';
-                    modal.style = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(10,16,40,0.85);z-index:2000;display:flex;align-items:center;justify-content:center;';
-                    modal.innerHTML = `
-                        <div style="background:#181c3a;padding:2em 2.5em 2em 2.5em;border-radius:1.2em;box-shadow:0 0 32px #00fff966,0 0 0 2px #00fff933;text-align:center;max-width:90vw;min-width:320px;">
-                            <div style="font-size:1.3em;color:#e74c3c;font-weight:bold;margin-bottom:1.2em;letter-spacing:0.02em;">Tu as déjà un salon créé</div>
-                            <div style="color:#eaf6fb;margin-bottom:1.5em;">Merci de demander la suppression de ton salon existant d'abord.</div>
-                            <div style='display:flex;gap:1.2em;justify-content:center;'>
-                                <button id="btn-demander-suppression-salon" style="background:#0ff1ce;color:#181c3a;border:none;padding:0.6em 1.5em;border-radius:0.5em;font-weight:600;font-size:1em;cursor:pointer;">Demander la suppression</button>
-                                <button id="btn-fermer-modal-hote-salon" style="background:#aaa;color:#181c3a;border:none;padding:0.6em 1.5em;border-radius:0.5em;font-weight:600;font-size:1em;cursor:pointer;">Fermer</button>
-                            </div>
+                // Trouver le salon existant de l'hôte et stocker son code
+                let salonExistant = salons.find(salon => {
+                    const joueurs = Array.isArray(salon.joueurs) ? salon.joueurs : [];
+                    const hote = joueurs.find(j => j.estHote) || joueurs[0];
+                    return hote && hote.nom && hote.nom.trim().toLowerCase() === nomHoteTest;
+                });
+                window.salonExistant = salonExistant || {};
+                // Modale personnalisée
+                let modal = document.getElementById('modal-hote-salon-exist');
+                if (modal) modal.remove();
+                modal = document.createElement('div');
+                modal.id = 'modal-hote-salon-exist';
+                modal.style = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(10,16,40,0.85);z-index:2000;display:flex;align-items:center;justify-content:center;';
+                // Ajout d'un input caché pour le code du salon existant si présent
+                let codeSalonExistant = '';
+                if (window.salonExistant && window.salonExistant.code) codeSalonExistant = window.salonExistant.code;
+                modal.innerHTML = `
+                    <div style="background:#181c3a;padding:2em 2.5em 2em 2.5em;border-radius:1.2em;box-shadow:0 0 32px #00fff966,0 0 0 2px #00fff933;text-align:center;max-width:90vw;min-width:320px;">
+                        <input type="hidden" id="code-salon" value="${codeSalonExistant}">
+                        <div style="font-size:1.3em;color:#e74c3c;font-weight:bold;margin-bottom:1.2em;letter-spacing:0.02em;">Tu as déjà un salon créé</div>
+                        <div style="color:#eaf6fb;margin-bottom:1.5em;">Merci de demander la suppression de ton salon existant d'abord.</div>
+                        <div style='display:flex;gap:1.2em;justify-content:center;'>
+                            <button id="btn-demander-suppression-salon" style="background:#0ff1ce;color:#181c3a;border:none;padding:0.6em 1.5em;border-radius:0.5em;font-weight:600;font-size:1em;cursor:pointer;">Demander la suppression</button>
+                            <button id="btn-fermer-modal-hote-salon" style="background:#aaa;color:#181c3a;border:none;padding:0.6em 1.5em;border-radius:0.5em;font-weight:600;font-size:1em;cursor:pointer;">Fermer</button>
                         </div>
-                    `;
+                    </div>
+                `;
                     document.body.appendChild(modal);
                     document.getElementById('btn-fermer-modal-hote-salon').onclick = function() {
                         modal.remove();
                     };
                     document.getElementById('btn-demander-suppression-salon').onclick = async function() {
-                        // Récupérer le nom de l'hôte connecté
+                        // Récupérer le nom de l'hôte connecté et le code du salon
                         let nomHote = '';
+                        let codeSalon = '';
                         try {
                             const res = await fetch('../backend/get_user_info.php');
                             if (res.ok) {
                                 const data = await res.json();
                                 nomHote = data.nom || '';
+                                codeSalon = data.salon_code || '';
                             }
                         } catch (e) {}
-                        // Envoyer la notification à l'admin
+                        // Si le code salon n'est pas dans la session, essayer de le trouver dans la page
+                        if (!codeSalon) {
+                            // Cherche un input caché dans le modal contenant le code du salon existant
+                            const el = document.getElementById('code-salon');
+                            if (el && el.value) codeSalon = el.value;
+                        }
                         await fetch('../backend/notify_admin.php', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
                                 host: nomHote,
-                                message: 'Demande de suppression de salon par l\'hôte: ' + nomHote
+                                message: `Demande de suppression de salon par l'hôte: ${nomHote} (code: ${codeSalon})`
                             })
                         });
                         // Afficher la confirmation
