@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parfum Azzaro Sport - Shop Na Biso</title>
+    <link rel="stylesheet" href="../global.css">
+    <link rel="stylesheet" href="../index-modern.css">
+    <link rel="stylesheet" href="../detailproduit.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navigation moderne -->
+    <header class="modern-header">
+        <nav class="nav-container">
+            <div class="nav-brand">
+                <a href="../index.html" class="brand-link">
+                    <div class="brand-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <span class="brand-text">Shop Na Biso</span>
+                </a>
+            </div>
+
+            <div class="nav-menu" id="nav-menu">
+                <ul class="nav-list">
+                    <li><a href="../index.html" class="nav-link">Accueil</a></li>
+                    <li><a href="../quisommesnous.html" class="nav-link">À propos</a></li>
+                    <li><a href="../index.html#produits-featured" class="nav-link">Produits</a></li>
+                    <li><a href="../index.html#categories-section" class="nav-link">Catégories</a></li>
+                    <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-actions">
+                <div class="currency-selector">
+                    <select id="country-selector" class="currency-select">
+                        <option value="EUR">EUR (€)</option>
+                        <option value="XAF">FCFA</option>
+                        <option value="USD">USD ($)</option>
+                    </select>
+                </div>
+                <a href="../connexion.html" class="action-btn login-btn">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="../panier.html" class="action-btn cart-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="compteur-panier">0</span>
+                </a>
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="product-detail-container">
+            <div class="product-detail">
+                <div class="product-image">
+                    <img src="../produits_phares/images/parfum-azzaro-sport.jpg" alt="Parfum Azzaro Sport">
+                </div>
+                <div class="product-info">
+                    <h1>Parfum Azzaro Sport</h1>
+                    <div class="price" data-original-price="50">50 €</div>
+                    <div class="description">
+                        <p>Parfum masculin énergisant et rafraîchissant d'Azzaro. Notes fraîches et sportives, parfait pour l'homme moderne et dynamique. Flacon élégant de 100ml.</p>
+                    </div>
+                    <div class="caracteristiques">
+                        <p><strong>Caractéristiques :</strong></p>
+                        <ul>
+                            <li>Contenance : 100ml</li>
+                            <li>Type : Eau de toilette</li>
+                            <li>Notes : Fraîches et sportives</li>
+                            <li>Genre : Homme</li>
+                        </ul>
+                    </div>
+                    <div class="actions">
+                        <div class="quantity-section">
+                            <label for="quantite">Quantité :</label>
+                            <input type="number" id="quantite" name="quantite" min="1" value="1">
+                        </div>
+                        <button class="btn ajouter-panier">Ajouter au panier</button>
+                    </div>
+                    <p id="confirmation-message" class="confirmation-message" style="display: none;">Produit ajouté au panier !</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer" aria-label="Pied de page principal">
+        <nav aria-label="Menu de pied de page">
+            <ul>
+                <li><a href="../index.html">Accueil</a></li>
+                <li><a href="../index.html#categories-en-avant">Catégories</a></li>
+                <li><a href="../index.html#contact">Support</a></li>
+                <li><a href="../panier.html">Mon Panier</a></li>
+            </ul>
+        </nav>
+        <div class="footer-content">
+            <div class="reseaux">
+                <a href="../404.html"><img src="../images/facebook.png" alt="Facebook"></a>
+                <a href="../404.html"><img src="../images/twitter.jpg" alt="Twitter"></a>
+                <a href="../404.html"><img src="../images/instagram.jpg" alt="Instagram"></a>
+            </div>
+            <div class="infos-legales">
+                <p>&copy; 2025 Association Solidaire. Tous droits réservés.</p>
+                <p>Mentions légales | Politique de confidentialité | Conditions d'utilisation</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const selector = document.getElementById("country-selector");
+            const TAUX_FCFA = 655.957; 
+            const TAUX_USD = 1.07; 
+
+            function updatePrices(currency) {
+                const priceElements = document.querySelectorAll('[data-original-price]');
+                priceElements.forEach(element => {
+                    const originalPrice = parseFloat(element.getAttribute('data-original-price'));
+                    let newPrice;
+                    let currencySymbol;
+                    let locale = 'fr-FR';
+
+                    if (currency === 'XAF') {
+                        newPrice = Math.round(originalPrice * TAUX_FCFA / 1000) * 1000;
+                        currencySymbol = ' FCFA';
+                        newPrice = newPrice.toLocaleString(locale);
+                    } else if (currency === 'USD') {
+                        newPrice = (originalPrice * TAUX_USD).toFixed(2); 
+                        currencySymbol = ' $';
+                        locale = 'en-US'; 
+                    } else {
+                        newPrice = originalPrice.toFixed(2);
+                        currencySymbol = ' €';
+                        newPrice = newPrice.replace('.00', ''); 
+                    }
+                    // Nettoyer le texte pour éviter les caractères indésirables
+                    const cleanPrice = `${newPrice}${currencySymbol}`.replace(/[()]/g, '').trim();
+                    element.textContent = cleanPrice;
+                });
+            }
+            
+            function handleSelection(currency) {
+                updatePrices(currency);
+                sessionStorage.setItem('selectedCountry', currency);
+            }
+
+            const savedCountry = sessionStorage.getItem('selectedCountry'); 
+            const defaultCurrency = 'EUR';
+            let initialCurrency = savedCountry || defaultCurrency;
+
+            if (selector) {
+                selector.value = initialCurrency;
+            }
+            updatePrices(initialCurrency);
+
+            if (selector) {
+                selector.addEventListener('change', (event) => {
+                    const selectedCurrency = event.target.value;
+                    handleSelection(selectedCurrency);
+                });
+            }
+        });
+    </script>
+    
+    <script>
+        function updateCartCounter() {
+            const compteur = document.getElementById("compteur-panier");
+            if (compteur) {
+                const panier = JSON.parse(localStorage.getItem("panier")) || [];
+                const totalArticles = panier.reduce((acc, item) => acc + item.quantite, 0);
+                compteur.textContent = totalArticles;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            updateCartCounter();
+
+            // Navigation moderne - Menu mobile
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+            const navMenu = document.getElementById('nav-menu');
+            
+            if (mobileMenuToggle && navMenu) {
+                mobileMenuToggle.addEventListener('click', () => {
+                    navMenu.classList.toggle('nav-open');
+                    mobileMenuToggle.classList.toggle('menu-open');
+                });
+
+                // Fermer le menu mobile quand on clique sur un lien
+                const navLinks = navMenu.querySelectorAll('.nav-link');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        navMenu.classList.remove('nav-open');
+                        mobileMenuToggle.classList.remove('menu-open');
+                    });
+                });
+
+                // Fermer le menu quand on clique en dehors
+                document.addEventListener('click', (e) => {
+                    if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                        navMenu.classList.remove('nav-open');
+                        mobileMenuToggle.classList.remove('menu-open');
+                    }
+                });
+            }
+
+            const boutonPanier = document.querySelector(".ajouter-panier");
+            const message = document.getElementById("confirmation-message");
+
+            boutonPanier.addEventListener("click", () => {
+                const produit = {
+                    nom: "Parfum Azzaro Sport",
+                    prix: 50,
+                    quantite: parseInt(document.getElementById("quantite").value),
+                    image: "produits_phares/images/parfum-azzaro-sport.jpg"
+                };
+
+                let panier = JSON.parse(localStorage.getItem("panier")) || [];
+                const indexExistant = panier.findIndex(p => p.nom === produit.nom);
+                if (indexExistant !== -1) {
+                    panier[indexExistant].quantite += produit.quantite;
+                } else {
+                    panier.push(produit);
+                }
+
+                localStorage.setItem("panier", JSON.stringify(panier));
+                updateCartCounter();
+
+                message.style.display = "block";
+                message.style.opacity = "1";
+
+                setTimeout(() => {
+                    message.style.opacity = "0";
+                    setTimeout(() => {
+                        message.style.display = "none";
+                    }, 300);
+                }, 3000);
+            });
+        });
+    </script>
+    
+    <!-- Footer Moderne -->
+    <footer class="modern-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="brand-link">
+                        <div class="brand-icon">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <span class="brand-text">Shop Na Biso</span>
+                    </div>
+                    <p class="footer-description">
+                        Votre boutique e-commerce de confiance pour des produits de qualité à des prix exceptionnels.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/?locale=fr_FR" target="_blank" rel="noopener noreferrer" class="social-link">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="social-link">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>Navigation</h4>
+                        <ul>
+                            <li><a href="../index.html">Accueil</a></li>
+                            <li><a href="../informations/quisommesnous.html">À propos</a></li>
+                            <li><a href="../index.html#produits-featured">Produits</a></li>
+                            <li><a href="../index.html#categories-section">Catégories</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Support</h4>
+                        <ul>
+                            <li><a href="../index.html#contact">Contact</a></li>
+                            <li><a href="../informations/faq.html">FAQ</a></li>
+                            <li><a href="#">Livraison</a></li>
+                            <li><a href="#">Retours</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Mon Compte</h4>
+                        <ul>
+                            <li><a href="../auth/connexion.html">Se connecter</a></li>
+                            <li><a href="../panier-paiement/panier.html">Mon Panier</a></li>
+                            <li><a href="#">Mes Commandes</a></li>
+                            <li><a href="#">Mes Favoris</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Informations</h4>
+                        <ul>
+                            <li><a href="../informations/terms-conditions.html">Conditions d'utilisation</a></li>
+                            <li><a href="#">Politique de confidentialité</a></li>
+                            <li><a href="#">Mentions légales</a></li>
+                            <li><a href="#">Cookies</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Shop Na Biso. Tous droits réservés.</p>
+                <div class="payment-methods">
+                    <i class="fab fa-cc-visa"></i>
+                    <i class="fab fa-cc-mastercard"></i>
+                    <i class="fab fa-paypal"></i>
+                    <i class="fas fa-credit-card"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

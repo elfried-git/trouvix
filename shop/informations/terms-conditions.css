@@ -1,0 +1,289 @@
+/* ==========================================================================
+   CSS moderne pour terms-conditions.html
+   Système de design moderne avec variables CSS et gradients
+   ========================================================================== */
+
+/* Bouton retour à l'accueil */
+.retour-accueil-container {
+    padding: 2rem 0 1rem 0;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.btn-retour-accueil {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-retour-accueil:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    color: white;
+}
+
+.btn-retour-accueil i {
+    font-size: 0.9rem;
+}
+
+/* Variables CSS modernes */
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --text-dark: #2c3e50;
+    --text-light: #6c757d;
+    --text-muted: #95a5a6;
+    --background-light: #f8fafc;
+    --background-card: #ffffff;
+    --border-light: #e9ecef;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.15);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.1);
+    --border-radius-sm: 6px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --border-radius-xl: 16px;
+    --spacing-small: 0.75rem;
+    --spacing-medium: 1.5rem;
+    --spacing-large: 3rem;
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Container principal modernisé */
+.legal-document-wrapper {
+    max-width: 900px;
+    margin: var(--spacing-large) auto;
+    padding: var(--spacing-large);
+    background: var(--background-card);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-xl);
+    position: relative;
+    overflow: hidden;
+}
+
+.legal-document-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--primary-gradient);
+}
+
+/* Typographie moderne */
+.legal-document-wrapper h1 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: var(--spacing-medium);
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.2;
+}
+
+.legal-document-wrapper h2 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-top: 2.5rem;
+    margin-bottom: var(--spacing-medium);
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid transparent;
+    background: linear-gradient(90deg, var(--border-light) 0%, transparent 100%) bottom/100% 2px no-repeat;
+    position: relative;
+}
+
+.legal-document-wrapper h2::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: var(--accent-gradient);
+    border-radius: 2px;
+}
+
+.legal-document-wrapper h3 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-size: 1.375rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-top: 2rem;
+    margin-bottom: var(--spacing-small);
+}
+
+/* Paragraphes et contenu */
+.legal-document-wrapper p {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text-light);
+    margin-bottom: var(--spacing-small);
+}
+
+.introduction-text {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    background: var(--background-light);
+    padding: var(--spacing-medium);
+    border-radius: var(--border-radius-lg);
+    border-left: 4px solid;
+    border-image: var(--accent-gradient) 1;
+    margin-bottom: var(--spacing-large);
+}
+
+/* Listes modernisées */
+.legal-document-wrapper ul {
+    margin: var(--spacing-small) 0 var(--spacing-medium) 0;
+    padding-left: var(--spacing-medium);
+}
+
+.legal-document-wrapper li {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+
+.legal-document-wrapper li::marker {
+    color: #667eea;
+}
+
+/* Liens modernisés */
+.legal-document-wrapper a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition-smooth);
+    position: relative;
+}
+
+.legal-document-wrapper a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent-gradient);
+    transition: width 0.3s ease;
+}
+
+.legal-document-wrapper a:hover {
+    color: #764ba2;
+    transform: translateY(-1px);
+}
+
+.legal-document-wrapper a:hover::after {
+    width: 100%;
+}
+
+/* Sections d'information contact */
+.contact-info {
+    background: linear-gradient(135deg, #f8fafc 0%, #e3f2fd 100%);
+    padding: var(--spacing-medium);
+    border-radius: var(--border-radius-lg);
+    margin: var(--spacing-large) 0;
+    border: 1px solid var(--border-light);
+}
+
+.contact-info p {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+/* Alertes et avertissements modernisés */
+.warning-text, .final-warning {
+    background: linear-gradient(135deg, #fff9e6 0%, #fef3cd 100%);
+    border-left: 4px solid #f59e0b;
+    padding: var(--spacing-medium);
+    border-radius: var(--border-radius-lg);
+    margin: var(--spacing-medium) 0;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+}
+
+.warning-text::before, .final-warning::before {
+    content: '⚠️';
+    position: absolute;
+    top: var(--spacing-medium);
+    left: var(--spacing-small);
+    font-size: 1.25rem;
+}
+
+.warning-text p, .final-warning p {
+    margin-left: 2rem;
+    color: #92400e;
+    font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .legal-document-wrapper {
+        margin: var(--spacing-medium) 1rem;
+        padding: var(--spacing-medium);
+    }
+
+    .legal-document-wrapper h1 {
+        font-size: 2rem;
+    }
+
+    .legal-document-wrapper h2 {
+        font-size: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .legal-document-wrapper h3 {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .legal-document-wrapper {
+        margin: 1rem 0.5rem;
+        padding: 1.5rem 1rem;
+    }
+
+    .legal-document-wrapper h1 {
+        font-size: 1.75rem;
+    }
+
+    .legal-document-wrapper h2 {
+        font-size: 1.375rem;
+    }
+
+    .legal-document-wrapper h3 {
+        font-size: 1.125rem;
+    }
+
+    .introduction-text {
+        padding: 1rem;
+        font-size: 1rem;
+    }
+
+    .warning-text, .final-warning {
+        padding: 1rem;
+    }
+
+    .warning-text p, .final-warning p {
+        margin-left: 1.5rem;
+        font-size: 0.9rem;
+    }
+}

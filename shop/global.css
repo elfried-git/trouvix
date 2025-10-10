@@ -1,0 +1,919 @@
+/* ==========================================================================
+   STYLES GLOBAUX
+
+   Ce fichier contient tous les styles qui sont partagés sur l'ensemble du site.
+   Il est chargé sur chaque page, en plus d'un fichier CSS spécifique à la page.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. GOOGLE FONTS
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap');
+
+/* ==========================================================================
+   2. CSS VARIABLES
+   ========================================================================== */
+:root {
+    /* Colors */
+    --primary-color: #27AE60;
+    --primary-color-dark: #219150;
+    --secondary-color: #2C3E50;
+    --text-color: #333;
+    --background-color: #FFFFFF;
+    --light-gray-color: #f4f4f4;
+    --medium-gray-color: #ccc;
+    --dark-gray-color: #7f8c8d;
+    --white-color: #fff;
+    --black-color: #000;
+    --danger-color: #f01404;
+    --success-color: #08d25c;
+
+    /* Typography */
+    --body-font: 'Roboto', sans-serif;
+    --heading-font: 'Poppins', sans-serif;
+
+    /* Spacing */
+    --spacing-small: 0.5rem;
+    --spacing-medium: 1rem;
+    --spacing-large: 2rem;
+
+    /* Borders */
+    --border-radius: 8px;
+    --border-light: 1px solid var(--medium-gray-color);
+    --border-dark: 1px solid var(--secondary-color);
+
+    /* Shadows */
+    --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================================================
+   3. RESET & BASE STYLES
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: var(--body-font);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    width: 100%;
+    min-width: 100%;
+    overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--heading-font);
+    color: var(--secondary-color);
+    margin-bottom: var(--spacing-medium);
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--primary-color-dark);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+ul {
+    list-style: none;
+}
+
+/* ==========================================================================
+   4. HEADER
+   ========================================================================== */
+.main-header {
+    background-color: var(--primary-color);
+    padding: var(--spacing-medium) var(--spacing-large);
+    box-shadow: var(--shadow-small);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    min-width: 100%;
+    box-sizing: border-box;
+}
+
+#logo a {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+#logo a:hover {
+    transform: scale(1.05);
+}
+
+#logo img {
+    width: 200px;
+    height: auto;
+}
+
+.main-nav ul {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-large);
+}
+
+.main-nav a {
+    color: var(--white-color);
+    font-weight: 600;
+    position: relative;
+}
+
+.main-nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--white-color);
+    transition: width 0.3s ease;
+}
+
+.main-nav a:hover::after {
+    width: 100%;
+}
+
+.icone-panier {
+    position: relative;
+}
+
+.icone-panier img {
+    width: 30px;
+}
+
+#compteur-panier {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: var(--danger-color);
+    color: var(--white-color);
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 50%;
+}
+
+/* ==========================================================================
+   8. FORMS
+   ========================================================================== */
+.contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-medium);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: var(--spacing-small);
+}
+
+.form-group input,
+.form-group textarea {
+    padding: var(--spacing-medium);
+    border: var(--border-light);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-family: var(--body-font);
+}
+
+.btn,
+a.btn,
+button.btn {
+    display: inline-block;
+    padding: var(--spacing-medium) var(--spacing-large);
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 600;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.btn-secondary {
+    background-color: var(--dark-gray-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--secondary-color);
+}
+
+.btn:hover {
+    background-color: var(--primary-color-dark);
+}
+
+.envoyer-btn {
+    align-self: center;
+}
+
+/* ==========================================================================
+   9. FOOTER
+   ========================================================================== */
+.main-footer {
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+    padding: var(--spacing-large);
+    text-align: center;
+}
+
+.main-footer nav ul {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-large);
+    margin-bottom: var(--spacing-large);
+}
+
+.main-footer nav a {
+    color: var(--white-color);
+}
+
+.footer-content {
+    margin-top: var(--spacing-large);
+}
+
+.reseaux {
+    margin-bottom: var(--spacing-medium);
+}
+
+.reseaux a {
+    margin: 0 var(--spacing-small);
+    display: inline-block;
+}
+
+.reseaux img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.reseaux img:hover {
+    transform: scale(1.1);
+}
+
+.infos-legales {
+    margin-top: var(--spacing-medium);
+    font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   10. UTILITIES & COMPONENTS
+   ========================================================================== */
+#top-bar {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-medium);
+    z-index: 1000;
+    display: none;
+    /* Hidden by default */
+}
+
+#top-bar:hover {
+    background-color: var(--primary-color);
+}
+
+/* Chatbot */
+#chatbot-toggle {
+    position: fixed;
+    bottom: 25px;
+    left: 25px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-color-dark));
+    color: var(--white-color);
+    border: none;
+    border-radius: 50%;
+    width: 65px;
+    height: 65px;
+    font-size: 1.8rem;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(39, 174, 96, 0.3);
+    z-index: 1000;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#chatbot-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(39, 174, 96, 0.4);
+    background: linear-gradient(135deg, var(--primary-color-dark), var(--primary-color));
+}
+
+#chatbot-toggle:active {
+    transform: translateY(0);
+}
+
+#chatbot-container {
+    position: fixed;
+    bottom: 100px;
+    left: 25px;
+    width: 350px;
+    background-color: var(--white-color);
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+    overflow: hidden;
+    display: none;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#chatbot-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-color-dark));
+    color: var(--white-color);
+    padding: 1.2rem var(--spacing-medium);
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+#chatbot-header::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1), rgba(255,255,255,0.3));
+}
+
+#chatbot-close {
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.3rem;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#chatbot-close:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+#chatbot-messages {
+    height: 280px;
+    overflow-y: auto;
+    padding: var(--spacing-medium);
+    font-size: 0.9rem;
+    background: linear-gradient(to bottom, #fafafa, #ffffff);
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-color) #f0f0f0;
+}
+
+#chatbot-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+#chatbot-messages::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 3px;
+}
+
+#chatbot-messages::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 3px;
+}
+
+#chatbot-messages::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color-dark);
+}
+
+/* Styles pour les messages */
+.user-message {
+    margin-bottom: 12px;
+    padding: 10px 14px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-color-dark));
+    color: var(--white-color);
+    border-radius: 18px 18px 6px 18px;
+    max-width: 85%;
+    margin-left: auto;
+    box-shadow: 0 2px 8px rgba(39, 174, 96, 0.2);
+    animation: messageSlideIn 0.3s ease-out;
+}
+
+.bot-message {
+    margin-bottom: 12px;
+    padding: 10px 14px;
+    background: #f8f9fa;
+    color: var(--text-color);
+    border-radius: 18px 18px 18px 6px;
+    max-width: 85%;
+    border-left: 3px solid var(--primary-color);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    animation: messageSlideIn 0.3s ease-out;
+}
+
+@keyframes messageSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.user-message strong,
+.bot-message strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+#chatbot-input {
+    display: flex;
+    border-top: 1px solid #e9ecef;
+    background: #ffffff;
+    padding: 12px;
+    gap: 8px;
+}
+
+#chatbot-input input {
+    flex: 1;
+    border: 1px solid #e9ecef;
+    border-radius: 20px;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    outline: none;
+    background: #f8f9fa;
+    transition: all 0.2s ease;
+}
+
+#chatbot-input input:focus {
+    border-color: var(--primary-color);
+    background: var(--white-color);
+    box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.1);
+}
+
+#chatbot-input input::placeholder {
+    color: #6c757d;
+}
+
+#chatbot-input button {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-color-dark));
+    color: var(--white-color);
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    min-width: 70px;
+}
+
+#chatbot-input button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+#chatbot-input button:active {
+    transform: translateY(0);
+}
+
+/* ==========================================================================
+   11. RESPONSIVE DESIGN
+   ========================================================================== */
+
+/* Menu burger */
+.menu-burger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001;
+}
+
+.menu-burger span {
+    width: 100%;
+    height: 3px;
+    background-color: var(--white-color);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.menu-burger.menu-open span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.menu-burger.menu-open span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-burger.menu-open span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Media queries pour responsive */
+@media (max-width: 1024px) {
+    .main-header {
+        padding: var(--spacing-medium);
+    }
+
+    .produits {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    section {
+        padding: 3rem var(--spacing-medium);
+    }
+}
+
+@media (max-width: 768px) {
+    .menu-burger {
+        display: flex;
+    }
+
+    .main-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: var(--spacing-medium);
+    }
+
+    #logo img {
+        width: 160px;
+        height: auto;
+    }
+
+    .main-nav {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100vh;
+        background-color: var(--primary-color);
+        transition: left 0.3s ease;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .main-nav.nav-open {
+        left: 0;
+    }
+
+    .main-nav ul {
+        flex-direction: column;
+        gap: var(--spacing-large);
+        text-align: center;
+        padding: 0;
+    }
+
+    .main-nav a {
+        font-size: 1.2rem;
+        padding: var(--spacing-medium);
+        display: block;
+    }
+
+    .main-nav a::after {
+        display: none;
+    }
+
+    .main-nav a:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: var(--border-radius);
+    }
+
+    #hero {
+        padding: 2rem var(--spacing-medium);
+    }
+
+    .hero-text h1 {
+        font-size: 1.8rem;
+        line-height: 1.3;
+    }
+
+    .hero-text p {
+        font-size: 1rem;
+    }
+
+    section {
+        padding: 2rem var(--spacing-medium);
+    }
+
+    section h2 {
+        font-size: 1.8rem;
+        margin-bottom: var(--spacing-medium);
+    }
+
+    .produits {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--spacing-medium);
+    }
+
+    .produit {
+        padding: var(--spacing-medium);
+    }
+
+    .produit h3 {
+        font-size: 1rem;
+        margin: var(--spacing-small) 0;
+    }
+
+    .produit p {
+        font-size: 0.9rem;
+    }
+
+    .produit img {
+        height: 150px;
+    }
+
+    .contact-form {
+        padding: var(--spacing-medium);
+    }
+
+    .form-group input,
+    .form-group textarea {
+        font-size: 16px;
+        /* Empêche le zoom sur iOS */
+    }
+
+    .main-footer nav ul {
+        flex-direction: column;
+        gap: var(--spacing-medium);
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: var(--spacing-medium);
+    }
+
+    .infos-legales {
+        font-size: 0.8rem;
+    }
+
+    /* Chatbot responsive */
+    #chatbot-toggle {
+        bottom: 20px;
+        left: 20px;
+        width: 60px;
+        height: 60px;
+    }
+
+    #chatbot-container {
+        width: calc(100vw - 40px);
+        left: 20px;
+        right: 20px;
+        bottom: 90px;
+        border-radius: 12px;
+    }
+
+    #chatbot-messages {
+        height: 220px;
+    }
+
+    .user-message,
+    .bot-message {
+        max-width: 90%;
+        font-size: 0.85rem;
+    }
+
+    /* Carousel responsive */
+    .carousel-track .categorie {
+        width: 150px;
+        min-width: 150px;
+    }
+
+    .carousel-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-header {
+        padding: var(--spacing-small) var(--spacing-medium);
+    }
+
+    #logo img {
+        width: 120px;
+        height: auto;
+    }
+
+    .hero-text h1 {
+        font-size: 1.5rem;
+    }
+
+    .hero-text p {
+        font-size: 0.9rem;
+    }
+
+    section {
+        padding: 1.5rem var(--spacing-small);
+    }
+
+    section h2 {
+        font-size: 1.5rem;
+    }
+
+    .produits {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-small);
+    }
+
+    .produit {
+        padding: var(--spacing-small);
+    }
+
+    .produit img {
+        height: 120px;
+    }
+
+    .produit h3 {
+        font-size: 0.9rem;
+    }
+
+    .produit p {
+        font-size: 0.8rem;
+    }
+
+    .contact-form {
+        padding: var(--spacing-small);
+    }
+
+    .btn {
+        padding: var(--spacing-small) var(--spacing-medium);
+        font-size: 0.9rem;
+    }
+
+    .main-footer {
+        padding: var(--spacing-medium) var(--spacing-small);
+    }
+
+    .main-footer nav ul {
+        gap: var(--spacing-small);
+    }
+
+    .infos-legales {
+        font-size: 0.7rem;
+    }
+
+    /* Chatbot très petit écran */
+    #chatbot-toggle {
+        bottom: 15px;
+        left: 15px;
+        width: 55px;
+        height: 55px;
+        font-size: 1.6rem;
+    }
+
+    #chatbot-container {
+        width: calc(100vw - 20px);
+        left: 10px;
+        right: 10px;
+        bottom: 80px;
+        border-radius: 10px;
+    }
+
+    #chatbot-header {
+        padding: 1rem;
+        font-size: 0.9rem;
+    }
+
+    #chatbot-messages {
+        height: 180px;
+        font-size: 0.8rem;
+        padding: var(--spacing-small);
+    }
+
+    .user-message,
+    .bot-message {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        border-radius: 14px;
+    }
+
+    .user-message {
+        border-radius: 14px 14px 4px 14px;
+    }
+
+    .bot-message {
+        border-radius: 14px 14px 14px 4px;
+    }
+
+    #chatbot-input {
+        padding: 10px;
+    }
+
+    #chatbot-input input {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+
+    #chatbot-input button {
+        padding: 8px 16px;
+        font-size: 0.8rem;
+        min-width: 60px;
+    }
+
+    /* Carousel très petit écran */
+    .carousel-track .categorie {
+        width: 120px;
+        min-width: 120px;
+    }
+
+    .carousel-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 1.2rem;
+    }
+}
+
+
+/* Styles pour le nouveau sélecteur de devise dans la section Hero */
+.currency-widget {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column; /* Aligne les éléments verticalement */
+    align-items: flex-start; /* Aligne à gauche (ou au centre si vous préférez) */
+    max-width: 300px; /* Limite la largeur pour l'esthétique */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#country-selector {
+    padding: 8px 12px;
+    font-size: 1.1em;
+    border: 2px solid #000000; /* Couleur pour le faire ressortir */
+    border-radius: 6px;
+    background-color: white;
+    cursor: pointer;
+    width: 100%;
+}

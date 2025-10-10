@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paiement - Shop Na Biso</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../index-modern.css">
+    <link rel="stylesheet" href="paiement.css">
+    <style>
+    /* HEADER MODERNE - Copié depuis index-modern.css */
+    .modern-header {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 16px 0 rgba(102, 126, 234, 0.07);
+    }
+    .nav-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .nav-brand .brand-link {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+        color: #2d3748;
+        font-weight: 700;
+        font-size: 1.5rem;
+    }
+    .brand-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .brand-icon:hover {
+        transform: scale(1.1) rotate(5deg);
+    }
+    .nav-menu {
+        display: flex;
+        align-items: center;
+    }
+    .nav-list {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    .nav-link {
+        text-decoration: none;
+        color: #718096;
+        font-weight: 500;
+        position: relative;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .nav-link:hover,
+    .nav-link.active {
+        color: #2d3748;
+    }
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: -0.5rem;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .nav-link:hover::after,
+    .nav-link.active::after {
+        width: 100%;
+    }
+    .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .currency-select {
+        background: #f3f4f6;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .currency-select:hover {
+        background: #e5e7eb;
+    }
+    .action-btn {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        background: #f3f4f6;
+        color: #718096;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        border: none;
+        cursor: pointer;
+    }
+    .action-btn:hover {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        transform: translateY(-2px);
+    }
+    .cart-count {
+        position: absolute;
+        top: -0.25rem;
+        right: -0.25rem;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.25rem 0.5rem;
+        border-radius: 9999px;
+        min-width: 1.25rem;
+        height: 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .mobile-menu-toggle {
+        display: none;
+        flex-direction: column;
+        gap: 0.25rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.5rem;
+    }
+    .mobile-menu-toggle span {
+        width: 1.5rem;
+        height: 2px;
+        background: #2d3748;
+        border-radius: 2px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    body {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+    }
+    main {
+        background: #f8fafc;
+        min-height: 100vh;
+        padding-top: 110px;
+    }
+    @media (max-width: 900px) {
+        .nav-container {
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1rem;
+        }
+        .nav-list {
+            gap: 1rem;
+        }
+    }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .payment-methods-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            background: #fff;
+            cursor: pointer;
+            transition: border 0.2s;
+        }
+
+        .payment-method.selected {
+            border: 2px solid #10b981;
+            background: #f0fdf4;
+        }
+
+        .payment-method img {
+            width: 60px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .payment-method label {
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .pay-btn {
+            margin-top: 2rem;
+            width: 150px;
+            max-width: 100%;
+            padding: 0.85rem 0;
+            font-size: 0.95rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            color: #3b82f6;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header moderne et navigation -->
+    <header class="modern-header">
+        <nav class="nav-container">
+            <div class="nav-brand">
+                <a href="../index.html" class="brand-link">
+                    <div class="brand-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <span class="brand-text">Shop Na Biso</span>
+                </a>
+            </div>
+
+            <div class="nav-menu" id="nav-menu">
+                <ul class="nav-list">
+                    <li><a href="../index.html" class="nav-link">Accueil</a></li>
+                    <li><a href="../informations/quisommesnous.html" class="nav-link">À propos</a></li>
+                    <li><a href="../index.html#produits-featured" class="nav-link">Produits</a></li>
+                    <li><a href="../index.html#categories-section" class="nav-link">Catégories</a></li>
+                    <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-actions">
+                <a href="../auth/connexion.html" class="action-btn login-btn">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="panier.html" class="action-btn cart-btn active">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="compteur-panier">0</span>
+                </a>
+            </div>
+
+            <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
+    <main class="paiement-main">
+        <div class="container paiement-center">
+            <style>
+                .paiement-center {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: flex-start;
+                    min-height: 80vh;
+                    margin-top: 6rem;
+                }
+
+                .paiement-center h1 {
+                    text-align: center;
+                    width: 100%;
+                }
+
+                .paiement-center form {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+
+                .paiement-center .payment-methods-list {
+                    width: 100%;
+                    max-width: 500px;
+                    margin-left: auto;
+                    margin-right: auto;
+                }
+            </style>
+            <style>
+                .back-link {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.7rem;
+                    background: linear-gradient(90deg, #34d399 0%, #10b981 100%);
+                    color: #fff;
+                    font-weight: 700;
+                    padding: 0.85rem 0;
+                    width: 150px;
+                    border-radius: 12px;
+                    text-align: center;
+                    text-decoration: none;
+                    border: none;
+                    font-size: 0.95rem;
+                    font-family: 'Inter', Arial, sans-serif;
+                    font-weight: 600;
+                    margin-bottom: 0;
+                    box-shadow: 0 6px 24px 0 rgba(16, 185, 129, 0.18);
+                    text-transform: none;
+                    letter-spacing: 0.5px;
+                    transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s;
+                }
+
+                .back-link:hover {
+                    background: linear-gradient(90deg, #059669 0%, #34d399 100%);
+                    color: #fff;
+                    box-shadow: 0 10px 32px 0 rgba(16, 185, 129, 0.22);
+                    transform: translateY(-2px) scale(1.04);
+                }
+
+                .back-link i {
+                    font-size: 1.35em;
+                }
+            </style>
+            <h1>Choisissez votre méthode de paiement</h1>
+            <form id="payment-form">
+                <div class="payment-methods-list payment-methods-list-bg">
+                    <style>
+                        .payment-methods-list-bg {
+                            background: linear-gradient(120deg, #f0fdf4 60%, #d1fae5 100%);
+                            border-radius: 22px;
+                            box-shadow: 0 6px 24px 0 rgba(16, 185, 129, 0.10);
+                            padding: 2.2rem 1.5rem 1.2rem 1.5rem;
+                            margin-bottom: 2.2rem;
+                            max-width: 520px;
+                            width: 100%;
+                        }
+                    </style>
+                    <div class="payment-method" data-method="carte">
+                        <input type="radio" id="carte" name="payment-method" value="carte" required>
+                        <img src="../images_page_paiement/carte.jpg" alt="Carte Bancaire">
+                        <label for="carte">Carte Bancaire</label>
+                    </div>
+                    <div class="payment-method" data-method="mtn">
+                        <input type="radio" id="mtn" name="payment-method" value="mtn">
+                        <img src="../images_page_paiement/mtn_momo.png" alt="MTN Mobile Money">
+                        <label for="mtn">MTN Mobile Money</label>
+                    </div>
+                    <div class="payment-method" data-method="airtel">
+                        <input type="radio" id="airtel" name="payment-method" value="airtel">
+                        <img src="../images_page_paiement/airtel_money.jpg" alt="Airtel Money">
+                        <label for="airtel">Airtel Money</label>
+                    </div>
+                </div>
+                <div id="payment-details" style="margin-top:2rem;"></div>
+                <div class="paiement-actions-row">
+                    <button type="submit" class="btn btn-primary pay-btn">Payer</button>
+                    <a href="panier.html" class="back-link">Retour au panier</a>
+                </div>
+            </form>
+        </div>
+    </main>
+    <script>
+        // Highlight selected payment method and show details
+        const methods = document.querySelectorAll('.payment-method');
+        const paymentDetails = document.getElementById('payment-details');
+
+        function getCardForm() {
+            return `
+                    <style>
+                        #card-form-fields {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            background: linear-gradient(135deg, #f8fafc 60%, #ffe4e6 100%);
+                            border-radius: 22px;
+                            padding: 2.2rem 1.7rem 2.5rem 1.7rem;
+                            box-shadow: 0 6px 32px 0 rgba(255, 99, 132, 0.13), 0 2px 12px rgba(0,0,0,0.06);
+                            max-width: 420px;
+                            margin: 0 auto 2rem auto;
+                            border: 2.5px solid #f472b6;
+                            position: relative;
+                            overflow: hidden;
+                        }
+                        #card-form-fields:before {
+                            content: "💳";
+                            position: absolute;
+                            top: -30px;
+                            right: -30px;
+                            font-size: 5rem;
+                            opacity: 0.13;
+                            pointer-events: none;
+                        }
+                        #card-form-fields label {
+                            font-weight: 600;
+                            margin-bottom: 0.3rem;
+                            display: block;
+                            text-align: left;
+                            color: #111;
+                            letter-spacing: 0.5px;
+                        }
+                        #card-form-fields input {
+                            width: 100%;
+                            padding: 0.8rem 1.1rem;
+                            border-radius: 10px;
+                            border: 1.5px solid #f472b6;
+                            margin-bottom: 0.2rem;
+                            font-size: 1.08rem;
+                            background: #fff0f6;
+                            box-sizing: border-box;
+                            transition: border 0.2s, box-shadow 0.2s;
+                        }
+                        #card-form-fields input:focus {
+                            border: 2px solid #be185d;
+                            outline: none;
+                            box-shadow: 0 0 0 2px #fbcfe8;
+                        }
+                        #card-form-fields .row {
+                            display: flex;
+                            gap: 1.1rem;
+                            width: 100%;
+                            justify-content: center;
+                        }
+                        #card-form-fields .row > div {
+                            flex: 1;
+                        }
+                        #card-form-fields small {
+                            display: block;
+                            min-height: 18px;
+                            text-align: left;
+                            color: #111;
+                            font-size: 0.93em;
+                        }
+                    </style>
+                    <div id="card-form-fields">
+                        <div style="width:100%;margin-bottom:1rem;">
+                            <label for="card-name">Titulaire de la carte</label>
+                            <input type="text" id="card-name" name="card-name" maxlength="40" required pattern="[A-Za-zÀ-ÿ\s]+" placeholder="Nom et prénom" autocomplete="cc-name">
+                            <small id="card-name-error" style="color:red;display:none;">Lettres uniquement, pas de chiffres ni caractères spéciaux.</small>
+                        </div>
+                        <div style="width:100%;margin-bottom:1rem;">
+                            <label for="card-number">Numéro de la carte</label>
+                            <input type="text" id="card-number" name="card-number" maxlength="16" minlength="16" required pattern="\d{16}" placeholder="1234 5678 9012 3456" inputmode="numeric" autocomplete="cc-number">
+                            <small id="card-number-error" style="color:red;display:none;">16 chiffres requis.</small>
+                        </div>
+                        <div class="row" style="margin-bottom:1rem;">
+                            <div>
+                                <label for="card-expiry">Date d'expiration</label>
+                                <input type="month" id="card-expiry" name="card-expiry" required min="2025-10">
+                                <small id="card-expiry-error" style="color:red;display:none;">Date valide requise</small>
+                            </div>
+                            <div>
+                                <label for="card-cvv">CVV</label>
+                                <input type="text" id="card-cvv" name="card-cvv" maxlength="3" required pattern="\d{3}" placeholder="123" inputmode="numeric" autocomplete="cc-csc">
+                                <small id="card-cvv-error" style="color:red;display:none;">3 chiffres requis.</small>
+                            </div>
+                        </div>
+                    </div>
+            `;
+        }
+
+        function getMtnForm() {
+            return `
+                <style>
+                    #mtn-form-fields {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        background: linear-gradient(135deg, #f8fafc 60%, #fef08a 100%);
+                        border-radius: 22px;
+                        padding: 2.2rem 1.7rem 2.5rem 1.7rem;
+                        box-shadow: 0 6px 32px 0 rgba(251, 191, 36, 0.13), 0 2px 12px rgba(0,0,0,0.06);
+                        max-width: 420px;
+                        margin: 0 auto 2rem auto;
+                        border: 2.5px solid #facc15;
+                        position: relative;
+                        overflow: hidden;
+                    }
+                    #mtn-form-fields:before {
+                        content: "\u{1F4F2}";
+                        position: absolute;
+                        top: -30px;
+                        right: -30px;
+                        font-size: 5rem;
+                        opacity: 0.13;
+                        pointer-events: none;
+                    }
+                    #mtn-form-fields label {
+                        font-weight: 600;
+                        margin-bottom: 0.3rem;
+                        display: block;
+                        text-align: left;
+                        color: #b45309;
+                        letter-spacing: 0.5px;
+                    }
+                    #mtn-form-fields input {
+                        width: 100%;
+                        padding: 0.8rem 1.1rem;
+                        border-radius: 10px;
+                        border: 1.5px solid #facc15;
+                        margin-bottom: 0.2rem;
+                        font-size: 1.08rem;
+                        background: #fefce8;
+                        box-sizing: border-box;
+                        transition: border 0.2s, box-shadow 0.2s;
+                    }
+                    #mtn-form-fields input:focus {
+                        border: 2px solid #b45309;
+                        outline: none;
+                        box-shadow: 0 0 0 2px #fef08a;
+                    }
+                    #mtn-form-fields small {
+                        display: block;
+                        min-height: 18px;
+                        text-align: left;
+                        color: #b45309;
+                        font-size: 0.93em;
+                    }
+                </style>
+                <div id="mtn-form-fields">
+                    <div style="width:100%;margin-bottom:1rem;">
+                        <label for="mtn-number">Numéro MTN Mobile Money</label>
+                        <input type="text" id="mtn-number" name="mtn-number" maxlength="15" required pattern="\d{8,15}" placeholder="Numéro de téléphone" inputmode="numeric">
+                        <small id="mtn-number-error" style="color:red;display:none;"></small>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getAirtelForm() {
+            return `
+                <style>
+                    #airtel-form-fields {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        background: linear-gradient(135deg, #f8fafc 60%, #fecaca 100%);
+                        border-radius: 22px;
+                        padding: 2.2rem 1.7rem 2.5rem 1.7rem;
+                        box-shadow: 0 6px 32px 0 rgba(239, 68, 68, 0.13), 0 2px 12px rgba(0,0,0,0.06);
+                        max-width: 420px;
+                        margin: 0 auto 2rem auto;
+                        border: 2.5px solid #ef4444;
+                        position: relative;
+                        overflow: hidden;
+                    }
+                    #airtel-form-fields:before {
+                        content: "\u{1F4F1}";
+                        position: absolute;
+                        top: -30px;
+                        right: -30px;
+                        font-size: 5rem;
+                        opacity: 0.13;
+                        pointer-events: none;
+                    }
+                    #airtel-form-fields label {
+                        font-weight: 600;
+                        margin-bottom: 0.3rem;
+                        display: block;
+                        text-align: left;
+                        color: #b91c1c;
+                        letter-spacing: 0.5px;
+                    }
+                    #airtel-form-fields input {
+                        width: 100%;
+                        padding: 0.8rem 1.1rem;
+                        border-radius: 10px;
+                        border: 1.5px solid #ef4444;
+                        margin-bottom: 0.2rem;
+                        font-size: 1.08rem;
+                        background: #fef2f2;
+                        box-sizing: border-box;
+                        transition: border 0.2s, box-shadow 0.2s;
+                    }
+                    #airtel-form-fields input:focus {
+                        border: 2px solid #b91c1c;
+                        outline: none;
+                        box-shadow: 0 0 0 2px #fecaca;
+                    }
+                    #airtel-form-fields small {
+                        display: block;
+                        min-height: 18px;
+                        text-align: left;
+                        color: #b91c1c;
+                        font-size: 0.93em;
+                    }
+                </style>
+                <div id="airtel-form-fields">
+                    <div style="width:100%;margin-bottom:1rem;">
+                        <label for="airtel-number">Numéro Airtel Money</label>
+                        <input type="text" id="airtel-number" name="airtel-number" maxlength="15" required pattern="\d{8,15}" placeholder="Numéro de téléphone" inputmode="numeric">
+                        <small id="airtel-number-error" style="color:red;display:none;"></small>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showPaymentDetails(method) {
+            if (method === 'carte') {
+                paymentDetails.innerHTML = getCardForm();
+            } else if (method === 'mtn') {
+                paymentDetails.innerHTML = getMtnForm();
+            } else if (method === 'airtel') {
+                paymentDetails.innerHTML = getAirtelForm();
+            } else {
+                paymentDetails.innerHTML = '';
+            }
+        }
+
+        methods.forEach(method => {
+            method.addEventListener('click', function () {
+                methods.forEach(m => m.classList.remove('selected'));
+                this.classList.add('selected');
+                this.querySelector('input[type=radio]').checked = true;
+                showPaymentDetails(this.dataset.method);
+            });
+        });
+
+        // Validation helpers pour la carte bancaire
+        function validateCardName(value) {
+            return /^[A-Za-zÀ-ÿ\s]+$/.test(value);
+        }
+        function validateCardNumber(value) {
+            return /^\d{16}$/.test(value);
+        }
+        function validateCVV(value) {
+            return /^\d{3}$/.test(value);
+        }
+
+        function validateExpiry(value) {
+            // value format: yyyy-mm
+            if (!/^\d{4}-\d{2}$/.test(value)) return false;
+            const [year, month] = value.split('-').map(Number);
+            const now = new Date();
+            const exp = new Date(year, month - 1);
+            return exp >= new Date(now.getFullYear(), now.getMonth());
+        }
+
+        // Form submission
+        document.getElementById('payment-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const selected = document.querySelector('input[name="payment-method"]:checked');
+            if (!selected) return;
+
+            if (selected.value === 'carte') {
+                // Champs
+                const name = document.getElementById('card-name').value.trim();
+                const number = document.getElementById('card-number').value.trim();
+                const cvv = document.getElementById('card-cvv').value.trim();
+
+                let valid = true;
+                // Titulaire
+                if (!validateCardName(name)) {
+                    document.getElementById('card-name-error').style.display = 'block';
+                    valid = false;
+                } else {
+                    document.getElementById('card-name-error').style.display = 'none';
+                }
+                // Numéro
+                if (!validateCardNumber(number)) {
+                    document.getElementById('card-number-error').style.display = 'block';
+                    valid = false;
+                } else {
+                    document.getElementById('card-number-error').style.display = 'none';
+                }
+                // Expiry
+                const expiry = document.getElementById('card-expiry').value.trim();
+                if (!validateExpiry(expiry)) {
+                    document.getElementById('card-expiry-error').style.display = 'block';
+                    valid = false;
+                } else {
+                    document.getElementById('card-expiry-error').style.display = 'none';
+                }
+                // CVV
+                if (!validateCVV(cvv)) {
+                    document.getElementById('card-cvv-error').style.display = 'block';
+                    valid = false;
+                } else {
+                    document.getElementById('card-cvv-error').style.display = 'none';
+                }
+
+                if (!valid) return;
+                alert('Paiement par carte accepté (simulation).');
+                // Ici, logique réelle ou redirection
+            } else if (selected.value === 'mtn') {
+                const mtnNumber = document.getElementById('mtn-number').value.trim();
+                if (!/^\d{8,15}$/.test(mtnNumber)) {
+                    alert('Numéro MTN Mobile Money invalide.');
+                    return;
+                }
+                alert('Paiement via MTN Mobile Money accepté (simulation).');
+            } else if (selected.value === 'airtel') {
+                const airtelNumber = document.getElementById('airtel-number').value.trim();
+                if (!/^\d{8,15}$/.test(airtelNumber)) {
+                    alert('Numéro Airtel Money invalide.');
+                    return;
+                }
+                alert('Paiement via Airtel Money accepté (simulation).');
+            }
+        });
+
+        // Afficher le formulaire de la méthode sélectionnée au chargement si déjà coché
+        // Met à jour le compteur du panier dans le header
+        function updateCartCounter() {
+            const compteur = document.getElementById("compteur-panier");
+            if (compteur) {
+                const panier = JSON.parse(localStorage.getItem("panier")) || [];
+                const totalArticles = panier.reduce((acc, item) => acc + item.quantite, 0);
+                compteur.textContent = totalArticles;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            updateCartCounter();
+            const selected = document.querySelector('input[name="payment-method"]:checked');
+            if (selected) showPaymentDetails(selected.value);
+        });
+    </script>
+</body>
+
+</html>
