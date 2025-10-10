@@ -361,6 +361,8 @@
 			reader.onload = async function (ev) {
 				const photo = ev.target.result;
 				const codeSalon = generateSalonCode();
+				// Stocke le nombre de joueurs pour la page salon
+				localStorage.setItem('trouvix_nbJoueurs', nbJoueurs);
 				// Affiche la modal de confirmation avec les bons labels
 				showSalonModal({
 					nomSalon,

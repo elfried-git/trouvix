@@ -152,13 +152,15 @@
                 if (data && data.nom) hoteNom = data.nom;
             }
         } catch (e) {}
-        // TODO: remplacer nbJoueurs par la vraie valeur du salon si backend prêt
+        // Récupère le nombre de joueurs stocké lors de la création
+        let nbJoueurs = parseInt(localStorage.getItem('trouvix_nbJoueurs'), 10);
+        if (!nbJoueurs || isNaN(nbJoueurs)) nbJoueurs = 3;
         return {
             hote: {
                 nom: hoteNom,
                 photo: hotePhoto,
             },
-            nbJoueurs: 3, // nombre total de joueurs choisis lors de la création
+            nbJoueurs,
             code: salonCode,
         };
     }
