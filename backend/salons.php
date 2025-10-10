@@ -36,6 +36,15 @@ if ($method === 'GET') {
     $salons = $stmt->fetchAll(PDO::FETCH_ASSOC);
     foreach ($salons as &$salon) {
         $salon['joueurs'] = json_decode($salon['joueurs'], true);
+        // Ajout : expose toujours le nom de l'hôte principal
+        if (!isset($salon['nom_hote']) || !$salon['nom_hote']) {
+            // fallback depuis joueurs
+            if (is_array($salon['joueurs']) && isset($salon['joueurs'][0]['nom'])) {
+                $salon['nom_hote'] = $salon['joueurs'][0]['nom'];
+            } else {
+                $salon['nom_hote'] = '';
+            }
+        }
     }
     echo json_encode($salons);
     exit;
@@ -53,8 +62,8 @@ if ($method === 'POST') {
     $code = substr(strip_tags($data['code']), 0, 10);
     $maxJoueurs = (int)$data['maxJoueurs'];
     $longueurMot = (int)$data['longueurMot'];
-    // Correction : toujours vérifier la photo du joueur
     $joueursArr = $data['joueurs'];
+    // Correction : toujours vérifier la photo du joueur
     if (is_array($joueursArr) && isset($joueursArr[0])) {
         $photo = $joueursArr[0]['photo'] ?? '';
         if (!$photo || (!str_starts_with($photo, 'data:image') && !str_starts_with($photo, 'http'))) {
@@ -63,8 +72,13 @@ if ($method === 'POST') {
     }
     $joueurs = json_encode($joueursArr);
     $createdAt = time();
-    $stmt = $pdo->prepare('INSERT INTO salons (nom, code, maxJoueurs, longueurMot, joueurs, created_at) VALUES (?, ?, ?, ?, ?, ?)');
-    $stmt->execute([$nom, $code, $maxJoueurs, $longueurMot, $joueurs, $createdAt]);
+    // Ajout du nom de l'hôte principal pour affichage fiable
+    $nomHote = '';
+    if (is_array($joueursArr) && isset($joueursArr[0]['nom'])) {
+        $nomHote = substr(strip_tags($joueursArr[0]['nom']), 0, 50);
+    }
+    $stmt = $pdo->prepare('INSERT INTO salons (nom, code, maxJoueurs, longueurMot, joueurs, created_at, nom_hote) VALUES (?, ?, ?, ?, ?, ?, ?)');
+    $stmt->execute([$nom, $code, $maxJoueurs, $longueurMot, $joueurs, $createdAt, $nomHote]);
     echo json_encode(['success' => true]);
     exit;
 }
