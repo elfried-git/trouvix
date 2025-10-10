@@ -398,10 +398,56 @@
 				</div>
 			`;
 			document.body.appendChild(modal);
-			document.getElementById('btn-go-salon').onclick = function () {
-				// Redirection vers la page du salon avec le code
-				window.location.href = `salon.html?code=${code}`;
-			};
+			// Utiliser addEventListener pour éviter les problèmes de réattribution
+			const btnGoSalon = document.getElementById('btn-go-salon');
+			if (btnGoSalon) {
+				btnGoSalon.addEventListener('click', async function handleGoSalonClick(e) {
+					// Empêcher double clic
+					btnGoSalon.disabled = true;
+					// Récupère le nom de session si possible (sécurité)
+					let nomHote = hote;
+					try {
+						const userInfo = await fetch('../backend/get_user_info.php').then(r => r.ok ? r.json() : null);
+						if (userInfo && userInfo.nom) {
+							nomHote = userInfo.nom;
+						}
+					} catch (e) {}
+					// Enregistrement du salon côté serveur via salons.php
+					try {
+						const response = await fetch('../backend/salons.php', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							body: JSON.stringify({
+								nom: nomSalon,
+								code: code,
+								maxJoueurs: parseInt(nbJoueurs, 10),
+								longueurMot: parseInt(nbMots, 10),
+								createdAt: Math.floor(Date.now() / 1000),
+								joueurs: [
+									{
+										nom: nomHote,
+										photo: photo,
+										estHote: true
+									}
+								]
+							})
+						});
+						if (!response.ok) {
+							alert("Erreur lors de la création du salon côté serveur.");
+							btnGoSalon.disabled = false;
+							return;
+						}
+					} catch (err) {
+						alert("Erreur réseau lors de la création du salon.");
+						btnGoSalon.disabled = false;
+						return;
+					}
+					// Redirection vers la page du salon avec le code
+					window.location.href = `salon.html?code=${code}`;
+				}, { once: true });
+			}
 		}
 	</script>
 </body>

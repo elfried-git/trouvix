@@ -46,7 +46,161 @@ $user_email = $_SESSION['user_email'];
             </nav>
         </div>
     </header>
-    <script src="../js/session-nav.js"></script>
+  <script src="../js/session-nav.js"></script>
+  <script>
+  // Tout le JS s'exécute après que le DOM est prêt et vérifie l'existence des éléments
+  document.addEventListener('DOMContentLoaded', function() {
+    // Ouvre la modale rejoindre salon
+    var btnJoinModal = document.getElementById('btn-join-modal');
+    var modalJoin = document.getElementById('modal-join-salon');
+    if (btnJoinModal && modalJoin) {
+      btnJoinModal.addEventListener('click', function(e) {
+        e.preventDefault();
+        modalJoin.style.display = 'flex';
+      });
+    }
+    // Ferme la modale
+    var btnCancelJoin = document.getElementById('btn-cancel-join');
+    if (btnCancelJoin && modalJoin) {
+      btnCancelJoin.addEventListener('click', function() {
+        modalJoin.style.display = 'none';
+      });
+    }
+    // Avatar preview pour la modale rejoindre salon
+    var joinPhotoInput = document.getElementById('join-photo');
+    var joinPhotoPreview = document.getElementById('avatar-preview-modal');
+    var joinPhotoPlaceholder = document.getElementById('avatar-placeholder-modal');
+    if (joinPhotoInput && joinPhotoPreview && joinPhotoPlaceholder) {
+      joinPhotoInput.addEventListener('change', function () {
+        if (joinPhotoInput.files && joinPhotoInput.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            joinPhotoPreview.src = e.target.result;
+            joinPhotoPreview.style.display = 'block';
+            joinPhotoPlaceholder.style.display = 'none';
+          };
+          reader.readAsDataURL(joinPhotoInput.files[0]);
+        } else {
+          joinPhotoPreview.src = '';
+          joinPhotoPreview.style.display = 'none';
+          joinPhotoPlaceholder.style.display = 'block';
+        }
+      });
+    }
+    // Gestion du formulaire rejoindre salon
+    var formJoin = document.getElementById('form-join-salon');
+    if (formJoin && joinPhotoInput) {
+      formJoin.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        // Vérifie si l'utilisateur est admin (par sécurité)
+        try {
+          const userInfo = await fetch('../backend/get_user_info.php');
+          if (userInfo.ok) {
+            const data = await userInfo.json();
+            if (data && data.email && data.email === 'admin@trouvix.local') {
+              showAlert("Un administrateur ne peut pas rejoindre un salon en tant que joueur. Veuillez utiliser un compte utilisateur.");
+              return;
+            }
+          }
+        } catch(e) {}
+        var nom = document.getElementById('join-nom').value.trim();
+        var code = document.getElementById('join-code').value.trim().toUpperCase();
+        var file = joinPhotoInput.files[0];
+        if (!nom || !code || !file) {
+          showAlert("Tous les champs sont obligatoires.");
+          return;
+        }
+        var reader = new FileReader();
+        reader.onload = async function(ev) {
+          var photo = ev.target.result;
+          // 1. Cherche le salon par code
+          var salons = [];
+          try {
+            var res = await fetch('../backend/salons.php');
+            salons = await res.json();
+          } catch (err) {
+            showAlert("Erreur lors de la recherche du salon.");
+            return;
+          }
+          var salon = salons.find(function(s) { return s.code === code; });
+          if (!salon) {
+            showAlert("Aucun salon trouvé avec ce code. Vous ne pouvez rejoindre qu'un salon existant.");
+            return;
+          }
+          // 2. Vérifie la place dispo
+          if (!Array.isArray(salon.joueurs)) salon.joueurs = [];
+          if (salon.joueurs.length >= salon.maxJoueurs && !salon.joueurs.some(function(j) { return (!j.nom || !j.photo); })) {
+            showAlert("Ce salon est déjà complet.");
+            return;
+          }
+          // 3. Vérifie que le joueur n'est pas déjà dans le salon
+          if (salon.joueurs.some(function(j) { return j.nom === nom; })) {
+            showAlert("Vous êtes déjà dans ce salon.");
+            return;
+          }
+          // 4. Place intelligente : occupe la première place vide (slot sans nom ou sans photo)
+          var slotTrouve = false;
+          for (var i = 0; i < salon.joueurs.length; i++) {
+            // Ne jamais modifier le slot 0 (hôte)
+            if (i === 0) continue;
+            if (!salon.joueurs[i].nom || !salon.joueurs[i].photo) {
+              salon.joueurs[i] = { nom: nom, photo: photo, estHote: false };
+              slotTrouve = true;
+              break;
+            }
+          }
+          // Si aucune place vide, ajoute à la fin
+          if (!slotTrouve) {
+            // Ajoute le joueur seulement si on ne dépasse pas maxJoueurs et jamais en index 0
+            if (salon.joueurs.length < salon.maxJoueurs) {
+              salon.joueurs.push({ nom: nom, photo: photo, estHote: false });
+            }
+          }
+          // 5. Met à jour le salon côté serveur (on ne crée jamais de nouveau salon ici)
+          try {
+            // Refetch le salon pour garantir que le slot 0 (hôte) est strictement identique à la BDD
+            var resSalonBdd = await fetch('../backend/salons.php');
+            var salonsBdd = await resSalonBdd.json();
+            var salonBdd = salonsBdd.find(function(s) { return s.code === code; });
+            var joueursPayload = [...salon.joueurs];
+            if (salonBdd && Array.isArray(salonBdd.joueurs) && salonBdd.joueurs[0]) {
+              joueursPayload[0] = salonBdd.joueurs[0];
+            }
+            var resp = await fetch('../backend/salons.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                nom: salon.nom,
+                code: salon.code,
+                maxJoueurs: salon.maxJoueurs,
+                longueurMot: salon.longueurMot,
+                joueurs: joueursPayload
+              })
+            });
+            if (!resp.ok) throw new Error();
+          } catch (err) {
+            showAlert("Erreur lors de la mise à jour du salon.");
+            return;
+          }
+          // 6. Redirige vers la page du salon
+          window.location.href = `salon.html?code=${code}`;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+    // Affiche une alerte modale
+    function showAlert(msg) {
+      var modal = document.getElementById('alert-modal');
+      document.getElementById('alert-message').textContent = msg;
+      modal.style.display = 'flex';
+      document.getElementById('alert-ok').onclick = function() {
+        modal.style.display = 'none';
+      };
+    }
+  });
+
+  // ...existing code...
+  </script>
     <div class="client-space-container">
         <div class="profile-card">
             <div class="profile-avatar">
@@ -82,7 +236,7 @@ $user_email = $_SESSION['user_email'];
                   </div>
                   <div class="form-join-btns">
                     <button type="button" class="btn-cancel-join" id="btn-cancel-join">Annuler</button>
-                    <button type="submit" class="btn-go-salon">Go Salon</button>
+                    <button type="submit" class="btn-go-salon">Rejoindre hôte</button>
                   </div>
                 </form>
               </div>
@@ -117,6 +271,8 @@ $user_email = $_SESSION['user_email'];
                 position: relative;
                 overflow: hidden;
                 outline: none;
+                pointer-events: auto !important;
+                cursor: pointer;
             }
             .btn-join-salon:hover, .btn-join-salon:focus {
                 background: linear-gradient(90deg, #ff00ff 0%, #00fff9 100%);
@@ -382,62 +538,7 @@ $user_email = $_SESSION['user_email'];
     </div>
 </body>
 <script>
-// Ouvre la modale
-const btnJoinModal = document.getElementById('btn-join-modal');
-const modalJoin = document.getElementById('modal-join-salon');
-btnJoinModal.onclick = function(e) {
-  e.preventDefault();
-  modalJoin.style.display = 'flex';
-};
-// Ferme la modale
-const btnCancelJoin = document.getElementById('btn-cancel-join');
-btnCancelJoin.onclick = function() {
-  modalJoin.style.display = 'none';
-};
-// Vérifie le code et redirige
-const formJoin = document.getElementById('form-join-salon');
-formJoin.onsubmit = function(e) {
-  e.preventDefault();
-  const codeSaisi = document.getElementById('join-code').value.trim();
-  const codeSalon = localStorage.getItem('trouvix_codeSalon');
-  if (!codeSalon) {
-    showCustomAlert("Aucun salon n'a été créé ou code introuvable.");
-    return;
-  }
-  if (codeSaisi.toUpperCase() !== codeSalon.toUpperCase()) {
-    showCustomAlert("Code du salon incorrect.");
-    return;
-  }
-  // On pourrait ici uploader la photo si besoin
-  window.location.href = 'salon.html?code=' + encodeURIComponent(codeSalon);
-};
-const joinPhotoInput = document.getElementById('join-photo');
-const avatarPreviewModal = document.getElementById('avatar-preview-modal');
-const avatarPlaceholderModal = document.getElementById('avatar-placeholder-modal');
-if (joinPhotoInput) {
-  joinPhotoInput.addEventListener('change', function () {
-    if (joinPhotoInput.files && joinPhotoInput.files[0]) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        avatarPreviewModal.src = e.target.result;
-        avatarPreviewModal.style.display = 'block';
-        avatarPlaceholderModal.style.display = 'none';
-      };
-      reader.readAsDataURL(joinPhotoInput.files[0]);
-    } else {
-      avatarPreviewModal.src = '';
-      avatarPreviewModal.style.display = 'none';
-      avatarPlaceholderModal.style.display = 'block';
-    }
-  });
-}
-function showCustomAlert(message) {
-  document.getElementById('alert-message').textContent = message;
-  document.getElementById('alert-modal').style.display = 'flex';
-}
-document.getElementById('alert-ok').onclick = function() {
-  document.getElementById('alert-modal').style.display = 'none';
-};
+// ...existing code...
 </script>
 </html>
 <style>

@@ -56,8 +56,9 @@ function fetchSalons() {
             }
             salons.forEach(salon => {
                 let hote = '-';
-                if (Array.isArray(salon.joueurs) && salon.joueurs.length > 0) {
-                    // Cherche le joueur avec estHote true, sinon prend le premier
+                if (salon.nom_hote && salon.nom_hote.trim()) {
+                    hote = salon.nom_hote;
+                } else if (Array.isArray(salon.joueurs) && salon.joueurs.length > 0) {
                     const hoteObj = salon.joueurs.find(j => j.estHote) || salon.joueurs[0];
                     hote = hoteObj && hoteObj.nom && hoteObj.nom.trim() ? hoteObj.nom : 'Inconnu';
                 } else {

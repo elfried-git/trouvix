@@ -163,56 +163,90 @@
     const urlParams = new URLSearchParams(window.location.search);
     const salonCode = urlParams.get('code');
 
-    // Simule une requête pour récupérer les infos du salon (à remplacer par un vrai appel AJAX)
-    async function fetchSalonInfo() {
-        // Récupère le nom réel de l'hôte via la session
-        let hoteNom = 'Nom Hôte';
-        let hotePhoto = '../assets/avatar-default.png';
+    async function fetchSalonFromBackend() {
         try {
-            const res = await fetch('../backend/get_user_info.php');
-            if (res.ok) {
-                const data = await res.json();
-                if (data && data.nom) hoteNom = data.nom;
-            }
-        } catch (e) {}
-        // Récupère le nombre de joueurs stocké lors de la création
-        let nbJoueurs = parseInt(localStorage.getItem('trouvix_nbJoueurs'), 10);
-        if (!nbJoueurs || isNaN(nbJoueurs)) nbJoueurs = 3;
-        return {
-            hote: {
-                nom: hoteNom,
-                photo: hotePhoto,
-            },
-            nbJoueurs,
-            code: salonCode,
-        };
+            const res = await fetch('../backend/salons.php');
+            if (!res.ok) throw new Error('Erreur serveur');
+            const salons = await res.json();
+            return salons.find(s => s.code === salonCode);
+        } catch (e) {
+            return null;
+        }
     }
 
     async function renderSalon() {
-        const salon = await fetchSalonInfo();
-        // Affiche le code du salon
+        const salon = await fetchSalonFromBackend();
+        // Si l'utilisateur connecté est dans la liste des joueurs, scroll ou focus sur sa place
+        try {
+            const userInfo = await fetch('../backend/get_user_info.php');
+            if (userInfo.ok) {
+                const data = await userInfo.json();
+                if (data && data.nom) {
+                    const joueurIndex = salon.joueurs.findIndex(j => j && j.nom === data.nom);
+                    if (joueurIndex > 0) {
+                        // Optionnel : scroll ou highlight la place du joueur
+                        setTimeout(() => {
+                            const slots = document.querySelectorAll('.player-slot');
+                            if (slots[joueurIndex-1]) {
+                                slots[joueurIndex-1].style.boxShadow = '0 0 24px #00fff9, 0 0 48px #ff00ff';
+                            }
+                        }, 300);
+                    }
+                }
+            }
+        } catch(e) {}
+        if (!salon) {
+            document.getElementById('salon-message').textContent = 'Salon introuvable.';
+            document.getElementById('players-list').innerHTML = '';
+            document.getElementById('host-info').innerHTML = '';
+            document.getElementById('salon-code').textContent = '';
+            return;
+        }
         document.getElementById('salon-code').textContent = `Code du salon : ${salon.code}`;
-        // Affiche l'hôte
+        // Affiche l'hôte (toujours index 0)
+        // Récupère le nom de l'hôte connecté (session)
+        let nomHoteSession = null;
+        try {
+            const userInfo = await fetch('../backend/get_user_info.php');
+            if (userInfo.ok) {
+                const data = await userInfo.json();
+                if (data && data.nom) nomHoteSession = data.nom;
+            }
+        } catch (e) {}
+        const hote = salon.joueurs[0];
+        let nomAffiche = hote && hote.nom ? hote.nom : 'Hôte';
+        // Si l'utilisateur connecté est l'hôte, on affiche son nom de session
+        if (nomHoteSession && hote && hote.nom && nomHoteSession === hote.nom) {
+            nomAffiche = nomHoteSession;
+        }
         document.getElementById('host-info').innerHTML = `
-            <img src="${salon.hote.photo}" class="avatar host" alt="Avatar Hôte">
-            <div class="player-name">${salon.hote.nom} <span style="font-size:0.8em;color:#ff00ff;">(Hôte)</span></div>
+            <img src="${hote && hote.photo ? hote.photo : '../assets/avatar-default.png'}" class="avatar host" alt="Avatar Hôte">
+            <div class="player-name">${nomAffiche} <span style="font-size:0.8em;color:#ff00ff;">(Hôte)</span></div>
         `;
-        // Affiche les places disponibles
+        // Affiche tous les joueurs (hors hôte) et les places vides
         const playersList = document.getElementById('players-list');
         playersList.innerHTML = '';
-        const totalSlots = salon.nbJoueurs;
-        // Simule le nombre de joueurs connectés (ici seulement l'hôte)
-        const joueursConnectes = 1;
-        // Ajoute les slots restants
-        for (let i = joueursConnectes; i < totalSlots; i++) {
-            playersList.innerHTML += `
-                <div class="player-slot">
-                    <div class="photo-placeholder">Photo</div>
-                    <div class="slot-status">Disponible</div>
-                </div>
-            `;
+        const totalSlots = salon.maxJoueurs;
+        for (let i = 1; i < totalSlots; i++) {
+            const joueur = salon.joueurs[i];
+            if (joueur && joueur.nom && joueur.photo) {
+                playersList.innerHTML += `
+                    <div class="player-slot">
+                        <img src="${joueur.photo}" class="avatar" alt="Avatar joueur">
+                        <div class="player-name">${joueur.nom}</div>
+                    </div>
+                `;
+            } else {
+                playersList.innerHTML += `
+                    <div class="player-slot">
+                        <div class="photo-placeholder">Photo</div>
+                        <div class="slot-status">Disponible</div>
+                    </div>
+                `;
+            }
         }
         // Affiche le message dynamique
+        const joueursConnectes = salon.joueurs.filter(j => j && j.nom && j.photo).length;
         const salonMsg = document.getElementById('salon-message');
         if (joueursConnectes < totalSlots) {
             salonMsg.textContent = 'En attente des joueurs...';

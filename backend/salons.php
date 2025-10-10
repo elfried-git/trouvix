@@ -96,15 +96,83 @@ $stmt->execute([$code]);
 $salonExistant = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($salonExistant) {
-	// Mise à jour du salon (quand un joueur rejoint)
-	$stmt = $pdo->prepare('UPDATE salons SET joueurs = ?, nom_hote = ?, nom = ?, maxJoueurs = ?, longueurMot = ? WHERE code = ?');
-	$stmt->execute([$joueurs, $nomHote, $nom, $maxJoueurs, $longueurMot, $code]);
+	// Sécurité : empêcher la modification du slot 0 (hôte) par un joueur non-hôte
+	session_start();
+	$session_nom = isset($_SESSION['user_nom']) ? $_SESSION['user_nom'] : (isset($_SESSION['admin_name']) ? $_SESSION['admin_name'] : null);
+	// Bloque toute jointure de salon par un administrateur
+	if (isset($_SESSION['admin_name'])) {
+		http_response_code(403);
+		echo json_encode(['error' => 'Un administrateur ne peut pas rejoindre un salon en tant que joueur.']);
+		exit;
+	}
+	$hote_bdd = null;
+	$stmt2 = $pdo->prepare('SELECT joueurs, nom, nom_hote FROM salons WHERE code = ?');
+	$stmt2->execute([$code]);
+	$row = $stmt2->fetch(PDO::FETCH_ASSOC);
+	if ($row) {
+		$joueurs_bdd = json_decode($row['joueurs'], true);
+		if (isset($joueurs_bdd[0]['nom'])) {
+			$hote_bdd = $joueurs_bdd[0]['nom'];
+		}
+	}
+	$hote_nouveau = isset($joueursArr[0]['nom']) ? $joueursArr[0]['nom'] : null;
+	$hote_modifie = ($hote_bdd !== $hote_nouveau);
+	$isHote = isset($joueursArr[0]['estHote']) && $joueursArr[0]['estHote'] === true;
+	// Si ce n'est pas l'hôte connecté, on force le slot 0 à rester strictement celui de la BDD
+	if (!$isHote || !$session_nom || $session_nom !== $hote_bdd) {
+		if ($row && isset($joueurs_bdd[0])) {
+			$joueursArr[0] = $joueurs_bdd[0];
+		}
+	} else {
+		// Si c'est l'hôte connecté, il peut modifier son slot 0
+		if ($hote_modifie && (!$isHote || !$session_nom || $session_nom !== $hote_bdd)) {
+			http_response_code(403);
+			echo json_encode(['error' => 'Modification du slot hôte interdite.']);
+			exit;
+		}
+	}
+	// On protège aussi les autres champs critiques (nom, nom_hote) : seul l'hôte peut les modifier
+	$nom_bdd = isset($row['nom']) ? $row['nom'] : null;
+	$nom_hote_bdd = isset($row['nom_hote']) ? $row['nom_hote'] : null;
+	$infos_modifiees = ($nom !== $nom_bdd || $nomHote !== $nom_hote_bdd);
+	if ($infos_modifiees && (!$isHote || !$session_nom || $session_nom !== $hote_bdd)) {
+		http_response_code(403);
+		echo json_encode(['error' => 'Seul l’hôte peut modifier les infos du salon.']);
+		exit;
+	}
+	// Mise à jour autorisée (slots joueurs hors hôte, infos inchangées)
+	$stmt = $pdo->prepare('UPDATE salons SET joueurs = ? WHERE code = ?');
+	$stmt->execute([$joueurs, $code]);
 	echo json_encode(['success' => true, 'updated' => true]);
 	exit;
 } else {
-	// Création du salon
+	// Création du salon : on force le slot 0 à l'utilisateur connecté (jamais admin)
+	session_start();
+	if (isset($_SESSION['admin_name'])) {
+		http_response_code(403);
+		echo json_encode(['error' => 'Un administrateur ne peut pas créer de salon.']);
+		exit;
+	}
+	$user_nom = isset($_SESSION['user_nom']) ? $_SESSION['user_nom'] : null;
+	$user_photo = (isset($_SESSION['user_photo']) && !empty($_SESSION['user_photo'])) ? $_SESSION['user_photo'] : '../assets/avatar-default.png';
+	// Sécurité : si la session admin est active, on ne prend jamais sa photo
+	if (isset($_SESSION['admin_name'])) {
+		$user_photo = '../assets/avatar-default.png';
+	}
+	if (!$user_nom) {
+		http_response_code(401);
+		echo json_encode(['error' => 'Utilisateur non connecté.']);
+		exit;
+	}
+	// On force le slot 0 à l'utilisateur connecté
+	$joueursArr[0] = [
+		'nom' => $user_nom,
+		'photo' => $user_photo,
+		'estHote' => true
+	];
+	$joueurs = json_encode($joueursArr);
 	$stmt = $pdo->prepare('INSERT INTO salons (nom, code, maxJoueurs, longueurMot, joueurs, created_at, nom_hote) VALUES (?, ?, ?, ?, ?, ?, ?)');
-	$stmt->execute([$nom, $code, $maxJoueurs, $longueurMot, $joueurs, $createdAt, $nomHote]);
+	$stmt->execute([$nom, $code, $maxJoueurs, $longueurMot, $joueurs, $createdAt, $user_nom]);
 	echo json_encode(['success' => true, 'created' => true]);
 	exit;
 }
