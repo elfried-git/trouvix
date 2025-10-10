@@ -12,7 +12,7 @@
 			margin: 0;
 			padding: 0;
 			min-height: 100vh;
-		}
+
 		.container {
 			max-width: 370px;
 			margin: 60px auto;
@@ -97,10 +97,34 @@
 			line-height: 1.25;
 		}
 		.form-input:focus {
-			border: 2.5px solid #ff00ff;
-			box-shadow: 0 0 16px #ff00ff66;
-			background: #181c3a;
-			color: #fff;
+					border: 2.5px solid #ff00ff;
+					box-shadow: 0 0 16px #ff00ff66, 0 0 24px #00fff9aa;
+					background: #181c3a;
+					color: #fff;
+				}
+
+				select.form-input {
+					background: linear-gradient(90deg, #181c3a 60%, #00fff9 100%);
+					color: #00fff9;
+					font-weight: 600;
+					border: 2px solid #00fff9;
+					box-shadow: 0 0 8px #00fff966;
+					transition: border 0.22s, box-shadow 0.22s, background 0.22s;
+				}
+				select.form-input:focus {
+					border: 2.5px solid #ff00ff;
+					box-shadow: 0 0 16px #ff00ff66, 0 0 32px #00fff9cc;
+					background: linear-gradient(90deg, #181c3a 40%, #ff00ff 100%);
+					color: #fff;
+				}
+				select.form-input option {
+					background: #181c3a;
+					color: #00fff9;
+				}
+				select.form-input option:checked {
+					background: #ff00ff;
+					color: #fff;
+				}
 		}
 		.form-input:disabled {
 			background: #222;
@@ -243,9 +267,27 @@
 				<input class="form-input" id="pseudo-hote" maxlength="20" required type="text" placeholder="pseudo hôte" readonly>
 			</div>
 			<div class="form-group">
-							<label class="form-label" for="code-salon">Code salon</label>
-							<input class="form-input" id="code-salon" type="text" value="" placeholder="Code salon" disabled style="background:#222;color:#888;">
-						</div>
+				<label class="form-label" for="nb-joueurs">Joueurs</label>
+				<select class="form-input" id="nb-joueurs" required>
+					<option value="" disabled selected>Choisir...</option>
+					<option value="2">2 joueurs</option>
+					<option value="3">3 joueurs</option>
+					<option value="4">4 joueurs</option>
+					<option value="5">5 joueurs</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="form-label" for="nb-mots">Nombre de mot à deviner</label>
+				<select class="form-input" id="nb-mots" required>
+					<option value="" disabled selected>Choisir...</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+					<option value="9">9</option>
+					<option value="10">10</option>
+					<option value="11">11</option>
+				</select>
+			</div>
 			<div class="form-group">
 				<label class="form-label">Photo</label>
 				<label class="avatar-upload-label">
@@ -308,8 +350,10 @@
 			e.preventDefault();
 			const nomSalon = document.getElementById('nom-hote').value.trim();
 			const hote = document.getElementById('pseudo-hote').value.trim();
+			const nbJoueurs = document.getElementById('nb-joueurs').value;
+			const nbMots = document.getElementById('nb-mots').value;
 			const file = avatarUpload.files[0];
-			if (!nomSalon || !hote || !file) {
+			if (!nomSalon || !hote || !file || !nbJoueurs || !nbMots) {
 				alert("Tous les champs sont obligatoires.");
 				return;
 			}
@@ -322,14 +366,16 @@
 					nomSalon,
 					hote,
 					photo,
-					code: codeSalon
+					code: codeSalon,
+					nbJoueurs,
+					nbMots
 				});
 			};
 			reader.readAsDataURL(file);
 		});
 
 		// Affiche la modal de confirmation salon créé
-		function showSalonModal({ nomSalon, hote, photo, code }) {
+		function showSalonModal({ nomSalon, hote, photo, code, nbJoueurs, nbMots }) {
 			let modal = document.getElementById('modal-salon-cree');
 			if (modal) modal.remove();
 			modal = document.createElement('div');
@@ -339,7 +385,12 @@
 				<div class="modal-box">
 					<img src="${photo}" alt="Avatar Hôte">
 					<div style="font-size:1.15em;color:#00fff9;font-weight:bold;margin-bottom:0.5em;">Salon créé avec succès !</div>
-					<div style="margin-bottom:0.5em;"><b>Nom du salon :</b> ${nomSalon} <br><b>Hôte :</b> ${hote}</div>
+					<div style="margin-bottom:0.5em;">
+						<b>Nom du salon :</b> ${nomSalon} <br>
+						<b>Hôte :</b> ${hote} <br>
+						<b>Joueurs :</b> ${nbJoueurs} <br>
+						<b>Nombre de mots :</b> ${nbMots}
+					</div>
 					<div class="modal-code">${code}</div>
 					<button class="btn-go" id="btn-go-salon">Go Salon</button>
 				</div>

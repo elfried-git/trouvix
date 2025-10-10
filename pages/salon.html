@@ -1,413 +1,200 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Salon en cours - DeviChal</title>
-  <link rel="stylesheet" href="../style.css">
-  <style>
-    /* CSS OMMIS ICI POUR BREVETÉ, UTILISEZ LE CSS DU PROMPT ORIGINAL */
-    body {
-      background: #10132a;
-      color: #fff;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-
-    .lobby-container {
-      max-width: 700px;
-      margin: 3.5rem auto;
-      background: #181c3a;
-      border-radius: 1.5rem;
-      box-shadow: 0 0 32px #00fff966, 0 0 0 2px #00fff933;
-      padding: 2.5rem 2rem 2.5rem 2rem;
-      text-align: center;
-      position: relative;
-    }
-
-    .lobby-title {
-      font-size: 2rem;
-      color: #00fff9;
-      letter-spacing: 0.04em;
-      text-shadow: 0 0 8px #00fff9, 0 0 24px #00fff9;
-      margin-bottom: 1.2em;
-    }
-
-    .players-list {
-      display: flex;
-      justify-content: center;
-      gap: 2.5em;
-      margin-bottom: 2em;
-      flex-wrap: wrap;
-    }
-
-    .player-slot {
-      text-align: center;
-      min-width: 90px;
-    }
-
-    .avatar {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      border: 2.5px solid #00fff9;
-      object-fit: cover;
-      background: #222;
-      margin: 0 auto 0.5em auto;
-      box-shadow: 0 0 12px #00fff966;
-    }
-
-    .empty-avatar {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      background: #222 url('../assets/avatar-default.png') center/60% no-repeat;
-      border: 2.5px dashed #888;
-      margin: 0 auto 0.5em auto;
-      opacity: 0.5;
-    }
-
-    .player-name {
-      color: #00fff9;
-      font-size: 1em;
-      margin-bottom: 0.2em;
-      word-break: break-word;
-    }
-
-    .player-role {
-      color: #ff00ff;
-      font-size: 0.95em;
-      font-weight: bold;
-      margin-bottom: 0.2em;
-    }
-
-    .lobby-actions {
-      display: flex;
-      justify-content: center;
-      gap: 1.5em;
-      margin-top: 2em;
-    }
-
-    .btn-lobby {
-      background: linear-gradient(90deg, #00fff9 60%, #ff00ff 100%);
-      color: #181c3a;
-      border: none;
-      border-radius: 0.7em;
-      font-size: 1.15em;
-      font-weight: bold;
-      padding: 0.7em 2.2em;
-      cursor: pointer;
-      box-shadow: 0 0 16px #00fff966;
-      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-      text-shadow: 0 0 8px #fff;
-    }
-
-    .btn-lobby:disabled {
-      background: #222;
-      color: #888;
-      box-shadow: none;
-      cursor: not-allowed;
-    }
-
-    @media (max-width: 600px) {
-      .lobby-container {
-        padding: 1.2rem 0.5rem;
-      }
-
-      .players-list {
-        gap: 1em;
-      }
-
-      .player-slot {
-        min-width: 70px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salon - Trouvix</title>
+    <style>
+        body {
+            background: radial-gradient(ellipse at 50% 0%, #1a1d3a 60%, #10132a 100%);
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 420px;
+            margin: 60px auto;
+            background: rgba(24,28,58,0.98);
+            padding: 38px 20px 32px 20px;
+            border-radius: 1.7rem;
+            box-shadow: 0 0 48px #00fff9cc, 0 0 0 3px #00fff933, 0 0 80px 8px #ff00ff22;
+            border: 1.5px solid #00fff9;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 1.1s cubic-bezier(.4,0,.2,1);
+        }
+        @media (max-width: 600px) {
+            .container {
+                max-width: 98vw;
+                margin: 24px auto;
+                padding: 18px 4vw 24px 4vw;
+                border-radius: 1.1rem;
+            }
+            h1 {
+                font-size: 1.25em;
+            }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(40px) scale(0.98); }
+            to { opacity: 1; transform: none; }
+        }
+        h1 {
+            color: #00fff9;
+            font-size: 2.1em;
+            margin-bottom: 1.3em;
+            text-align: center;
+            font-weight: bold;
+            letter-spacing: 0.04em;
+            text-shadow: 0 0 16px #00fff9, 0 0 32px #00fff9;
+        }
+        .players {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 1.2em;
+            margin-top: 2.2em;
+        }
+        .player-slot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5em;
+        }
+        .avatar {
+            width: 74px;
+            height: 74px;
+            border-radius: 50%;
+            border: 3px solid #00fff9;
+            background: #222;
+            object-fit: cover;
+            box-shadow: 0 0 16px #00fff966, 0 0 32px #00fff933;
+        }
+        .host {
+            border: 3px solid #ff00ff;
+            box-shadow: 0 0 24px #ff00ff99, 0 0 48px #00fff966;
+        }
+        .player-name {
+            color: #00fff9;
+            font-weight: 600;
+            font-size: 1.08em;
+            text-align: center;
+            margin-top: 0.2em;
+            text-shadow: 0 0 8px #00fff9cc;
+        }
+        .slot-status {
+            color: #888;
+            font-size: 0.98em;
+            margin-top: 0.1em;
+            text-align: center;
+        }
+    </style>
 </head>
-
 <body>
-  <header>
-    <div class="header-row">
-      <div class="logo" tabindex="0" aria-label="Accueil Trouvix">
-        <span class="logo-text">Trouvix</span>
-      </div>
+    <!-- Les boutons sont déplacés en bas de la page -->
+    <div class="container">
+        <h1>Salon</h1>
+        <div id="host-info" style="text-align:center;margin-bottom:2em;"></div>
+        <div class="players" id="players-list"></div>
+            <div class="salon-btns">
+                <button class="btn-retour" id="btn-retour">&#8592; Retour</button>
+                <button class="btn-demarrer" id="btn-demarrer">Démarrer</button>
+            </div>
+        </style>
+        <style>
+            .salon-btns {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 2.5em;
+            }
+            .btn-retour, .btn-demarrer {
+                background: #00fff9;
+                border: none;
+                color: #000;
+                padding: 0.8em 1.6em;
+                font-size: 1em;
+                border-radius: 0.6rem;
+                cursor: pointer;
+                font-weight: bold;
+                box-shadow: 0 0 16px #00fff9cc, 0 0 32px #00fff933;
+                transition: background 0.3s, box-shadow 0.3s;
+            }
+            .btn-retour:hover, .btn-demarrer:hover {
+                background: #00e6e6;
+                box-shadow: 0 0 24px #00e6e699, 0 0 48px #00e6e666;
+            }
+            .btn-demarrer {
+                background: #ff00ff;
+                color: #fff;
+                box-shadow: 0 0 16px #ff00ffcc, 0 0 32px #ff00ff33;
+            }
+            .btn-demarrer:hover {
+                background: #e600e6;
+                box-shadow: 0 0 24px #e600e699, 0 0 48px #e600e666;
+            }
+        </style>
     </div>
-  </header>
-  <div class="lobby-container">
-    <div class="lobby-title" id="lobby-title">Salon</div>
-    <div id="host-name" style="color:#ff00ff;font-size:1.1em;margin-bottom:1em;"></div>
-    <div class="players-list" id="players-list"></div>
-    <div class="lobby-actions">
-      <button class="btn-lobby" id="btn-start" disabled>DÉMARRER</button>
-      <button class="btn-lobby" id="btn-quit">QUITTER</button>
-    </div>
-    <div style="margin-top:2em;">
-      <a href="../index.html" class="btn-lobby" style="text-decoration:none;display:inline-block;">&#8592; Retour à
-        l'accueil</a>
-    </div>
-  </div>
-  <script>
-    // Récupère le nom de l'utilisateur qui a créé/joint le salon
-    const SESSION_PLAYER_NAME = localStorage.getItem('sessionName') || 'Invité';
+    <script>
+    // Récupère les infos du salon depuis le code dans l'URL (ex: salon.html?code=VIX-XXXX)
+    const urlParams = new URLSearchParams(window.location.search);
+    const salonCode = urlParams.get('code');
 
-    function getSalonCodeFromURL() {
-      const params = new URLSearchParams(window.location.search);
-      return params.get('code');
-    }
-
-    async function fetchSalonByCode(code) {
-      if (!code) return null;
-
-      // CORRECTION CRITIQUE : Ajout du cache-buster pour forcer le rafraîchissement
-      const cacheBuster = `_t=${Date.now()}`;
-
-      try {
-        const res = await fetch(`../backend/salons.php?${cacheBuster}`);
-        if (res.ok) {
-          const salons = await res.json();
-
-          // Rendre la recherche insensible à la casse et plus robuste
-          const codeMaj = code.toUpperCase();
-          return salons.find(s => (s.code || '').toUpperCase() === codeMaj);
-        }
-      } catch (e) {
-        console.error("Erreur de récupération des salons:", e);
-      }
-      return null;
-    }
-
-    async function afficherSalon() {
-      const codeSalon = getSalonCodeFromURL();
-      const salon = await fetchSalonByCode(codeSalon);
-      const lobbyTitle = document.getElementById('lobby-title');
-      const hostName = document.getElementById('host-name');
-      const playersList = document.getElementById('players-list');
-      const btnStart = document.getElementById('btn-start');
-      playersList.innerHTML = '';
-      btnStart.disabled = true;
-
-      // Vérification de l'intégrité minimale du salon
-      if (!salon || !Array.isArray(salon.joueurs) || !salon.joueurs[0] || !salon.joueurs[0].nom) {
-        lobbyTitle.textContent = 'Salon introuvable. (Code invalide ou erreur serveur)';
-        hostName.textContent = '';
-        btnStart.style.display = 'none';
-        return;
-      }
-
-      btnStart.style.display = 'inline-block'; // Afficher si trouvé
-      const nbJoueursActuels = salon.joueurs.filter(j => j && j.nom).length;
-      const hote = salon.joueurs[0];
-
-      // Détermine si l'utilisateur est l'hôte de ce salon
-      const isHost = hote.nom === SESSION_PLAYER_NAME;
-
-      lobbyTitle.textContent = salon.nom && salon.nom.trim() ? salon.nom : 'Salon';
-      hostName.innerHTML = `<span style="color:#ff00ff;font-weight:bold;">Hôte :</span> <span style="color:#00fff9;">${hote.nom}</span>`;
-
-      // Affiche l’hôte dans la liste
-      const hoteSlot = document.createElement('div');
-      hoteSlot.className = 'player-slot';
-      hoteSlot.innerHTML = `
-                <div style="display:flex;justify-content:center;align-items:center;">
-                    <img src="${hote.photo || '../assets/avatar-default.png'}" class="avatar" alt="Avatar" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2.5px solid #ff00ff;background:#222;box-shadow:0 0 12px #ff00ff66;" />
-                </div>
-                <div class="player-role" style="color:#ff00ff;font-weight:bold;font-size:1.15em;margin-top:0.3em;">Hôte</div>
-                <div class="player-name" style="color:#00fff9;">${hote.nom}</div>
-            `;
-      playersList.appendChild(hoteSlot);
-
-      // Affiche les places disponibles ou joueurs
-      for (let i = 1; i < salon.maxJoueurs; i++) {
-        const slot = document.createElement('div');
-        slot.className = 'player-slot';
-        const joueur = salon.joueurs[i];
-
-        if (joueur && joueur.nom) {
-          slot.innerHTML = `
-                        <div style="display:flex;justify-content:center;align-items:center;">
-                            <img src="${joueur.photo || '../assets/avatar-default.png'}" class="avatar" alt="Avatar" style="width:64px;height:64px;border:2.5px solid #00fff9;box-shadow:0 0 12px #00fff966;" />
-                        </div>
-                        <div class="player-name">${joueur.nom}</div>
-                    `;
-        } else {
-          slot.innerHTML = `
-                        <div class="empty-avatar"></div>
-                        <div class="player-name">Place disponible</div>
-                    `;
-          // N'autoriser la jointure que si l'utilisateur n'est pas déjà dans le salon
-          if (salon.joueurs.every(j => !j || j.nom !== SESSION_PLAYER_NAME)) {
-            slot.style.cursor = 'pointer';
-            slot.onclick = function () {
-              createJoinModal(async function (nom, photo) {
-                await rejoindreSalon(nom, photo);
-              });
-            };
-          }
-        }
-        playersList.appendChild(slot);
-      }
-
-      // Logique du bouton Démarrer
-      if (isHost) {
-        if (nbJoueursActuels >= 2) {
-          btnStart.disabled = false;
-          btnStart.textContent = `DÉMARRER (${nbJoueursActuels}/${salon.maxJoueurs})`;
-          btnStart.onclick = demarrerPartie;
-        } else {
-          btnStart.textContent = `DÉMARRER (${nbJoueursActuels}/${salon.maxJoueurs}) - Min 2 joueurs`;
-        }
-      } else {
-        btnStart.textContent = `En attente de l'hôte... (${nbJoueursActuels}/${salon.maxJoueurs})`;
-      }
-    }
-
-    function createJoinModal(onSubmit) {
-      let modal = document.getElementById('join-modal');
-      if (modal) modal.remove();
-      modal = document.createElement('div');
-      modal.id = 'join-modal';
-      modal.style = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(10,16,40,0.85);z-index:1000;display:flex;align-items:center;justify-content:center;';
-      modal.innerHTML = `
-                <div style="background:#181c3a;padding:2em 2.5em 2em 2.5em;border-radius:1.2em;box-shadow:0 0 32px #00fff966,0 0 0 2px #00fff933;text-align:center;max-width:90vw;">
-                    <div style="font-size:1.5em;color:#00fff9;font-weight:bold;margin-bottom:1.2em;letter-spacing:0.02em;text-shadow:0 0 8px #00fff9,0 0 24px #00fff9;">Rejoindre le salon</div>
-                    <form id="join-form">
-                        <input type="text" id="join-nom" placeholder="Votre nom" maxlength="15" required style="margin-bottom:1.2em;width:92%;padding:0.7em 1.1em;font-size:1.15em;border-radius:0.7em;border:2px solid #00fff9;outline:none;box-shadow:0 0 8px #00fff966;background:#10132a;color:#00fff9;transition:border 0.2s;">
-                        <div style="display:flex;justify-content:center;align-items:center;margin-bottom:1.2em;">
-                            <label id="avatar-upload-label-modal" style="width:72px;height:72px;border-radius:50%;border:3px solid #00fff9;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;position:relative;background:#222;box-shadow:0 0 8px #00fff966;transition:border 0.2s;">
-                                <input type="file" id="join-photo" accept="image/*" style="display:none;">
-                                <span id="avatar-placeholder-modal" style="color:#00fff9;font-size:2.2em;opacity:0.7;">+</span>
-                                <img id="avatar-preview-modal" src="" alt="Aperçu photo" style="display:none;width:100%;height:100%;object-fit:cover;">
-                            </label>
-                        </div>
-                        <button type="submit" style="background:linear-gradient(90deg,#00fff9 60%,#ff00ff 100%);color:#181c3a;border:none;border-radius:0.7em;font-size:1.2em;font-weight:bold;padding:0.7em 2.5em;cursor:pointer;box-shadow:0 0 12px #00fff966;margin-right:1.2em;letter-spacing:0.02em;">Rejoindre</button>
-                        <button type="button" id="join-cancel" style="background:#222;color:#fff;border:none;border-radius:0.7em;font-size:1.2em;font-weight:bold;padding:0.7em 2.5em;cursor:pointer;box-shadow:0 0 8px #00fff966;letter-spacing:0.02em;">Annuler</button>
-                    </form>
-                </div>
-            `;
-      document.body.appendChild(modal);
-
-      // Pré-remplir le nom avec le nom de session s'il existe
-      const joinNomInput = document.getElementById('join-nom');
-      if (SESSION_PLAYER_NAME !== 'Invité') {
-        joinNomInput.value = SESSION_PLAYER_NAME;
-      }
-
-      const joinPhotoInput = document.getElementById('join-photo');
-      const avatarPreview = document.getElementById('avatar-preview-modal');
-      const avatarPlaceholder = document.getElementById('avatar-placeholder-modal');
-
-      joinPhotoInput.onchange = function (e) {
-        const file = e.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = function (ev) {
-            avatarPreview.src = ev.target.result;
-            avatarPreview.style.display = 'block';
-            avatarPlaceholder.style.display = 'none';
-          };
-          reader.readAsDataURL(file);
-        } else {
-          avatarPreview.src = '';
-          avatarPreview.style.display = 'none';
-          avatarPlaceholder.style.display = 'block';
-        }
-      };
-
-      document.getElementById('avatar-upload-label-modal').onclick = function () {
-        joinPhotoInput.click();
-      };
-
-      document.getElementById('join-form').onsubmit = function (e) {
-        e.preventDefault();
-        const nom = joinNomInput.value.trim();
-        const file = joinPhotoInput.files[0];
-
-        if (!nom) return;
-
-        if (!file) {
-          // Utiliser l'avatar par défaut si aucune photo n'est fournie
-          onSubmit(nom, '../assets/avatar-default.png');
-          modal.remove();
-          return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = function (ev) {
-          onSubmit(nom, ev.target.result);
-          modal.remove();
+    // Simule une requête pour récupérer les infos du salon (à remplacer par un vrai appel AJAX)
+    async function fetchSalonInfo() {
+        // Récupère le nom réel de l'hôte via la session
+        let hoteNom = 'Nom Hôte';
+        let hotePhoto = '../assets/avatar-default.png';
+        try {
+            const res = await fetch('../backend/get_user_info.php');
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.nom) hoteNom = data.nom;
+            }
+        } catch (e) {}
+        // TODO: remplacer nbJoueurs par la vraie valeur du salon si backend prêt
+        return {
+            hote: {
+                nom: hoteNom,
+                photo: hotePhoto,
+            },
+            nbJoueurs: 3, // nombre total de joueurs choisis lors de la création
+            code: salonCode,
         };
-        reader.readAsDataURL(file);
-      };
-
-      document.getElementById('join-cancel').onclick = function () {
-        modal.remove();
-      };
     }
 
-    async function rejoindreSalon(nom, photo) {
-      const codeSalon = getSalonCodeFromURL();
-      const salon = await fetchSalonByCode(codeSalon);
-      if (!salon || !Array.isArray(salon.joueurs) || !salon.joueurs[0] || !salon.joueurs[0].nom) return;
-
-      let joueursMaj = [...salon.joueurs];
-
-      let placeTrouvee = false;
-      let indexTrouve = -1;
-
-      // Vérifier si l'utilisateur est déjà dans le salon
-      if (joueursMaj.some(j => j && j.nom === nom)) {
-        alert("Vous êtes déjà dans ce salon.");
-        return;
-      }
-
-      // Trouver la première place vide à partir de l'index 1 (après l'hôte)
-      for (let i = 1; i < salon.maxJoueurs; i++) {
-        if (!joueursMaj[i] || !joueursMaj[i].nom) {
-          joueursMaj[i] = { nom, photo };
-          placeTrouvee = true;
-          indexTrouve = i;
-          break;
+    async function renderSalon() {
+        const salon = await fetchSalonInfo();
+        // Affiche l'hôte
+        document.getElementById('host-info').innerHTML = `
+            <img src="${salon.hote.photo}" class="avatar host" alt="Avatar Hôte">
+            <div class="player-name">${salon.hote.nom} <span style="font-size:0.8em;color:#ff00ff;">(Hôte)</span></div>
+        `;
+        // Affiche les places disponibles
+        const playersList = document.getElementById('players-list');
+        playersList.innerHTML = '';
+        // L'hôte occupe la première place
+        const totalSlots = salon.nbJoueurs;
+        // Ajoute l'hôte en premier (déjà affiché au-dessus)
+        // Ajoute les slots restants
+        for (let i = 1; i < totalSlots; i++) {
+            playersList.innerHTML += `
+                <div class="player-slot">
+                    <img src="../assets/avatar-default.png" class="avatar" alt="Disponible">
+                    <div class="slot-status">Disponible</div>
+                </div>
+            `;
         }
-      }
-
-      if (!placeTrouvee) {
-        alert("Le salon est déjà plein.");
-        return;
-      }
-
-      // Met à jour la session locale pour l'utilisateur qui vient de joindre
-      localStorage.setItem('sessionName', nom);
-
-      await fetch('../backend/salons.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          nom: salon.nom,
-          code: salon.code,
-          maxJoueurs: salon.maxJoueurs,
-          longueurMot: salon.longueurMot,
-          joueurs: joueursMaj
-        })
-      });
-      await afficherSalon();
     }
-
-    function demarrerPartie() {
-      alert(`La partie DÉMARRE pour le salon ${getSalonCodeFromURL()} ! Redirection vers le jeu...`);
-      // window.location.href = 'jeu.html?code=' + getSalonCodeFromURL();
-    }
-
-    document.getElementById('btn-quit').addEventListener('click', function () {
-      // Dans une vraie application, il faudrait appeler une API pour se retirer du salon
-      window.location.href = 'creer-salon.html';
-    });
-
-    // Initialisation et rafraîchissement automatique (pour simuler un lobby en temps réel)
-    afficherSalon();
-    setInterval(afficherSalon, 3000); 
-  </script>
+    renderSalon();
+    // Bouton retour vers la création de salon
+    document.getElementById('btn-retour').onclick = function() {
+        window.location.href = 'creer-salon.html';
+    };
+    // Bouton démarrer (à personnaliser selon la logique de démarrage)
+    document.getElementById('btn-demarrer').onclick = function() {
+        alert('Démarrage du salon... (fonction à implémenter)');
+    };
+    </script>
 </body>
-
 </html>
