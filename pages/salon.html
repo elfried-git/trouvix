@@ -89,18 +89,41 @@
             margin-top: 0.1em;
             text-align: center;
         }
+        .photo-placeholder {
+            width: 74px;
+            height: 74px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #00fff9 0%, #ff00ff 100%);
+            color: #181c3a;
+            font-size: 1.18em;
+            font-weight: bold;
+            box-shadow: 0 0 16px #00fff966, 0 0 32px #ff00ff99;
+            margin-bottom: 0.2em;
+            border: 3px dashed #fff;
+            text-shadow: 0 0 8px #fff, 0 0 16px #00fff9cc;
+            letter-spacing: 0.04em;
+            transition: box-shadow 0.22s;
+        }
+        .photo-placeholder:hover {
+            box-shadow: 0 0 32px #ff00ffcc, 0 0 48px #00fff9cc;
+        }
     </style>
 </head>
 <body>
     <!-- Les boutons sont déplacés en bas de la page -->
     <div class="container">
-        <h1>Salon</h1>
+        <div id="salon-message" style="text-align:center;font-size:1.18em;font-weight:bold;margin-bottom:1.1em;color:#00fff9;text-shadow:0 0 8px #00fff9cc;"></div>
+    <h1>Salon</h1>
+    <div id="salon-code" style="text-align:center;font-size:1.12em;font-weight:600;color:#ff00ff;margin-bottom:1.1em;text-shadow:0 0 8px #ff00ff99;"></div>
         <div id="host-info" style="text-align:center;margin-bottom:2em;"></div>
         <div class="players" id="players-list"></div>
-            <div class="salon-btns">
-                <button class="btn-retour" id="btn-retour">&#8592; Retour</button>
-                <button class="btn-demarrer" id="btn-demarrer">Démarrer</button>
-            </div>
+        <div class="salon-btns">
+            <button class="btn-retour" id="btn-retour">&#8592; Retour</button>
+            <button class="btn-demarrer" id="btn-demarrer">Démarrer</button>
+        </div>
         </style>
         <style>
             .salon-btns {
@@ -167,6 +190,8 @@
 
     async function renderSalon() {
         const salon = await fetchSalonInfo();
+        // Affiche le code du salon
+        document.getElementById('salon-code').textContent = `Code du salon : ${salon.code}`;
         // Affiche l'hôte
         document.getElementById('host-info').innerHTML = `
             <img src="${salon.hote.photo}" class="avatar host" alt="Avatar Hôte">
@@ -175,17 +200,26 @@
         // Affiche les places disponibles
         const playersList = document.getElementById('players-list');
         playersList.innerHTML = '';
-        // L'hôte occupe la première place
         const totalSlots = salon.nbJoueurs;
-        // Ajoute l'hôte en premier (déjà affiché au-dessus)
+        // Simule le nombre de joueurs connectés (ici seulement l'hôte)
+        const joueursConnectes = 1;
         // Ajoute les slots restants
-        for (let i = 1; i < totalSlots; i++) {
+        for (let i = joueursConnectes; i < totalSlots; i++) {
             playersList.innerHTML += `
                 <div class="player-slot">
-                    <img src="../assets/avatar-default.png" class="avatar" alt="Disponible">
+                    <div class="photo-placeholder">Photo</div>
                     <div class="slot-status">Disponible</div>
                 </div>
             `;
+        }
+        // Affiche le message dynamique
+        const salonMsg = document.getElementById('salon-message');
+        if (joueursConnectes < totalSlots) {
+            salonMsg.textContent = 'En attente des joueurs...';
+            salonMsg.style.color = '#00fff9';
+        } else {
+            salonMsg.textContent = 'Place au jeu !';
+            salonMsg.style.color = '#ff00ff';
         }
     }
     renderSalon();

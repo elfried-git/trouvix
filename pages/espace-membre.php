@@ -59,6 +59,178 @@ $user_email = $_SESSION['user_email'];
             <form action="logout.php" method="post" class="logout-form">
                 <button type="submit" class="logout-btn">Déconnexion</button>
             </form>
+            <button class="btn-main btn-join-salon" id="btn-join-modal">Rejoindre un salon</button>
+            <div id="modal-join-salon" class="modal-bg" style="display:none;">
+              <div class="modal-box">
+                <h2 style="color:#00fff9;text-align:center;margin-bottom:1em;">Rejoindre un salon</h2>
+                <form id="form-join-salon" autocomplete="off">
+                  <div class="form-group">
+                    <label for="join-nom" style="color:#fff;font-weight:600;">Nom du joueur</label>
+                    <input type="text" id="join-nom" class="form-input" value="<?php echo htmlspecialchars($user_nom); ?>" readonly style="background:#222;color:#00fff9;">
+                  </div>
+                  <div class="form-group">
+                    <label for="join-code" style="color:#fff;font-weight:600;">Code du salon</label>
+                    <input type="text" id="join-code" class="form-input" maxlength="10" required placeholder="Ex: VIX-1234">
+                  </div>
+                  <div class="form-group">
+                    <label for="join-photo" style="color:#fff;font-weight:600;">Photo</label>
+                    <label class="avatar-upload-label">
+                      <input type="file" id="join-photo" accept="image/*" style="display:none;" required>
+                      <span class="avatar-placeholder" id="avatar-placeholder-modal">+</span>
+                      <img id="avatar-preview-modal" class="avatar-preview" src="" alt="Aperçu photo" style="display:none;">
+                    </label>
+                  </div>
+                  <div class="form-join-btns">
+                    <button type="button" class="btn-cancel-join" id="btn-cancel-join">Annuler</button>
+                    <button type="submit" class="btn-go-salon">Go Salon</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <style>
+            .btn-main {
+                width: 100%;
+                max-width: 320px;
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .btn-join-salon {
+                margin-top: 1em;
+                background: linear-gradient(90deg, #00fff9 0%, #ff00ff 100%);
+                color: #181c3a;
+                font-weight: bold;
+                border: none;
+                border-radius: 0.9em;
+                font-size: 1.18em;
+                padding: 0.95em 2.4em;
+                box-shadow: 0 0 24px #00fff9cc, 0 0 48px #ff00ff66;
+                letter-spacing: 0.04em;
+                text-shadow: 0 0 8px #fff, 0 0 16px #00fff9cc;
+                transition: background 0.22s, color 0.22s, box-shadow 0.22s, transform 0.13s;
+                position: relative;
+                overflow: hidden;
+                outline: none;
+            }
+            .btn-join-salon:hover, .btn-join-salon:focus {
+                background: linear-gradient(90deg, #ff00ff 0%, #00fff9 100%);
+                color: #fff;
+                box-shadow: 0 0 40px #ff00ffaa, 0 0 0 2px #00fff933;
+                transform: scale(1.06);
+            }
+            .modal-bg {
+              position: fixed;top: 0;left: 0;width: 100vw;height: 100vh;
+              background: rgba(10,16,40,0.92);z-index: 1000;display: flex;align-items: center;justify-content: center;
+            }
+            .modal-box {
+              background: #181c3a;padding: 2.2em 2.5em 2em 2.5em;border-radius: 1.2em;
+              box-shadow: 0 0 32px #00fff966,0 0 0 2px #00fff933, 0 0 80px 8px #ff00ff22;
+              text-align: center;max-width: 90vw;border: 1.5px solid #00fff9;
+              animation: fadeIn 0.7s cubic-bezier(.4,0,.2,1);
+            }
+            .form-group {margin-bottom: 1.7em;text-align: left;display: flex;flex-direction: column;gap: 0.45em;}
+            .form-input {width: 85%;min-width: 160px;max-width: 260px;margin-left: auto;margin-right: auto;display: block;background: rgba(24,28,58,0.92);color: #00fff9;border: 2px solid #00fff9;border-radius: 0.7em;padding: 0.85em 1.1em 0.85em 1.1em;font-size: 1.13em;outline: none;margin-top: 0;margin-bottom: 0;transition: border 0.22s, box-shadow 0.22s;box-shadow: 0 0 0 0 #00fff9;font-weight: 500;line-height: 1.25;}
+            .form-input:focus {border: 2.5px solid #ff00ff;box-shadow: 0 0 16px #ff00ff66, 0 0 24px #00fff9aa;background: #181c3a;color: #fff;}
+            .avatar-upload-label {
+              width: 84px;
+              height: 84px;
+              border-radius: 50%;
+              border: 3px solid #00fff9;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background: #222;
+              box-shadow: 0 0 16px #00fff966, 0 0 32px #00fff933;
+              margin: 0.2em auto 0.7em auto;
+              transition: border 0.22s, box-shadow 0.22s;
+              cursor: pointer;
+              overflow: hidden;
+            }
+            .avatar-upload-label:hover, .avatar-upload-label:focus {
+              border: 3px solid #ff00ff;
+              box-shadow: 0 0 24px #ff00ff99, 0 0 48px #00fff966;
+            }
+            .avatar-placeholder {
+              color: #00fff9;
+              font-size: 2.5em;
+              opacity: 0.7;
+              transition: color 0.2s;
+            }
+            .avatar-upload-label:hover .avatar-placeholder {
+              color: #ff00ff;
+              opacity: 0.9;
+            }
+            .avatar-preview {
+              display: none;
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 50%;
+              box-shadow: 0 0 16px #00fff966;
+            }
+            #form-join-salon {
+              display: flex;
+              flex-direction: column;
+            }
+            .form-join-btns {
+              display: flex;
+              justify-content: space-between;
+              gap: 1.2em;
+              margin-top: 2em;
+            }
+            .btn-cancel-join {
+              flex: 1;
+              background: linear-gradient(90deg,#222 60%,#00fff9 100%);
+              color: #fff;
+              border: none;
+              border-radius: 0.9em;
+              font-size: 1.13em;
+              font-weight: bold;
+              padding: 0.85em 2.2em;
+              cursor: pointer;
+              box-shadow: 0 0 18px #00fff966, 0 0 0 2px #00fff933;
+              transition: background 0.22s, color 0.22s, box-shadow 0.22s, transform 0.13s;
+              letter-spacing: 0.04em;
+              text-shadow: 0 0 8px #00fff9cc;
+              outline: none;
+            }
+            .btn-cancel-join:hover, .btn-cancel-join:focus {
+              background: linear-gradient(90deg, #00fff9 0%, #222 100%);
+              color: #ff00ff;
+              box-shadow: 0 0 32px #00fff9cc;
+              transform: scale(1.04);
+            }
+            .btn-go-salon {
+              flex: 1;
+              background: linear-gradient(90deg, #ff00ff 0%, #00fff9 100%);
+              color: #181c3a;
+              border: none;
+              border-radius: 0.9em;
+              font-size: 1.13em;
+              font-weight: bold;
+              padding: 0.85em 2.2em;
+              cursor: pointer;
+              box-shadow: 0 0 24px #ff00ff66, 0 0 0 2px #00fff933;
+              transition: background 0.22s, color 0.22s, box-shadow 0.22s, transform 0.13s;
+              letter-spacing: 0.04em;
+              text-shadow: 0 0 8px #fff;
+              outline: none;
+            }
+            .btn-go-salon:hover, .btn-go-salon:focus {
+              background: linear-gradient(90deg, #00fff9 0%, #ff00ff 100%);
+              color: #fff;
+              box-shadow: 0 0 40px #ff00ffaa, 0 0 0 2px #00fff933;
+              transform: scale(1.06);
+            }
+            .form-join-btns button {
+              min-width: 100px;
+              max-width: 140px;
+              width: auto;
+              padding: 0.5em 1.1em;
+              font-size: 0.98em;
+              border-radius: 0.7em;
+            }
+            </style>
         </div>
         <div class="client-space-content">
             <h3>Votre espace membre</h3>
@@ -69,7 +241,55 @@ $user_email = $_SESSION['user_email'];
     </div>
 </body>
 <script>
-
+// Ouvre la modale
+const btnJoinModal = document.getElementById('btn-join-modal');
+const modalJoin = document.getElementById('modal-join-salon');
+btnJoinModal.onclick = function(e) {
+  e.preventDefault();
+  modalJoin.style.display = 'flex';
+};
+// Ferme la modale
+const btnCancelJoin = document.getElementById('btn-cancel-join');
+btnCancelJoin.onclick = function() {
+  modalJoin.style.display = 'none';
+};
+// Vérifie le code et redirige
+const formJoin = document.getElementById('form-join-salon');
+formJoin.onsubmit = function(e) {
+  e.preventDefault();
+  const codeSaisi = document.getElementById('join-code').value.trim();
+  const codeSalon = localStorage.getItem('trouvix_codeSalon');
+  if (!codeSalon) {
+    alert('Aucun salon n\'a été créé ou code introuvable.');
+    return;
+  }
+  if (codeSaisi.toUpperCase() !== codeSalon.toUpperCase()) {
+    alert('Code du salon incorrect.');
+    return;
+  }
+  // On pourrait ici uploader la photo si besoin
+  window.location.href = 'salon.html?code=' + encodeURIComponent(codeSalon);
+};
+const joinPhotoInput = document.getElementById('join-photo');
+const avatarPreviewModal = document.getElementById('avatar-preview-modal');
+const avatarPlaceholderModal = document.getElementById('avatar-placeholder-modal');
+if (joinPhotoInput) {
+  joinPhotoInput.addEventListener('change', function () {
+    if (joinPhotoInput.files && joinPhotoInput.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        avatarPreviewModal.src = e.target.result;
+        avatarPreviewModal.style.display = 'block';
+        avatarPlaceholderModal.style.display = 'none';
+      };
+      reader.readAsDataURL(joinPhotoInput.files[0]);
+    } else {
+      avatarPreviewModal.src = '';
+      avatarPreviewModal.style.display = 'none';
+      avatarPlaceholderModal.style.display = 'block';
+    }
+  });
+}
 </script>
 </html>
 <style>
@@ -188,4 +408,3 @@ $user_email = $_SESSION['user_email'];
     }
 }
 </style>
-</html>
