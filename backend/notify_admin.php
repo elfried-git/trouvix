@@ -5,28 +5,15 @@ header('Content-Type: application/json');
 require_once 'db.php'; // Connexion PDO $pdo
 
 $data = json_decode(file_get_contents('php://input'), true);
-$host = isset($data['host']) ? trim($data['host']) : '';
-$message = isset($data['message']) ? trim($data['message']) : '';
-if (!$host || !$message) {
+
+$code = isset($data['code']) ? trim($data['code']) : '';
+$event = isset($data['event']) ? trim($data['event']) : '';
+if (!$code || !$event) {
     http_response_code(400);
     echo json_encode(['success' => false, 'error' => 'Paramètres manquants']);
     exit;
 }
-
-// Créer la table notifications si elle n'existe pas
-$pdo->exec("CREATE TABLE IF NOT EXISTS notifications (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    host VARCHAR(100) NOT NULL,
-    message TEXT NOT NULL,
-    is_read TINYINT(1) DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)");
-
-$stmt = $pdo->prepare("INSERT INTO notifications (host, message) VALUES (?, ?)");
-$ok = $stmt->execute([$host, $message]);
-if ($ok) {
-    echo json_encode(['success' => true]);
-} else {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'error' => 'Erreur serveur']);
-}
+// Écrit un fichier d'événement pour salon_events.php
+$filename = __DIR__ . '/../tmp/salon_event_' . preg_replace('/[^a-zA-Z0-9_-]/', '', $code) . '.json';
+file_put_contents($filename, json_encode(['event' => $event, 'code' => $code]));
+echo json_encode(['success' => true]);

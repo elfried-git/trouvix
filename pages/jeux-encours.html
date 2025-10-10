@@ -408,13 +408,41 @@ document.getElementById('mot-form').onsubmit = function(e) {
     btnQuitter.style.display = 'block';
     btnQuitter.onclick = async function() {
       showQuitPopin(async () => {
-        // Appel backend pour supprimer le salon (à remplacer par API réelle)
-        // Simule la suppression
+        // Appel backend pour supprimer le salon
+        if (!salon || !salon.id) {
+          alert('Salon introuvable.');
+          return;
+        }
+        // Supprime le salon
+        await fetch('../backend/delete_salon.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: salon.id })
+        });
+        // Déclenche un event temps réel pour tous les joueurs
+        await fetch('../backend/notify_admin.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: salon.code, event: 'salon_supprime' })
+        });
         showSalonDetruitPopin(() => {
           window.location.href = 'espace-membre.php';
         });
       });
     };
+(function listenSalonEvents() {
+  // Écoute les événements temps réel pour ce salon
+  if (!window.EventSource || !salon || !salon.code) return;
+  const evt = new EventSource(`../backend/salon_events.php?code=${encodeURIComponent(salon.code)}`);
+  evt.onmessage = function(e) {
+    if (e.data && e.data.includes('salon_supprime')) {
+      showSalonDetruitPopin(() => {
+        window.location.href = 'espace-membre.php';
+      });
+      evt.close();
+    }
+  };
+})();
   }
 // Popin stylée pour confirmation destruction salon
 function showQuitPopin(onConfirm) {

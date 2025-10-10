@@ -139,9 +139,10 @@
     <div id="salon-code" style="text-align:center;font-size:1.12em;font-weight:600;color:#ff00ff;margin-bottom:1.1em;text-shadow:0 0 8px #ff00ff99;"></div>
         <div id="host-info" style="text-align:center;margin-bottom:2em;"></div>
         <div class="players" id="players-list"></div>
-        <div class="salon-btns">
+        <div class="salon-btns" style="display:flex;justify-content:center;margin-top:2.5em;">
+            <button class="btn-betou" id="btn-betou-kouenda" style="background:linear-gradient(90deg,#00fff9 0%,#ff00ff 100%);color:#181c3a;font-weight:bold;font-size:1.13em;padding:0.7em 2.2em;border-radius:0.8em;border:none;box-shadow:0 0 16px #00fff9cc,0 0 32px #ff00ff99;cursor:pointer;margin-right:1.2em;">Betou Kouenda</button>
             <button class="btn-retour" id="btn-retour">&#8592; Retour</button>
-            <button class="btn-demarrer" id="btn-demarrer">Démarrer</button>
+            </div>
         </div>
         </style>
         <style>
@@ -234,10 +235,22 @@
         if (nomHoteSession && hote && hote.nom && nomHoteSession === hote.nom) {
             nomAffiche = nomHoteSession;
         }
+        let hostImgAttrs = `src="${hote && hote.photo ? hote.photo : '../assets/avatar-default.png'}" class="avatar host" alt="Avatar Hôte"`;
+        // Si l'utilisateur connecté est l'hôte, rendre la photo cliquable
+        if (nomHoteSession && hote && hote.nom && nomHoteSession === hote.nom) {
+            hostImgAttrs += ' style="cursor:pointer;box-shadow:0 0 32px #ffe600cc,0 0 64px #00fff9cc;transition:box-shadow 0.18s;" id="host-avatar-clickable"';
+        }
         document.getElementById('host-info').innerHTML = `
-            <img src="${hote && hote.photo ? hote.photo : '../assets/avatar-default.png'}" class="avatar host" alt="Avatar Hôte">
+            <img ${hostImgAttrs}>
             <div class="player-name">${nomAffiche} <span style="font-size:0.8em;color:#ff00ff;">(Hôte)</span></div>
         `;
+        // Ajoute l'action de refresh si c'est l'hôte
+        if (nomHoteSession && hote && hote.nom && nomHoteSession === hote.nom) {
+            setTimeout(() => {
+                const img = document.getElementById('host-avatar-clickable');
+                if (img) img.onclick = () => { renderSalon(); };
+            }, 50);
+        }
         // Affiche tous les joueurs (hors hôte) et les places vides
         const playersList = document.getElementById('players-list');
         playersList.innerHTML = '';
