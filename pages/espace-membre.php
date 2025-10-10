@@ -50,6 +50,18 @@ $user_email = $_SESSION['user_email'];
   <script>
   // Tout le JS s'exécute après que le DOM est prêt et vérifie l'existence des éléments
   document.addEventListener('DOMContentLoaded', function() {
+    // Récupère la photo de l'utilisateur connecté et l'affiche dans la modale rejoindre salon
+    fetch('../backend/get_user_info.php')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        var joinPhotoPreview = document.getElementById('avatar-preview-modal');
+        var joinPhotoPlaceholder = document.getElementById('avatar-placeholder-modal');
+        if (data && data.photo && joinPhotoPreview && joinPhotoPlaceholder) {
+          joinPhotoPreview.src = data.photo;
+          joinPhotoPreview.style.display = 'block';
+          joinPhotoPlaceholder.style.display = 'none';
+        }
+      });
     // Ouvre la modale rejoindre salon
     var btnJoinModal = document.getElementById('btn-join-modal');
     var modalJoin = document.getElementById('modal-join-salon');
@@ -113,13 +125,12 @@ $user_email = $_SESSION['user_email'];
         var reader = new FileReader();
         reader.onload = async function(ev) {
           var photo = ev.target.result;
-          // 1. Cherche le salon par code
+          var joinPhotoPreview = document.getElementById('avatar-preview-modal');
+          var photo = joinPhotoPreview && joinPhotoPreview.src ? joinPhotoPreview.src : '';
+          if (!nom || !code || !photo || photo === window.location.origin + '/') {
           var salons = [];
           try {
             var res = await fetch('../backend/salons.php');
-            salons = await res.json();
-          } catch (err) {
-            showAlert("Erreur lors de la recherche du salon.");
             return;
           }
           var salon = salons.find(function(s) { return s.code === code; });
@@ -179,7 +190,8 @@ $user_email = $_SESSION['user_email'];
             });
             if (!resp.ok) throw new Error();
           } catch (err) {
-            showAlert("Erreur lors de la mise à jour du salon.");
+          // No longer reading file, as we are using the photo from the preview
+          // reader.readAsDataURL(file);
             return;
           }
           // 6. Redirige vers la page du salon
@@ -229,8 +241,8 @@ $user_email = $_SESSION['user_email'];
                   <div class="form-group">
                     <label for="join-photo" style="color:#fff;font-weight:600;">Photo</label>
                     <label class="avatar-upload-label">
-                      <input type="file" id="join-photo" accept="image/*" style="display:none;" required>
-                      <span class="avatar-placeholder" id="avatar-placeholder-modal">+</span>
+                      <input type="file" id="join-photo" accept="image/*" style="display:none;" disabled>
+                      <span class="avatar-placeholder" id="avatar-placeholder-modal" style="display:none;">+</span>
                       <img id="avatar-preview-modal" class="avatar-preview" src="" alt="Aperçu photo" style="display:none;">
                     </label>
                   </div>
