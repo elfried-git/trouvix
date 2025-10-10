@@ -67,9 +67,28 @@
             height: 74px;
             border-radius: 50%;
             border: 3px solid #00fff9;
-            background: #222;
+            background: linear-gradient(135deg, #181c3a 60%, #00fff9 100%);
             object-fit: cover;
             box-shadow: 0 0 16px #00fff966, 0 0 32px #00fff933;
+            transition: box-shadow 0.22s, border 0.22s;
+        }
+        .avatar.player {
+            border: 3px solid #ffe600;
+            background: linear-gradient(135deg, #181c3a 60%, #ffe600 100%);
+            box-shadow: 0 0 24px #ffe60099, 0 0 48px #00fff966;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .avatar.player:hover {
+            box-shadow: 0 0 32px #ffe600cc, 0 0 64px #00fff9cc;
+            border: 3px solid #fff200;
+        }
+        .player-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2em;
         }
         .host {
             border: 3px solid #ff00ff;
@@ -176,23 +195,13 @@
 
     async function renderSalon() {
         const salon = await fetchSalonFromBackend();
-        // Si l'utilisateur connecté est dans la liste des joueurs, scroll ou focus sur sa place
+        // Vérifie si l'utilisateur connecté est encore dans la liste des joueurs
+        let userNom = null;
         try {
             const userInfo = await fetch('../backend/get_user_info.php');
             if (userInfo.ok) {
                 const data = await userInfo.json();
-                if (data && data.nom) {
-                    const joueurIndex = salon.joueurs.findIndex(j => j && j.nom === data.nom);
-                    if (joueurIndex > 0) {
-                        // Optionnel : scroll ou highlight la place du joueur
-                        setTimeout(() => {
-                            const slots = document.querySelectorAll('.player-slot');
-                            if (slots[joueurIndex-1]) {
-                                slots[joueurIndex-1].style.boxShadow = '0 0 24px #00fff9, 0 0 48px #ff00ff';
-                            }
-                        }, 300);
-                    }
-                }
+                if (data && data.nom) userNom = data.nom;
             }
         } catch(e) {}
         if (!salon) {
@@ -200,6 +209,12 @@
             document.getElementById('players-list').innerHTML = '';
             document.getElementById('host-info').innerHTML = '';
             document.getElementById('salon-code').textContent = '';
+            return;
+        }
+        // Si le joueur n'est plus dans la liste, il est exclu
+        if (userNom && !salon.joueurs.some(j => j && j.nom === userNom)) {
+            alert('Vous avez été retiré du salon.');
+            window.location.href = 'espace-membre.php';
             return;
         }
         document.getElementById('salon-code').textContent = `Code du salon : ${salon.code}`;
@@ -230,10 +245,16 @@
         for (let i = 1; i < totalSlots; i++) {
             const joueur = salon.joueurs[i];
             if (joueur && joueur.nom && joueur.photo) {
+                let retirerBtn = '';
+                // Affiche le bouton uniquement si l'utilisateur connecté est l'hôte
+                if (nomHoteSession && hote && hote.nom && nomHoteSession === hote.nom) {
+                    retirerBtn = `<button class="btn-retirer-joueur" data-nom="${joueur.nom}" style="margin-top:0.5em;background:#ff0055;color:#fff;border:none;border-radius:0.5em;padding:0.3em 0.9em;font-weight:bold;cursor:pointer;box-shadow:0 0 8px #ff0055cc;">Retirer</button>`;
+                }
                 playersList.innerHTML += `
-                    <div class="player-slot">
-                        <img src="${joueur.photo}" class="avatar" alt="Avatar joueur">
+                    <div class="player-block">
+                        <img src="${joueur.photo}" class="avatar player" alt="Avatar joueur">
                         <div class="player-name">${joueur.nom}</div>
+                        ${retirerBtn}
                     </div>
                 `;
             } else {
@@ -257,6 +278,30 @@
         }
     }
     renderSalon();
+    // Gestion du retrait d'un joueur (hôte uniquement)
+    setTimeout(() => {
+        document.querySelectorAll('.btn-retirer-joueur').forEach(btn => {
+            btn.onclick = async function() {
+                const nomARetirer = this.getAttribute('data-nom');
+                if (!confirm(`Retirer ${nomARetirer} du salon ?`)) return;
+                try {
+                    const res = await fetch('../backend/kick_player.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ code: salon.code, nom: nomARetirer })
+                    });
+                    const result = await res.json();
+                    if (result && result.success) {
+                        renderSalon();
+                    } else {
+                        alert(result && result.error ? result.error : 'Erreur lors du retrait');
+                    }
+                } catch (e) {
+                    alert('Erreur réseau lors du retrait');
+                }
+            };
+        });
+    }, 200);
     // Bouton retour vers la création de salon
     document.getElementById('btn-retour').onclick = function() {
         window.location.href = 'creer-salon.html';
