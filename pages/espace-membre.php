@@ -632,10 +632,17 @@ async function renderMemberSalonBlock() {
   // Afficher ou masquer le bouton Betou Kouenda selon si l'utilisateur est l'hôte
   const btnBetou = document.getElementById('btn-betou-kouenda');
   if (btnBetou) {
-    if (salon.joueurs[0] && salon.joueurs[0].nom === userNom) {
+    // Affiche le bouton pour tous les joueurs présents dans le salon
+    if (salon.joueurs.some(j => j && j.nom === userNom)) {
       btnBetou.style.display = 'block';
       btnBetou.onclick = function() {
-        alert('Le jeu va démarrer ! (fonctionnalité à implémenter)');
+        if (salon.code) {
+          localStorage.setItem('codeSalon', salon.code);
+          sessionStorage.setItem('codeSalon', salon.code);
+          window.location.href = 'jeux-encours.html?code=' + encodeURIComponent(salon.code);
+        } else {
+          window.location.href = 'jeux-encours.html';
+        }
       };
     } else {
       btnBetou.style.display = 'none';
@@ -672,7 +679,7 @@ async function renderMemberSalonBlock() {
     } else {
       playersList.innerHTML += `
         <div class="player-slot">
-          <div class="photo-placeholder">Photo</div>
+          <div class="photo-placeholder" style="width:70px;height:70px;border-radius:50%;background:rgba(0,255,249,0.13);border:2.5px solid #00fff9;box-shadow:0 0 16px #00fff966,0 0 32px #ff00ff99;margin:0 auto 0.5em auto;"></div>
           <div class="slot-status">Disponible</div>
         </div>
       `;

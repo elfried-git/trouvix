@@ -2,219 +2,465 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <title>Jeu en cours - Trouvix</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Salon en cours - DeviChal</title>
   <link rel="stylesheet" href="../style.css">
   <style>
     body {
-      background: #10132a;
+      background: radial-gradient(ellipse at 50% 0%, #1a1d3a 60%, #10132a 100%);
       color: #fff;
       font-family: 'Segoe UI', Arial, sans-serif;
       margin: 0;
       padding: 0;
+      min-height: 100vh;
     }
-    .lobby-container {
+    .game-encart {
       max-width: 700px;
-      margin: 3.5rem auto;
-      background: #181c3a;
-      border-radius: 1.5rem;
-      box-shadow: 0 0 32px #00fff966, 0 0 0 2px #00fff933;
-      padding: 2.5rem 2rem 2.5rem 2rem;
-      text-align: center;
-      position: relative;
-    }
-    .lobby-title {
-      font-size: 2rem;
-      color: #00fff9;
-      letter-spacing: 0.04em;
-      text-shadow: 0 0 8px #00fff9, 0 0 24px #00fff9;
-      margin-bottom: 1.2em;
-    }
-    .players-list {
-      display: flex;
-      justify-content: center;
-      gap: 2.5em;
-      margin-bottom: 2em;
-      flex-wrap: wrap;
-    }
-    .player-slot {
-      text-align: center;
-      min-width: 90px;
-    }
-    .avatar {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
+      width: 96vw;
+      min-height: 520px;
+      margin: 60px auto 0 auto;
+      background: rgba(24,28,58,0.98);
+      padding: 3.5em 2.5em 2.5em 2.5em;
+      border-radius: 2.2rem;
+      box-shadow: 0 0 64px #00fff9cc, 0 0 0 4px #00fff933, 0 0 120px 12px #ff00ff22;
       border: 2.5px solid #00fff9;
-      object-fit: cover;
-      background: #222;
-      margin: 0 auto 0.5em auto;
-      box-shadow: 0 0 12px #00fff966;
-    }
-    .empty-avatar {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      background: #222 url('../assets/avatar-default.png') center/60% no-repeat;
-      border: 2.5px dashed #888;
-      margin: 0 auto 0.5em auto;
-      opacity: 0.5;
-    }
-    .player-name {
-      color: #00fff9;
-      font-size: 1em;
-      margin-bottom: 0.2em;
-      word-break: break-word;
-    }
-    .player-role {
-      color: #ff00ff;
-      font-size: 0.95em;
-      font-weight: bold;
-      margin-bottom: 0.2em;
-    }
-    .lobby-actions {
+      position: relative;
+      overflow: visible;
+      animation: fadeIn 1.1s cubic-bezier(.4,0,.2,1);
+      text-align: center;
       display: flex;
-      justify-content: center;
-      gap: 1.5em;
-      margin-top: 2em;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      box-sizing: border-box;
     }
-    .btn-lobby {
-      background: linear-gradient(90deg, #00fff9 60%, #ff00ff 100%);
-      color: #181c3a;
-      border: none;
-      border-radius: 0.7em;
-      font-size: 1.15em;
+    .game-title {
+      color: #00fff9;
+      font-size: 2em;
       font-weight: bold;
+      margin-bottom: 0.7em;
+      text-shadow: 0 0 16px #00fff9, 0 0 32px #00fff9;
+    }
+    .game-info {
+      font-size: 1.18em;
+      margin-bottom: 1.2em;
+      color: #ff00ff;
+      font-weight: 600;
+      text-shadow: 0 0 8px #ff00ff99;
+    }
+    .timer {
+      font-size: 1.5em;
+      color: #ffe600;
+      font-weight: bold;
+      margin-bottom: 0.7em;
+      text-shadow: 0 0 8px #ffe600cc;
+    }
+    .round-info {
+      font-size: 1.1em;
+      color: #00fff9;
+      margin-bottom: 0.7em;
+      font-weight: 600;
+    }
+    .mot-info {
+      font-size: 1.1em;
+      color: #fff;
+      margin-bottom: 1.2em;
+      font-weight: 500;
+    }
+    .input-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 1em;
+      margin-bottom: 1.5em;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .mot-input {
+      font-size: 1.15em;
+      padding: 0.7em 1.2em;
+      border-radius: 0.7em;
+      border: 2px solid #00fff9;
+      background: #181c3a;
+      color: #00fff9;
+      outline: none;
+      min-width: 120px;
+      max-width: 260px;
+      width: 100%;
+      font-weight: 500;
+      transition: border 0.22s, box-shadow 0.22s;
+      box-sizing: border-box;
+    }
+    .mot-input:focus {
+      border: 2.5px solid #ff00ff;
+      box-shadow: 0 0 16px #ff00ff66, 0 0 24px #00fff9aa;
+      color: #fff;
+    }
+    .btn-valider {
+      background: linear-gradient(90deg, #00fff9 0%, #ff00ff 100%);
+      color: #181c3a;
+      font-weight: bold;
+      border: none;
+      border-radius: 0.9em;
+      font-size: 1.13em;
       padding: 0.7em 2.2em;
+      box-shadow: 0 0 16px #00fff9cc, 0 0 32px #ff00ff99;
       cursor: pointer;
-      box-shadow: 0 0 16px #00fff966;
-      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-      text-shadow: 0 0 8px #fff;
+      transition: background 0.2s, box-shadow 0.2s;
+      min-width: 120px;
+      margin-bottom: 0.5em;
     }
-    .btn-lobby:disabled {
-      background: #222;
-      color: #888;
-      box-shadow: none;
-      cursor: not-allowed;
+    .btn-valider:hover {
+      background: linear-gradient(90deg, #ff00ff 0%, #00fff9 100%);
+      color: #fff;
+      box-shadow: 0 0 40px #ff00ffaa, 0 0 0 2px #00fff933;
     }
-    @media (max-width: 600px) {
-      .lobby-container { padding: 1.2rem 0.5rem; }
-      .players-list { gap: 1em; }
-      .player-slot { min-width: 70px; }
+    .historique-table {
+      width: 100%;
+      min-width: 280px;
+      border-collapse: collapse;
+      margin-top: 2em;
+      background: rgba(24,28,58,0.98);
+      border-radius: 1em;
+      overflow: auto;
+      box-shadow: 0 0 24px #00fff966, 0 0 32px #ff00ff99;
+      box-sizing: border-box;
+    }
+    .historique-table th, .historique-table td {
+      padding: 0.7em 0.5em;
+      text-align: center;
+      font-size: 1.08em;
+    }
+    .historique-table th {
+      background: linear-gradient(90deg, #00fff9 0%, #ff00ff 100%);
+      color: #181c3a;
+      font-weight: bold;
+      font-size: 1.13em;
+    }
+    .historique-table td {
+      background: #181c3a;
+      color: #fff;
+      border-bottom: 1px solid #222;
+    }
+    .mot-valide {
+      color: #00ff66;
+      font-weight: bold;
+    }
+    .mot-invalide {
+      color: #ff0055;
+      font-weight: bold;
+    }
+    .avatar-table {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #00fff9;
+      box-shadow: 0 0 8px #00fff966;
+      margin-right: 0.5em;
+      vertical-align: middle;
+    }
+    @media (max-width: 900px) {
+      .game-encart {
+        max-width: 99vw;
+        min-width: 0;
+        padding: 1.2em 0.2em;
+        border-radius: 1.1em;
+      }
+      .input-row {
+        flex-direction: column;
+        gap: 0.7em;
+        align-items: stretch;
+      }
+      .btn-valider, #btn-quitter {
+        width: 100%;
+        min-width: 0;
+        margin-left: 0 !important;
+      }
+      .mot-input {
+        min-width: 0;
+        max-width: 100vw;
+      }
+      .historique-table th, .historique-table td {
+        font-size: 0.98em;
+      }
+    }
+    @media (max-width: 430px) {
+      .game-encart {
+        padding: 0.7em 0.1em;
+        border-radius: 0.7em;
+      }
+      .historique-table th, .historique-table td {
+        font-size: 0.92em;
+      }
     }
   </style>
+  <script src="../mots.js"></script>
 </head>
 <body>
-  <header>
-    <div class="header-row">
-      <div class="logo" tabindex="0" aria-label="Accueil Trouvix">
-        <span class="logo-text">Trouvix</span>
+  <div class="game-encart">
+    <div class="game-title">Jeu en cours</div>
+    <div id="game-info" class="game-info"></div>
+    <div class="timer">Temps restant : <span id="timer">20</span>s</div>
+    <div class="round-info" id="round-info"></div>
+    <div class="mot-info" id="mot-info"></div>
+    <form id="mot-form" autocomplete="off">
+      <div class="input-row">
+        <input type="text" id="mot-input" class="mot-input" placeholder="Deviner ce mot" required autocomplete="off" />
+        <button type="submit" class="btn-valider">Valider</button>
+        <button id="btn-quitter" type="button" style="display:none;margin-left:1.2em;padding:0.7em 2em;font-size:1.13em;font-weight:bold;border-radius:0.9em;background:linear-gradient(90deg,#ff0055 0%,#ff00ff 100%);color:#fff;box-shadow:0 0 12px #ff0055cc,0 0 24px #ff00ff99;border:none;cursor:pointer;letter-spacing:0.04em;transition:background 0.2s,box-shadow 0.2s;">Quitter</button>
       </div>
-      <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
-        <ul>
-          <li><a href="../index.html">Accueil</a></li>
-          <li><a href="../index.html#contact">Contact</a></li>
-          <li><a href="jeux-quiz.html">Jeux / Quiz</a></li>
-          <li><a href="../page-apprentissage-langues/index.html">Apprentissage des Langues</a></li>
-          <li><a href="tv-replay.html">TV / Replay</a></li>
-          <li id="menu-user-icon" style="display:none">
-            <a href="espace-membre.php" title="Espace membre" style="display:flex;align-items:center;gap:0.4em;">
-              <span style="font-size:1.5em;">👤</span>
-              <span id="menu-user-nom" style="font-size:1em;"></span>
-            </a>
-          </li>
-          <li id="menu-login-link"><a href="../auth/login.html">Connexion</a></li>
-          <li id="menu-logout-link" style="display:none"><form action="logout.php" method="post" style="display:inline;"><button type="submit" style="background:none;border:none;color:#0ff1ce;font-size:1em;cursor:pointer;">Déconnexion</button></form></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-  <div class="lobby-container">
-    <div class="lobby-title" id="lobby-title">Salon</div>
-    <div class="players-list" id="players-list"></div>
-    <div class="lobby-actions">
-      <button class="btn-lobby" id="btn-start" disabled>DÉMARRER</button>
-      <button class="btn-lobby" id="btn-quit">QUITTER</button>
-    </div>
-    <div style="margin-top:2em;">
-      <a href="creer-salon.html" class="btn-lobby" style="text-decoration:none;display:inline-block;">&#8592; Retour aux salons</a>
-    </div>
+    </form>
+    <table class="historique-table" id="historique-table">
+      <thead>
+        <tr>
+          <th>Joueurs</th>
+          <th>Mot proposé</th>
+          <th>Nombre de lettres</th>
+        </tr>
+      </thead>
+      <tbody id="historique-body"></tbody>
+    </table>
   </div>
   <script>
-    // --- Paramètres du salon (à récupérer dynamiquement dans une vraie app) ---
-    // Récupération du salon courant depuis le localStorage (créé par l'hôte)
-    function getSalonCourant() {
-      const salons = JSON.parse(localStorage.getItem('DEVITAL_SALONS') || '[]');
-      const salonId = localStorage.getItem('last_created_salon_id');
-      return salons.find(s => s.id === salonId) || salons[0] || {
-        nom: 'Titre du Salon',
-        maxJoueurs: 4,
-        joueurs: [
-          { nom: 'Hôte', photo: '../assets/avatar-default.png', estHote: true }
-        ]
-      };
+// --- Variables de simulation (à remplacer par backend/session/salon réel) ---
+let isHote = false; // À remplacer par la vraie session
+let salon = null;
+let user = null;
+let round = 1;
+let maxRounds = 10;
+let longueurMot = 6;
+let joueurs = [];
+let historique = [];
+let motADeviner = '';
+let joueurCourant = null;
+let timer = 20;
+let timerInterval = null;
+
+// --- Simulation récupération salon/session (à remplacer par API réelle) ---
+async function fetchSalonEtJoueurs() {
+  // Récupère le code du salon depuis l'URL ou le stockage local/session
+  let codeSalon = null;
+  // Essayons d'abord via l'URL (ex: ?code=VIX-VY6O)
+  const params = new URLSearchParams(window.location.search);
+  if (params.has('code')) {
+    codeSalon = params.get('code');
+  } else {
+    // Sinon, essaye via localStorage/sessionStorage
+    codeSalon = localStorage.getItem('codeSalon') || sessionStorage.getItem('codeSalon');
+  }
+  if (!codeSalon) {
+    alert('Code du salon introuvable.');
+    window.location.href = 'espace-membre.php';
+    return;
+  }
+  // Appel API pour récupérer le salon correspondant
+  let salons = [];
+  try {
+    const resp = await fetch('../backend/salons.php');
+    salons = await resp.json();
+  } catch (e) {
+    alert('Erreur lors de la récupération des salons.');
+    window.location.href = 'espace-membre.php';
+    return;
+  }
+  salon = salons.find(s => s.code === codeSalon);
+  if (!salon) {
+    alert('Salon non trouvé.');
+    window.location.href = 'espace-membre.php';
+    return;
+  }
+  joueurs = Array.isArray(salon.joueurs) ? salon.joueurs : [];
+  longueurMot = salon.longueurMot || 6;
+  maxRounds = salon.maxRounds || 10;
+  // Trouver l'utilisateur courant par sessionStorage/localStorage ou fallback premier joueur
+  let nomUser = localStorage.getItem('user_nom') || sessionStorage.getItem('user_nom');
+  user = joueurs.find(j => j.nom === nomUser) || joueurs[0];
+  // Déterminer si l'utilisateur est l'hôte
+  isHote = (user && joueurs.length && user.nom === joueurs[0].nom);
+  round = 1;
+  motADeviner = '';
+  joueurCourant = joueurs[0] || null;
+  historique = [];
+}
+
+function startTimer() {
+  timer = 20;
+  document.getElementById('timer').textContent = timer;
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timer--;
+    document.getElementById('timer').textContent = timer;
+    if (timer <= 0) {
+      clearInterval(timerInterval);
+      document.getElementById('timer').textContent = 0;
+      // Fin du round
+      setTimeout(() => {
+        nextRound();
+      }, 1000);
     }
-    const salon = getSalonCourant();
-    const isHote = true; // À adapter selon l'utilisateur courant
-    const minJoueurs = 2;
+  }, 1000);
+}
 
-    // --- Affichage du titre ---
-    document.getElementById('lobby-title').textContent = salon.nom;
+function updateGameInfo() {
+  document.getElementById('game-info').textContent = `Au tour de ${joueurCourant.nom} qui commence la partie`;
+  document.getElementById('round-info').textContent = `Round : ${round} / ${maxRounds}`;
+  document.getElementById('mot-info').textContent = `Le mot à deviner contient ${longueurMot} lettres`;
+}
 
-    // --- Affichage des joueurs et places vides ---
-    function renderPlayers() {
-      const playersList = document.getElementById('players-list');
-      playersList.innerHTML = '';
-      for (let i = 0; i < salon.maxJoueurs; i++) {
-        const joueur = salon.joueurs[i];
-        const slot = document.createElement('div');
-        slot.className = 'player-slot';
-        if (joueur) {
-          slot.innerHTML = `
-            <div style="display:flex;justify-content:center;align-items:center;">
-              <img src="${joueur.photo || '../assets/avatar-default.png'}" class="avatar" alt="Avatar" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2.5px solid #00fff9;background:#222;box-shadow:0 0 12px #00fff966;" />
-            </div>
-            ${joueur.estHote ? '<div class=\"player-role\" style=\"color:#ff00ff;font-weight:bold;font-size:1.15em;margin-top:0.3em;\">Hôte</div>' : `<div class=\"player-name\">${joueur.nom}</div>`}
-          `;
-        } else {
-          slot.innerHTML = `
-            <div class="empty-avatar"></div>
-            <div class="player-name">Place disponible</div>
-          `;
-        }
-        playersList.appendChild(slot);
+function updateHistoriqueTable() {
+  const tbody = document.getElementById('historique-body');
+  tbody.innerHTML = '';
+  for (const entry of historique) {
+    const joueur = joueurs.find(j => j.nom === entry.nom);
+    let photo = joueur && joueur.photo ? joueur.photo : '../assets/avatar-default.png';
+    // Corrige le chemin si la photo est dans uploads/
+    if (photo && !photo.startsWith('http') && !photo.includes('uploads/')) {
+      // Si ce n'est pas déjà un chemin uploads, on tente de corriger
+      const nomFichier = photo.split('/').pop();
+      if (nomFichier && nomFichier !== 'avatar-default.png') {
+        photo = '../uploads/' + nomFichier;
       }
     }
-    renderPlayers();
+    const motClass = entry.valide ? 'mot-valide' : 'mot-invalide';
+    tbody.innerHTML += `
+      <tr>
+        <td><img src="${photo}" class="avatar-table" alt="Avatar"> ${entry.nom}</td>
+        <td class="${motClass}">${entry.mot}</td>
+        <td>${entry.mot.length}</td>
+      </tr>
+    `;
+  }
+}
 
-    // --- Bouton DÉMARRER ---
-    const btnStart = document.getElementById('btn-start');
-    function updateStartButton() {
-      btnStart.disabled = !(
-        isHote && salon.joueurs.length >= minJoueurs
-      );
+function nextRound() {
+  round++;
+  if (round > maxRounds) {
+    showFinPartiePopin();
+    return;
+  }
+  joueurCourant = joueurs[(round-1) % joueurs.length];
+  updateGameInfo();
+  startTimer();
+  document.getElementById('mot-input').value = '';
+// Popin stylée de fin de partie
+function showFinPartiePopin() {
+  let old = document.getElementById('fin-partie-popin');
+    var oldPopin = document.getElementById('fin-partie-popin');
+    if (oldPopin) oldPopin.remove();
+    // Calcul des scores par joueur
+    const scores = {};
+    for (const entry of historique) {
+      if (!scores[entry.nom]) scores[entry.nom] = 0;
+      if (entry.valide) scores[entry.nom] += 1;
     }
-    updateStartButton();
+    // Génère le tableau des résultats
+    let resultTable = `<table style='margin:1.2em auto 1.5em auto;min-width:220px;max-width:90vw;background:#222;border-radius:0.7em;box-shadow:0 0 12px #00fff966;'><thead><tr><th style='color:#00fff9;padding:0.5em 1.2em;'>Joueur</th><th style='color:#ffe600;padding:0.5em 1.2em;'>Score</th></tr></thead><tbody>`;
+    // Trie les joueurs par score décroissant
+    const joueursTries = Object.keys(scores).sort((a,b)=>scores[b]-scores[a]);
+    for (const nom of joueursTries) {
+      resultTable += `<tr><td style='color:#fff;padding:0.5em 1.2em;'>${nom}</td><td style='color:#ffe600;font-weight:bold;padding:0.5em 1.2em;'>${scores[nom]}</td></tr>`;
+    }
+    resultTable += '</tbody></table>';
+    const popin = document.createElement('div');
+    popin.id = 'fin-partie-popin';
+    popin.innerHTML = `
+      <div style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(10,16,40,0.92);z-index:3200;display:flex;align-items:center;justify-content:center;">
+        <div style="background:#181c3a;padding:2.5em 2.7em 2.2em 2.7em;border-radius:1.3em;box-shadow:0 0 32px #00fff966,0 0 0 2px #00fff933,0 0 80px 8px #ff00ff22;text-align:center;max-width:90vw;border:2px solid #00fff9;">
+          <div style='font-size:1.35em;color:#ffe600;font-weight:bold;margin-bottom:1.2em;text-shadow:0 0 16px #ffe600cc;'>🎉 Fin de la partie !</div>
+          <div style='color:#fff;margin-bottom:1.2em;font-size:1.13em;'>Merci d’avoir joué avec nous.<br>Voici les résultats de la partie :</div>
+          ${resultTable}
+          <button id="btn-fin-partie-ok" style="background:linear-gradient(90deg,#00fff9 0%,#ff00ff 100%);color:#181c3a;font-weight:bold;font-size:1.13em;padding:0.7em 2.2em;border-radius:0.8em;border:none;box-shadow:0 0 16px #00fff9cc,0 0 32px #ff00ff99;cursor:pointer;">OK</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(popin);
+    document.getElementById('btn-fin-partie-ok').onclick = function() {
+      window.location.href = 'espace-membre.php';
+    };
+}
+}
 
-    btnStart.addEventListener('click', function() {
-      if (isHote && salon.joueurs.length >= minJoueurs) {
-        // Logique de démarrage du jeu pour tous (à implémenter)
-        alert('Le jeu commence !');
-      }
-    });
+document.getElementById('mot-form').onsubmit = function(e) {
+  e.preventDefault();
+  const mot = document.getElementById('mot-input').value.trim().toLowerCase();
+  if (!mot) return;
+  // Vérifie la validité du mot dans mots.js
+  let valide = false;
+  if (window.mots && Array.isArray(window.mots)) {
+    valide = window.mots.includes(mot) && mot.length === longueurMot;
+  }
+  historique.push({ nom: user.nom, mot, valide });
+  updateHistoriqueTable();
+  document.getElementById('mot-input').value = '';
+};
 
-    // --- Bouton QUITTER ---
-    document.getElementById('btn-quit').addEventListener('click', function() {
-      if (isHote) {
-        // Dissoudre le salon pour tous (à implémenter)
-        localStorage.removeItem('CURRENT_SALON');
-        window.location.href = 'creer-salon.html';
-      } else {
-        // Retirer le joueur du salon (à implémenter)
-        window.location.href = 'creer-salon.html';
-      }
-    });
+// --- Initialisation ---
+(async function() {
+  await fetchSalonEtJoueurs();
+  updateGameInfo();
+  updateHistoriqueTable();
+  startTimer();
+  // Affiche le bouton quitter uniquement pour l'hôte
+  const btnQuitter = document.getElementById('btn-quitter');
+  if (isHote && btnQuitter) {
+    btnQuitter.style.display = 'block';
+    btnQuitter.onclick = async function() {
+      showQuitPopin(async () => {
+        // Appel backend pour supprimer le salon (à remplacer par API réelle)
+        // Simule la suppression
+        showSalonDetruitPopin(() => {
+          window.location.href = 'espace-membre.php';
+        });
+      });
+    };
+  }
+// Popin stylée pour confirmation destruction salon
+function showQuitPopin(onConfirm) {
+  let old = document.getElementById('quit-popin');
+  if (old) old.remove();
+  const popin = document.createElement('div');
+  popin.id = 'quit-popin';
+  popin.innerHTML = `
+    <div style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(10,16,40,0.92);z-index:3000;display:flex;align-items:center;justify-content:center;">
+      <div style="background:#181c3a;padding:2.2em 2.5em 2em 2.5em;border-radius:1.2em;box-shadow:0 0 32px #00fff966,0 0 0 2px #00fff933,0 0 80px 8px #ff00ff22;text-align:center;max-width:90vw;border:1.5px solid #00fff9;">
+        <div style='font-size:1.18em;color:#ff0055;font-weight:bold;margin-bottom:1.2em;'>Voulez-vous vraiment quitter et détruire le salon ?</div>
+        <button id="btn-quit-cancel" style="background:linear-gradient(90deg,#222 60%,#00fff9 100%);color:#fff;font-weight:bold;font-size:1.13em;padding:0.7em 2.2em;border-radius:0.8em;border:none;box-shadow:0 0 16px #00fff966,0 0 32px #00fff933;cursor:pointer;">Annuler</button>
+        <button id="btn-quit-confirm" style="margin-left:1.2em;background:linear-gradient(90deg,#ff0055 0%,#ffe600 100%);color:#181c3a;font-weight:bold;font-size:1.13em;padding:0.7em 2.2em;border-radius:0.8em;border:none;box-shadow:0 0 16px #ff0055cc,0 0 32px #ffe60099;cursor:pointer;">Détruire</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(popin);
+  document.getElementById('btn-quit-cancel').onclick = () => popin.remove();
+  document.getElementById('btn-quit-confirm').onclick = function() {
+    popin.remove();
+    if (typeof onConfirm === 'function') onConfirm();
+  };
+}
+
+// Popin finale après destruction du salon
+function showSalonDetruitPopin(onClose) {
+  let old = document.getElementById('salon-detruit-popin');
+  if (old) old.remove();
+  const popin = document.createElement('div');
+  popin.id = 'salon-detruit-popin';
+  popin.innerHTML = `
+    <div style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(10,16,40,0.92);z-index:3100;display:flex;align-items:center;justify-content:center;">
+      <div style="background:#181c3a;padding:2.2em 2.5em 2em 2.5em;border-radius:1.2em;box-shadow:0 0 32px #00fff966,0 0 0 2px #00fff933,0 0 80px 8px #ff00ff22;text-align:center;max-width:90vw;border:1.5px solid #00fff9;">
+        <div style='font-size:1.18em;color:#00fff9;font-weight:bold;margin-bottom:1.2em;'>Salon détruit</div>
+        <div style='color:#fff;margin-bottom:1.2em;'>Le salon a été détruit. Tous les joueurs sont exclus.</div>
+        <button id="btn-salon-detruit-ok" style="background:linear-gradient(90deg,#00fff9 0%,#ff00ff 100%);color:#181c3a;font-weight:bold;font-size:1.13em;padding:0.7em 2.2em;border-radius:0.8em;border:none;box-shadow:0 0 16px #00fff9cc,0 0 32px #ff00ff99;cursor:pointer;">OK</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(popin);
+  document.getElementById('btn-salon-detruit-ok').onclick = function() {
+    popin.remove();
+    if (typeof onClose === 'function') onClose();
+  };
+}
+})();
   </script>
 </body>
-<script src="/Trouvix/js/session-nav.js"></script>
 </html>
