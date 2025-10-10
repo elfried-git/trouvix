@@ -4,7 +4,8 @@ header('Content-Type: application/json');
 if (isset($_SESSION['user_nom']) && isset($_SESSION['user_email'])) {
     echo json_encode([
         'nom' => $_SESSION['user_nom'],
-        'email' => $_SESSION['user_email']
+        'email' => $_SESSION['user_email'],
+        'photo' => isset($_SESSION['user_photo']) ? $_SESSION['user_photo'] : '../assets/avatar-default.png'
     ]);
 } elseif (isset($_SESSION['admin_id']) && isset($_SESSION['admin_name'])) {
     echo json_encode([

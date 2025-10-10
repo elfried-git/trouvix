@@ -29,9 +29,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Insérer l'utilisateur
-    $stmt = $pdo->prepare('INSERT INTO users (nom, email, ville, otp) VALUES (?, ?, ?, ?)');
-    $stmt->execute([$nom, $email, $ville, $otp]);
+    // Gestion de l'upload de la photo
+    $photoPath = '../assets/avatar-default.png';
+    if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        $fileType = mime_content_type($_FILES['photo']['tmp_name']);
+        if (!in_array($fileType, $allowedTypes)) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Format de photo non supporté.']);
+            exit;
+        }
+        $ext = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
+        $fileName = uniqid('photo_', true) . '.' . $ext;
+        $uploadDir = __DIR__ . '/../uploads/';
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+        $destPath = $uploadDir . $fileName;
+        if (move_uploaded_file($_FILES['photo']['tmp_name'], $destPath)) {
+            $photoPath = '../uploads/' . $fileName;
+        }
+    }
+
+    // Insérer l'utilisateur avec la photo
+    $stmt = $pdo->prepare('INSERT INTO users (nom, email, ville, otp, photo) VALUES (?, ?, ?, ?, ?)');
+    $stmt->execute([$nom, $email, $ville, $otp, $photoPath]);
 
     echo json_encode(['success' => true, 'message' => 'Inscription réussie !']);
     exit;

@@ -32,14 +32,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'samesite' => 'Lax'
         ]);
         session_start();
-    $_SESSION['user_id'] = $user['id'];
-    $_SESSION['user_nom'] = $user['nom'];
-    $_SESSION['user_email'] = $user['email'];
-    $_SESSION['username'] = $user['nom'];
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['user_nom'] = $user['nom'];
+        $_SESSION['user_email'] = $user['email'];
+        $_SESSION['username'] = $user['nom'];
+        $_SESSION['user_photo'] = isset($user['photo']) && $user['photo'] ? $user['photo'] : '../assets/avatar-default.png';
         echo json_encode([
             'success' => true,
             'message' => 'Connexion réussie !',
-            'user_nom' => $user['nom']
+            'user_nom' => $user['nom'],
+            'user_photo' => $_SESSION['user_photo']
         ]);
     } else {
         http_response_code(401);

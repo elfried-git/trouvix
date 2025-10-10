@@ -288,13 +288,12 @@
 					<option value="11">11</option>
 				</select>
 			</div>
-			<div class="form-group">
+			<div class="form-group" style="text-align:center;">
 				<label class="form-label">Photo</label>
-				<label class="avatar-upload-label">
-					<input type="file" id="avatar-upload" accept="image/*" style="display:none;" required>
-					<span class="avatar-placeholder" id="avatar-placeholder">+</span>
-					<img id="avatar-preview" class="avatar-preview" src="" alt="Aperçu photo">
+				<label class="avatar-upload-label" tabindex="-1" style="cursor:default;">
+					<img id="avatar-preview" class="avatar-preview" src="../assets/avatar-default.png" alt="Photo hôte" style="display:block;">
 				</label>
+				<div style="font-size:0.95em;color:#aaa;margin-top:0.3em;">Photo de profil de l'hôte (non modifiable ici)</div>
 			</div>
 			<button type="submit" class="btn-main" id="btn-creer">Créer le Salon</button>
 	</form>
@@ -311,24 +310,28 @@
 			return 'VIX-' + code;
 		}
 
-		// Avatar preview
-		const avatarUpload = document.getElementById('avatar-upload');
+		// Préremplir le champ pseudo et la photo avec la session utilisateur
 		const avatarPreview = document.getElementById('avatar-preview');
-		const avatarPlaceholder = document.getElementById('avatar-placeholder');
-		avatarUpload.addEventListener('change', function () {
-			if (avatarUpload.files && avatarUpload.files[0]) {
-				const reader = new FileReader();
-				reader.onload = function (e) {
-					avatarPreview.src = e.target.result;
-					avatarPreview.style.display = 'block';
-					avatarPlaceholder.style.display = 'none';
-				};
-				reader.readAsDataURL(avatarUpload.files[0]);
-			} else {
-				avatarPreview.src = '';
-				avatarPreview.style.display = 'none';
-				avatarPlaceholder.style.display = 'block';
-			}
+		window.addEventListener('DOMContentLoaded', function () {
+			fetch('../backend/get_user_info.php')
+				.then(res => res.ok ? res.json() : null)
+				.then(data => {
+					if (data) {
+						// Nom hôte
+						const pseudoInput = document.getElementById('pseudo-hote');
+						if (data.nom && pseudoInput && !pseudoInput.value) {
+							pseudoInput.value = data.nom;
+						}
+						// Photo hôte
+						if (data.photo && avatarPreview) {
+							avatarPreview.src = data.photo;
+							avatarPreview.style.display = 'block';
+						} else if (avatarPreview) {
+							avatarPreview.src = '../assets/avatar-default.png';
+							avatarPreview.style.display = 'block';
+						}
+					}
+				});
 		});
 
 		// Préremplir le champ pseudo avec le nom de session si disponible
@@ -352,28 +355,25 @@
 			const hote = document.getElementById('pseudo-hote').value.trim();
 			const nbJoueurs = document.getElementById('nb-joueurs').value;
 			const nbMots = document.getElementById('nb-mots').value;
-			const file = avatarUpload.files[0];
-			if (!nomSalon || !hote || !file || !nbJoueurs || !nbMots) {
+			if (!nomSalon || !hote || !nbJoueurs || !nbMots) {
 				alert("Tous les champs sont obligatoires.");
 				return;
 			}
-			const reader = new FileReader();
-			reader.onload = async function (ev) {
-				const photo = ev.target.result;
-				const codeSalon = generateSalonCode();
-				// Stocke le nombre de joueurs pour la page salon
-				localStorage.setItem('trouvix_nbJoueurs', nbJoueurs);
-				// Affiche la modal de confirmation avec les bons labels
-				showSalonModal({
-					nomSalon,
-					hote,
-					photo,
-					code: codeSalon,
-					nbJoueurs,
-					nbMots
-				});
-			};
-			reader.readAsDataURL(file);
+			// Récupère la photo de l'utilisateur connecté (hôte)
+			let photo = avatarPreview.src;
+			if (!photo) photo = '../assets/avatar-default.png';
+			const codeSalon = generateSalonCode();
+			// Stocke le nombre de joueurs pour la page salon
+			localStorage.setItem('trouvix_nbJoueurs', nbJoueurs);
+			// Affiche la modal de confirmation avec les bons labels
+			showSalonModal({
+				nomSalon,
+				hote,
+				photo,
+				code: codeSalon,
+				nbJoueurs,
+				nbMots
+			});
 		});
 
 		// Affiche la modal de confirmation salon créé
