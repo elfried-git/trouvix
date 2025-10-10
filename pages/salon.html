@@ -7,6 +7,7 @@
   <title>Salon en cours - DeviChal</title>
   <link rel="stylesheet" href="../style.css">
   <style>
+    /* CSS OMMIS ICI POUR BREVETÉ, UTILISEZ LE CSS DU PROMPT ORIGINAL */
     body {
       background: #10132a;
       color: #fff;
@@ -143,89 +144,160 @@
       <button class="btn-lobby" id="btn-quit">QUITTER</button>
     </div>
     <div style="margin-top:2em;">
-      <a href="../index.html" class="btn-lobby" style="text-decoration:none;display:inline-block;">&#8592; Retour à l'accueil</a>
+      <a href="../index.html" class="btn-lobby" style="text-decoration:none;display:inline-block;">&#8592; Retour à
+        l'accueil</a>
     </div>
   </div>
   <script>
-    // --- Paramètres du salon : récupération dynamique depuis le backend ---
-    // On suppose que le code du salon est passé en query string (?code=XXXXXX)
+    // Récupère le nom de l'utilisateur qui a créé/joint le salon
+    const SESSION_PLAYER_NAME = localStorage.getItem('sessionName') || 'Invité';
+
     function getSalonCodeFromURL() {
       const params = new URLSearchParams(window.location.search);
       return params.get('code');
     }
-    let salon = null;
-    const minJoueurs = 2;
 
-    async function chargerSalonEtAfficher() {
-      const codeSalon = getSalonCodeFromURL();
-      if (!codeSalon) {
-        document.getElementById('lobby-title').textContent = 'Salon introuvable';
-        document.getElementById('host-name').textContent = '';
-        return;
-      }
-      // Récupérer la liste des salons depuis le backend
-      let salons = [];
+    async function fetchSalonByCode(code) {
+      if (!code) return null;
+
+      // CORRECTION CRITIQUE : Ajout du cache-buster pour forcer le rafraîchissement
+      const cacheBuster = `_t=${Date.now()}`;
+
       try {
-        const res = await fetch('../backend/salons.php');
-        if (res.ok) salons = await res.json();
-      } catch (e) { }
-      salon = salons.find(s => s.code === codeSalon);
-      if (!salon || !Array.isArray(salon.joueurs)) {
-        document.getElementById('lobby-title').textContent = 'Salon introuvable';
-        document.getElementById('host-name').textContent = '';
-        return;
+        const res = await fetch(`../backend/salons.php?${cacheBuster}`);
+        if (res.ok) {
+          const salons = await res.json();
+
+          // Rendre la recherche insensible à la casse et plus robuste
+          const codeMaj = code.toUpperCase();
+          return salons.find(s => (s.code || '').toUpperCase() === codeMaj);
+        }
+      } catch (e) {
+        console.error("Erreur de récupération des salons:", e);
       }
-      // Affichage dynamique du nom du salon
-      document.getElementById('lobby-title').textContent = salon.nom && salon.nom.trim() ? salon.nom : 'Salon';
-      // Affichage dynamique du nom et de la photo de l'hôte
-      let host = salon.joueurs.find(j => j.estHote) || salon.joueurs[0];
-      if (host) {
-        document.getElementById('host-name').innerHTML = `<span style="color:#ff00ff;font-weight:bold;">Hôte :</span> <span style="color:#00fff9;">${host.nom}</span>`;
-      }
-      await renderPlayers();
-      updateStartButton();
+      return null;
     }
 
-    // --- Affichage des joueurs et places vides ---
-    // --- Modale pour rejoindre une place ---
-    function createJoinModal(onSubmit, onCancel) {
+    async function afficherSalon() {
+      const codeSalon = getSalonCodeFromURL();
+      const salon = await fetchSalonByCode(codeSalon);
+      const lobbyTitle = document.getElementById('lobby-title');
+      const hostName = document.getElementById('host-name');
+      const playersList = document.getElementById('players-list');
+      const btnStart = document.getElementById('btn-start');
+      playersList.innerHTML = '';
+      btnStart.disabled = true;
+
+      // Vérification de l'intégrité minimale du salon
+      if (!salon || !Array.isArray(salon.joueurs) || !salon.joueurs[0] || !salon.joueurs[0].nom) {
+        lobbyTitle.textContent = 'Salon introuvable. (Code invalide ou erreur serveur)';
+        hostName.textContent = '';
+        btnStart.style.display = 'none';
+        return;
+      }
+
+      btnStart.style.display = 'inline-block'; // Afficher si trouvé
+      const nbJoueursActuels = salon.joueurs.filter(j => j && j.nom).length;
+      const hote = salon.joueurs[0];
+
+      // Détermine si l'utilisateur est l'hôte de ce salon
+      const isHost = hote.nom === SESSION_PLAYER_NAME;
+
+      lobbyTitle.textContent = salon.nom && salon.nom.trim() ? salon.nom : 'Salon';
+      hostName.innerHTML = `<span style="color:#ff00ff;font-weight:bold;">Hôte :</span> <span style="color:#00fff9;">${hote.nom}</span>`;
+
+      // Affiche l’hôte dans la liste
+      const hoteSlot = document.createElement('div');
+      hoteSlot.className = 'player-slot';
+      hoteSlot.innerHTML = `
+                <div style="display:flex;justify-content:center;align-items:center;">
+                    <img src="${hote.photo || '../assets/avatar-default.png'}" class="avatar" alt="Avatar" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2.5px solid #ff00ff;background:#222;box-shadow:0 0 12px #ff00ff66;" />
+                </div>
+                <div class="player-role" style="color:#ff00ff;font-weight:bold;font-size:1.15em;margin-top:0.3em;">Hôte</div>
+                <div class="player-name" style="color:#00fff9;">${hote.nom}</div>
+            `;
+      playersList.appendChild(hoteSlot);
+
+      // Affiche les places disponibles ou joueurs
+      for (let i = 1; i < salon.maxJoueurs; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'player-slot';
+        const joueur = salon.joueurs[i];
+
+        if (joueur && joueur.nom) {
+          slot.innerHTML = `
+                        <div style="display:flex;justify-content:center;align-items:center;">
+                            <img src="${joueur.photo || '../assets/avatar-default.png'}" class="avatar" alt="Avatar" style="width:64px;height:64px;border:2.5px solid #00fff9;box-shadow:0 0 12px #00fff966;" />
+                        </div>
+                        <div class="player-name">${joueur.nom}</div>
+                    `;
+        } else {
+          slot.innerHTML = `
+                        <div class="empty-avatar"></div>
+                        <div class="player-name">Place disponible</div>
+                    `;
+          // N'autoriser la jointure que si l'utilisateur n'est pas déjà dans le salon
+          if (salon.joueurs.every(j => !j || j.nom !== SESSION_PLAYER_NAME)) {
+            slot.style.cursor = 'pointer';
+            slot.onclick = function () {
+              createJoinModal(async function (nom, photo) {
+                await rejoindreSalon(nom, photo);
+              });
+            };
+          }
+        }
+        playersList.appendChild(slot);
+      }
+
+      // Logique du bouton Démarrer
+      if (isHost) {
+        if (nbJoueursActuels >= 2) {
+          btnStart.disabled = false;
+          btnStart.textContent = `DÉMARRER (${nbJoueursActuels}/${salon.maxJoueurs})`;
+          btnStart.onclick = demarrerPartie;
+        } else {
+          btnStart.textContent = `DÉMARRER (${nbJoueursActuels}/${salon.maxJoueurs}) - Min 2 joueurs`;
+        }
+      } else {
+        btnStart.textContent = `En attente de l'hôte... (${nbJoueursActuels}/${salon.maxJoueurs})`;
+      }
+    }
+
+    function createJoinModal(onSubmit) {
       let modal = document.getElementById('join-modal');
       if (modal) modal.remove();
       modal = document.createElement('div');
       modal.id = 'join-modal';
       modal.style = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(10,16,40,0.85);z-index:1000;display:flex;align-items:center;justify-content:center;';
       modal.innerHTML = `
-          <div style="background:#181c3a;padding:2em 2.5em 2em 2.5em;border-radius:1.2em;box-shadow:0 0 32px #00fff966,0 0 0 2px #00fff933;text-align:center;max-width:90vw;">
-            <div style="font-size:1.5em;color:#00fff9;font-weight:bold;margin-bottom:1.2em;letter-spacing:0.02em;text-shadow:0 0 8px #00fff9,0 0 24px #00fff9;">Rejoindre le salon</div>
-            <form id="join-form">
-              <input type="text" id="join-nom" placeholder="Votre nom" maxlength="15" required style="margin-bottom:1.2em;width:92%;padding:0.7em 1.1em;font-size:1.15em;border-radius:0.7em;border:2px solid #00fff9;outline:none;box-shadow:0 0 8px #00fff966;background:#10132a;color:#00fff9;transition:border 0.2s;">
-              <div style="display:flex;justify-content:center;align-items:center;margin-bottom:1.2em;">
-                <label id="avatar-upload-label-modal" style="width:72px;height:72px;border-radius:50%;border:3px solid #00fff9;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;position:relative;background:#222;box-shadow:0 0 8px #00fff966;transition:border 0.2s;">
-                  <input type="file" id="join-photo" accept="image/*" required style="display:none;">
-                  <span id="avatar-placeholder-modal" style="color:#00fff9;font-size:2.2em;opacity:0.7;">+</span>
-                  <img id="avatar-preview-modal" src="" alt="Aperçu photo" style="display:none;width:100%;height:100%;object-fit:cover;">
-                </label>
-              </div>
-              <button type="submit" style="background:linear-gradient(90deg,#00fff9 60%,#ff00ff 100%);color:#181c3a;border:none;border-radius:0.7em;font-size:1.2em;font-weight:bold;padding:0.7em 2.5em;cursor:pointer;box-shadow:0 0 12px #00fff966;margin-right:1.2em;letter-spacing:0.02em;">Rejoindre</button>
-              <button type="button" id="join-cancel" style="background:#222;color:#fff;border:none;border-radius:0.7em;font-size:1.2em;font-weight:bold;padding:0.7em 2.5em;cursor:pointer;box-shadow:0 0 8px #00fff966;letter-spacing:0.02em;">Annuler</button>
-            </form>
-          </div>
-        `;
+                <div style="background:#181c3a;padding:2em 2.5em 2em 2.5em;border-radius:1.2em;box-shadow:0 0 32px #00fff966,0 0 0 2px #00fff933;text-align:center;max-width:90vw;">
+                    <div style="font-size:1.5em;color:#00fff9;font-weight:bold;margin-bottom:1.2em;letter-spacing:0.02em;text-shadow:0 0 8px #00fff9,0 0 24px #00fff9;">Rejoindre le salon</div>
+                    <form id="join-form">
+                        <input type="text" id="join-nom" placeholder="Votre nom" maxlength="15" required style="margin-bottom:1.2em;width:92%;padding:0.7em 1.1em;font-size:1.15em;border-radius:0.7em;border:2px solid #00fff9;outline:none;box-shadow:0 0 8px #00fff966;background:#10132a;color:#00fff9;transition:border 0.2s;">
+                        <div style="display:flex;justify-content:center;align-items:center;margin-bottom:1.2em;">
+                            <label id="avatar-upload-label-modal" style="width:72px;height:72px;border-radius:50%;border:3px solid #00fff9;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;position:relative;background:#222;box-shadow:0 0 8px #00fff966;transition:border 0.2s;">
+                                <input type="file" id="join-photo" accept="image/*" style="display:none;">
+                                <span id="avatar-placeholder-modal" style="color:#00fff9;font-size:2.2em;opacity:0.7;">+</span>
+                                <img id="avatar-preview-modal" src="" alt="Aperçu photo" style="display:none;width:100%;height:100%;object-fit:cover;">
+                            </label>
+                        </div>
+                        <button type="submit" style="background:linear-gradient(90deg,#00fff9 60%,#ff00ff 100%);color:#181c3a;border:none;border-radius:0.7em;font-size:1.2em;font-weight:bold;padding:0.7em 2.5em;cursor:pointer;box-shadow:0 0 12px #00fff966;margin-right:1.2em;letter-spacing:0.02em;">Rejoindre</button>
+                        <button type="button" id="join-cancel" style="background:#222;color:#fff;border:none;border-radius:0.7em;font-size:1.2em;font-weight:bold;padding:0.7em 2.5em;cursor:pointer;box-shadow:0 0 8px #00fff966;letter-spacing:0.02em;">Annuler</button>
+                    </form>
+                </div>
+            `;
       document.body.appendChild(modal);
-      // Pré-remplir le nom avec la session utilisateur et désactiver l'input
-      fetch('../backend/get_user_info.php')
-        .then(res => res.ok ? res.json() : null)
-        .then(data => {
-          if (data && data.nom) {
-            const joinNomInput = document.getElementById('join-nom');
-            joinNomInput.value = data.nom;
-            joinNomInput.disabled = true;
-          }
-        });
-      // Avatar preview logic
+
+      // Pré-remplir le nom avec le nom de session s'il existe
+      const joinNomInput = document.getElementById('join-nom');
+      if (SESSION_PLAYER_NAME !== 'Invité') {
+        joinNomInput.value = SESSION_PLAYER_NAME;
+      }
+
       const joinPhotoInput = document.getElementById('join-photo');
       const avatarPreview = document.getElementById('avatar-preview-modal');
       const avatarPlaceholder = document.getElementById('avatar-placeholder-modal');
+
       joinPhotoInput.onchange = function (e) {
         const file = e.target.files[0];
         if (file) {
@@ -242,15 +314,25 @@
           avatarPlaceholder.style.display = 'block';
         }
       };
-      // Clic sur le rond déclenche le file input
+
       document.getElementById('avatar-upload-label-modal').onclick = function () {
         joinPhotoInput.click();
       };
+
       document.getElementById('join-form').onsubmit = function (e) {
         e.preventDefault();
-        const nom = document.getElementById('join-nom').value.trim();
-        const file = document.getElementById('join-photo').files[0];
-        if (!nom || !file) return;
+        const nom = joinNomInput.value.trim();
+        const file = joinPhotoInput.files[0];
+
+        if (!nom) return;
+
+        if (!file) {
+          // Utiliser l'avatar par défaut si aucune photo n'est fournie
+          onSubmit(nom, '../assets/avatar-default.png');
+          modal.remove();
+          return;
+        }
+
         const reader = new FileReader();
         reader.onload = function (ev) {
           onSubmit(nom, ev.target.result);
@@ -258,117 +340,74 @@
         };
         reader.readAsDataURL(file);
       };
+
       document.getElementById('join-cancel').onclick = function () {
         modal.remove();
-        if (onCancel) onCancel();
       };
     }
 
-    async function renderPlayers() {
-      if (!salon || !Array.isArray(salon.joueurs)) return;
-      const playersList = document.getElementById('players-list');
-      playersList.innerHTML = '';
-      // Récupérer l'utilisateur connecté
-      let userNom = null;
-      try {
-        const res = await fetch('../backend/get_user_info.php');
-        if (res.ok) {
-          const data = await res.json();
-          userNom = data.nom;
+    async function rejoindreSalon(nom, photo) {
+      const codeSalon = getSalonCodeFromURL();
+      const salon = await fetchSalonByCode(codeSalon);
+      if (!salon || !Array.isArray(salon.joueurs) || !salon.joueurs[0] || !salon.joueurs[0].nom) return;
+
+      let joueursMaj = [...salon.joueurs];
+
+      let placeTrouvee = false;
+      let indexTrouve = -1;
+
+      // Vérifier si l'utilisateur est déjà dans le salon
+      if (joueursMaj.some(j => j && j.nom === nom)) {
+        alert("Vous êtes déjà dans ce salon.");
+        return;
+      }
+
+      // Trouver la première place vide à partir de l'index 1 (après l'hôte)
+      for (let i = 1; i < salon.maxJoueurs; i++) {
+        if (!joueursMaj[i] || !joueursMaj[i].nom) {
+          joueursMaj[i] = { nom, photo };
+          placeTrouvee = true;
+          indexTrouve = i;
+          break;
         }
-      } catch (e) { }
-      for (let i = 0; i < salon.maxJoueurs; i++) {
-        let joueur = salon.joueurs[i];
-        const slot = document.createElement('div');
-        slot.className = 'player-slot';
-        if (joueur) {
-          // Si c'est l'hôte (toujours index 0), afficher l'intitulé Hôte sous la photo
-          if (i === 0 && joueur.estHote) {
-            slot.innerHTML = `
-              <div style="display:flex;justify-content:center;align-items:center;">
-                <img src="${joueur.photo || '../assets/avatar-default.png'}" class="avatar" alt="Avatar" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2.5px solid #ff00ff;background:#222;box-shadow:0 0 12px #ff00ff66;" />
-              </div>
-              <div class="player-role" style="color:#ff00ff;font-weight:bold;font-size:1.15em;margin-top:0.3em;">Hôte</div>
-              <div class="player-name" style="color:#00fff9;">${joueur.nom}</div>
-            `;
-          } else {
-            slot.innerHTML = `
-              <div style="display:flex;justify-content:center;align-items:center;">
-                <img src="${joueur.photo || '../assets/avatar-default.png'}" class="avatar" alt="Avatar" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2.5px solid #00fff9;background:#222;box-shadow:0 0 12px #00fff966;" />
-              </div>
-              <div class="player-name">${joueur.nom}</div>
-            `;
-          }
-        } else {
-          slot.innerHTML = `
-            <div class="empty-avatar"></div>
-            <div class="player-name">Place disponible</div>
-          `;
-          // Si l'utilisateur connecté est déjà dans la liste des joueurs, il ne peut pas cliquer sur une place vide
-          const dejaDansSalon = userNom && Array.isArray(salon.joueurs) && salon.joueurs.some(j => j.nom === userNom);
-          if (!dejaDansSalon) {
-            slot.style.cursor = 'pointer';
-            slot.onclick = function () {
-              createJoinModal(async function (nom, photo) {
-                // Mettre à jour la liste des joueurs côté backend
-                if (!salon || !Array.isArray(salon.joueurs)) return;
-                salon.joueurs[i] = { nom, photo };
-                try {
-                  await fetch('../backend/salons.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                      nom: salon.nom,
-                      code: salon.code,
-                      maxJoueurs: salon.maxJoueurs,
-                      longueurMot: salon.longueurMot,
-                      joueurs: salon.joueurs
-                    })
-                  });
-                } catch (e) { }
-                await chargerSalonEtAfficher();
-              });
-            };
-          } else {
-            slot.style.cursor = 'not-allowed';
-          }
-        }
-        playersList.appendChild(slot);
       }
+
+      if (!placeTrouvee) {
+        alert("Le salon est déjà plein.");
+        return;
+      }
+
+      // Met à jour la session locale pour l'utilisateur qui vient de joindre
+      localStorage.setItem('sessionName', nom);
+
+      await fetch('../backend/salons.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nom: salon.nom,
+          code: salon.code,
+          maxJoueurs: salon.maxJoueurs,
+          longueurMot: salon.longueurMot,
+          joueurs: joueursMaj
+        })
+      });
+      await afficherSalon();
     }
-    chargerSalonEtAfficher();
-    window.addEventListener('storage', function (e) {
-      if (e.key === 'salon-supprime') {
-        chargerSalonEtAfficher();
-      }
-    });
 
-    // --- Bouton DÉMARRER ---
-    const btnStart = document.getElementById('btn-start');
-    function updateStartButton() {
-      if (!salon || !Array.isArray(salon.joueurs)) return;
-      // Démarrer si toutes les places sont prises
-      btnStart.disabled = !(salon.joueurs.length === salon.maxJoueurs);
-      if (!btnStart.disabled) btnStart.classList.add('active');
-      else btnStart.classList.remove('active');
+    function demarrerPartie() {
+      alert(`La partie DÉMARRE pour le salon ${getSalonCodeFromURL()} ! Redirection vers le jeu...`);
+      // window.location.href = 'jeu.html?code=' + getSalonCodeFromURL();
     }
-    updateStartButton();
 
-    btnStart.addEventListener('click', function () {
-      if (isHote && salon && Array.isArray(salon.joueurs) && salon.joueurs.length >= minJoueurs) {
-        // Logique de démarrage du jeu pour tous (à implémenter)
-        alert('Le jeu commence !');
-      }
-    });
-
-    // --- Bouton SUPPRIMER (pour l'hôte) ---
-
-    // --- Bouton QUITTER ---
     document.getElementById('btn-quit').addEventListener('click', function () {
+      // Dans une vraie application, il faudrait appeler une API pour se retirer du salon
       window.location.href = 'creer-salon.html';
     });
+
+    // Initialisation et rafraîchissement automatique (pour simuler un lobby en temps réel)
+    afficherSalon();
+    setInterval(afficherSalon, 3000); 
   </script>
 </body>
-<script src="/Trouvix/js/session-nav.js"></script>
 
 </html>
