@@ -87,6 +87,12 @@ $user_email = $_SESSION['user_email'];
                 </form>
               </div>
             </div>
+            <div id="alert-modal" class="modal-bg" style="display:none;">
+              <div class="modal-box" style="max-width:340px;">
+                <div id="alert-message" style="color:#fff;font-size:1.08em;margin-bottom:1.7em;text-align:left;"></div>
+                <button id="alert-ok" class="btn-main" style="width:120px;margin:0 auto;display:block;background:linear-gradient(90deg,#00fff9 0%,#ff00ff 100%);color:#181c3a;">OK</button>
+              </div>
+            </div>
             <style>
             .btn-main {
                 width: 100%;
@@ -162,11 +168,23 @@ $user_email = $_SESSION['user_email'];
             }
             .avatar-preview {
               display: none;
-              width: 100%;
-              height: 100%;
+              width: 84px;
+              height: 84px;
               object-fit: cover;
               border-radius: 50%;
-              box-shadow: 0 0 16px #00fff966;
+              box-shadow: 0 0 24px #00fff9cc, 0 0 48px #ff00ff66;
+              border: 3px solid #00fff9;
+              animation: avatarGlow 2.2s infinite alternate;
+              transition: box-shadow 0.22s, transform 0.18s;
+            }
+            @keyframes avatarGlow {
+              0% { box-shadow: 0 0 24px #00fff9cc, 0 0 48px #ff00ff66; }
+              100% { box-shadow: 0 0 48px #ff00ffcc, 0 0 80px #00fff9cc; }
+            }
+            .avatar-preview:hover {
+              transform: scale(1.08) rotate(-6deg);
+              box-shadow: 0 0 64px #ff00ffcc, 0 0 96px #00fff9cc;
+              filter: brightness(1.15) saturate(1.3);
             }
             #form-join-salon {
               display: flex;
@@ -230,6 +248,129 @@ $user_email = $_SESSION['user_email'];
               font-size: 0.98em;
               border-radius: 0.7em;
             }
+            @media (max-width: 600px) {
+              .modal-box {
+                min-width: 90vw;
+                max-width: 98vw;
+                padding: 2.2em 0.5em 2em 0.5em;
+                border-radius: 1.1em;
+              }
+              .form-input {
+                font-size: 1.08em;
+                padding: 0.7em 0.7em;
+                min-width: 0;
+                max-width: 98vw;
+              }
+              .avatar-upload-label {
+                width: 64px;
+                height: 64px;
+              }
+              .form-join-btns button {
+                min-width: 90px;
+                max-width: 120px;
+                font-size: 0.95em;
+                padding: 0.5em 0.7em;
+              }
+            }
+            @media (max-width: 900px) {
+              .modal-box {
+                min-width: 92vw;
+                max-width: 99vw;
+                padding: 2.2em 1em 2em 1em;
+                border-radius: 1.1em;
+              }
+              .form-input {
+                font-size: 1.13em;
+                padding: 0.9em 1em;
+                min-width: 0;
+                max-width: 99vw;
+              }
+              .avatar-upload-label {
+                width: 74px;
+                height: 74px;
+              }
+              .form-join-btns button {
+                min-width: 110px;
+                max-width: 180px;
+                font-size: 1.05em;
+                padding: 0.7em 1.2em;
+              }
+            }
+            @media (max-width: 430px) {
+              .modal-box {
+                min-width: 98vw;
+                max-width: 100vw;
+                padding: 1.2em 0.2em 1.2em 0.2em;
+                border-radius: 0.7em;
+              }
+              .form-input {
+                font-size: 1em;
+                padding: 0.7em 0.5em;
+                min-width: 0;
+                max-width: 100vw;
+              }
+              .avatar-upload-label {
+                width: 54px;
+                height: 54px;
+              }
+              .form-join-btns button {
+                min-width: 80px;
+                max-width: 120px;
+                font-size: 0.92em;
+                padding: 0.5em 0.7em;
+              }
+            }
+            @media (max-width: 412px) {
+              .modal-box {
+                min-width: 99vw;
+                max-width: 100vw;
+                padding: 1em 0.1em 1em 0.1em;
+                border-radius: 0.5em;
+              }
+              .form-input {
+                font-size: 0.98em;
+                padding: 0.6em 0.3em;
+                min-width: 0;
+                max-width: 100vw;
+              }
+              .avatar-upload-label {
+                width: 48px;
+                height: 48px;
+              }
+              .form-join-btns button {
+                min-width: 70px;
+                max-width: 100px;
+                font-size: 0.88em;
+                padding: 0.4em 0.5em;
+              }
+            }
+            @media (max-width: 390px) {
+              .modal-box {
+                min-width: 100vw;
+                max-width: 100vw;
+                padding: 0.7em 0.05em 0.7em 0.05em;
+                border-radius: 0.4em;
+              }
+              .form-input {
+                font-size: 0.95em;
+                padding: 0.5em 0.2em;
+                min-width: 0;
+                max-width: 100vw;
+              }
+              .avatar-upload-label {
+                width: 40px;
+                height: 40px;
+              }
+              .form-join-btns button {
+                min-width: 60px;
+                max-width: 90px;
+                font-size: 0.85em;
+                padding: 0.3em 0.4em;
+              }
+            }
+            .modal-bg {
+              z-index: 2000;
+            }
             </style>
         </div>
         <div class="client-space-content">
@@ -260,11 +401,11 @@ formJoin.onsubmit = function(e) {
   const codeSaisi = document.getElementById('join-code').value.trim();
   const codeSalon = localStorage.getItem('trouvix_codeSalon');
   if (!codeSalon) {
-    alert('Aucun salon n\'a été créé ou code introuvable.');
+    showCustomAlert("Aucun salon n'a été créé ou code introuvable.");
     return;
   }
   if (codeSaisi.toUpperCase() !== codeSalon.toUpperCase()) {
-    alert('Code du salon incorrect.');
+    showCustomAlert("Code du salon incorrect.");
     return;
   }
   // On pourrait ici uploader la photo si besoin
@@ -290,6 +431,13 @@ if (joinPhotoInput) {
     }
   });
 }
+function showCustomAlert(message) {
+  document.getElementById('alert-message').textContent = message;
+  document.getElementById('alert-modal').style.display = 'flex';
+}
+document.getElementById('alert-ok').onclick = function() {
+  document.getElementById('alert-modal').style.display = 'none';
+};
 </script>
 </html>
 <style>
