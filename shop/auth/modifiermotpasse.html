@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,13 +14,19 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @media (max-width: 600px) {
-            body .auth-container { margin-top: 90px !important; }
+            body .auth-container {
+                margin-top: 90px !important;
+            }
         }
+
         @media (min-width: 601px) {
-            body .auth-container { margin-top: 60px; }
+            body .auth-container {
+                margin-top: 60px;
+            }
         }
     </style>
 </head>
+
 <body>
     <header class="modern-header">
         <nav class="nav-container">
@@ -40,13 +47,13 @@
                     <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
                 </ul>
             </div>
-                <a href="connexion.html" class="action-btn login-btn">
-                    <i class="fas fa-user"></i>
-                </a>
-                <a href="../panier-paiement/panier.html" class="action-btn cart-btn">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count" id="compteur-panier">0</span>
-                </a>
+            <a href="connexion.html" class="action-btn login-btn">
+                <i class="fas fa-user"></i>
+            </a>
+            <a href="../panier-paiement/panier.html" class="action-btn cart-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="compteur-panier">0</span>
+            </a>
             </div>
             <button class="mobile-menu-toggle" id="mobile-menu-toggle">
                 <span></span>
@@ -56,7 +63,8 @@
         </nav>
     </header>
     <main>
-        <section class="auth-container" style="min-height:calc(100vh - 180px); background: linear-gradient(135deg, #f3f0ff 0%, #e0e7ff 100%);">
+        <section class="auth-container"
+            style="min-height:calc(100vh - 180px); background: linear-gradient(135deg, #f3f0ff 0%, #e0e7ff 100%);">
             <div class="auth-card">
                 <div class="auth-header">
                     <h1 style="color:#764ba2;">Réinitialiser le mot de passe</h1>
@@ -75,7 +83,8 @@
                     </button>
                 </form>
                 <div class="auth-footer">
-                    <p>Vous souvenez de votre mot de passe ? <a href="connexion.html" style="color:#764ba2; font-weight:600;">Se connecter</a></p>
+                    <p>Vous souvenez de votre mot de passe ? <a href="connexion.html"
+                            style="color:#764ba2; font-weight:600;">Se connecter</a></p>
                 </div>
             </div>
         </section>
@@ -94,10 +103,12 @@
                         Votre boutique e-commerce de confiance pour des produits de qualité à des prix exceptionnels.
                     </p>
                     <div class="social-links">
-                        <a href="https://www.facebook.com/?locale=fr_FR" target="_blank" rel="noopener noreferrer" class="social-link">
+                        <a href="https://www.facebook.com/?locale=fr_FR" target="_blank" rel="noopener noreferrer"
+                            class="social-link">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="social-link">
+                        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer"
+                            class="social-link">
                             <i class="fab fa-instagram"></i>
                         </a>
                         <a href="#" class="social-link">
@@ -159,12 +170,12 @@
         </div>
     </footer>
     <script>
-        document.getElementById('mobile-menu-toggle').addEventListener('click', function() {
+        document.getElementById('mobile-menu-toggle').addEventListener('click', function () {
             const navMenu = document.getElementById('nav-menu');
             navMenu.classList.toggle('nav-open');
             this.classList.toggle('menu-open');
         });
-        document.getElementById('reset-form').addEventListener('submit', function(e) {
+        document.getElementById('reset-form').addEventListener('submit', function (e) {
             e.preventDefault();
             const btn = this.querySelector('.auth-btn');
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi...';
@@ -179,4 +190,5 @@
         });
     </script>
 </body>
+
 </html>
