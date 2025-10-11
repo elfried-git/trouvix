@@ -15,7 +15,6 @@
 </head>
 
 <body>
-    <!-- Navigation moderne -->
     <header class="modern-header">
         <nav class="nav-container">
             <div class="nav-brand">
@@ -71,7 +70,8 @@
                     <h1>Benchou Ferrari</h1>
                     <div class="price" data-original-price="10">10 €</div>
                     <div class="description">
-                        <p>Accessoire de collection Ferrari. Produit officiel de la marque au cheval cabré. Design élégant et authentique pour les fans de la Scuderia Ferrari.</p>
+                        <p>Accessoire de collection Ferrari. Produit officiel de la marque au cheval cabré. Design
+                            élégant et authentique pour les fans de la Scuderia Ferrari.</p>
                     </div>
                     <div class="caracteristiques">
                         <p><strong>Caractéristiques :</strong></p>
@@ -89,7 +89,8 @@
                         </div>
                         <button class="btn ajouter-panier">Ajouter au panier</button>
                     </div>
-                    <p id="confirmation-message" class="confirmation-message" style="display: none;">Produit ajouté au panier !</p>
+                    <p id="confirmation-message" class="confirmation-message" style="display: none;">Produit ajouté au
+                        panier !</p>
                 </div>
             </div>
         </section>
@@ -120,8 +121,8 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const selector = document.getElementById("country-selector");
-            const TAUX_FCFA = 655.957; 
-            const TAUX_USD = 1.07; 
+            const TAUX_FCFA = 655.957;
+            const TAUX_USD = 1.07;
 
             function updatePrices(currency) {
                 const priceElements = document.querySelectorAll('[data-original-price]');
@@ -136,26 +137,25 @@
                         currencySymbol = ' FCFA';
                         newPrice = newPrice.toLocaleString(locale);
                     } else if (currency === 'USD') {
-                        newPrice = (originalPrice * TAUX_USD).toFixed(2); 
+                        newPrice = (originalPrice * TAUX_USD).toFixed(2);
                         currencySymbol = ' $';
-                        locale = 'en-US'; 
+                        locale = 'en-US';
                     } else {
                         newPrice = originalPrice.toFixed(2);
                         currencySymbol = ' €';
-                        newPrice = newPrice.replace('.00', ''); 
+                        newPrice = newPrice.replace('.00', '');
                     }
-                    // Nettoyer le texte pour éviter les caractères indésirables
                     const cleanPrice = `${newPrice}${currencySymbol}`.replace(/[()]/g, '').trim();
                     element.textContent = cleanPrice;
                 });
             }
-            
+
             function handleSelection(currency) {
                 updatePrices(currency);
                 sessionStorage.setItem('selectedCountry', currency);
             }
 
-            const savedCountry = sessionStorage.getItem('selectedCountry'); 
+            const savedCountry = sessionStorage.getItem('selectedCountry');
             const defaultCurrency = 'EUR';
             let initialCurrency = savedCountry || defaultCurrency;
 
@@ -172,7 +172,7 @@
             }
         });
     </script>
-    
+
     <script>
         function updateCartCounter() {
             const compteur = document.getElementById("compteur-panier");
@@ -219,8 +219,7 @@
             });
         });
     </script>
-    
-    <!-- Footer Moderne -->
+
     <footer class="modern-footer">
         <div class="container">
             <div class="footer-content">
@@ -235,10 +234,12 @@
                         Votre boutique e-commerce de confiance pour des produits de qualité à des prix exceptionnels.
                     </p>
                     <div class="social-links">
-                        <a href="https://www.facebook.com/?locale=fr_FR" target="_blank" rel="noopener noreferrer" class="social-link">
+                        <a href="https://www.facebook.com/?locale=fr_FR" target="_blank" rel="noopener noreferrer"
+                            class="social-link">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="social-link">
+                        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer"
+                            class="social-link">
                             <i class="fab fa-instagram"></i>
                         </a>
                         <a href="#" class="social-link">
@@ -249,7 +250,7 @@
                         </a>
                     </div>
                 </div>
-                
+
                 <div class="footer-links">
                     <div class="link-group">
                         <h4>Navigation</h4>
@@ -260,7 +261,7 @@
                             <li><a href="../index.html#categories-section">Catégories</a></li>
                         </ul>
                     </div>
-                    
+
                     <div class="link-group">
                         <h4>Support</h4>
                         <ul>
@@ -270,7 +271,7 @@
                             <li><a href="#">Retours</a></li>
                         </ul>
                     </div>
-                    
+
                     <div class="link-group">
                         <h4>Mon Compte</h4>
                         <ul>
@@ -280,7 +281,7 @@
                             <li><a href="#">Mes Favoris</a></li>
                         </ul>
                     </div>
-                    
+
                     <div class="link-group">
                         <h4>Informations</h4>
                         <ul>
@@ -292,7 +293,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="footer-bottom">
                 <p>&copy; 2025 Shop Na Biso. Tous droits réservés.</p>
                 <div class="payment-methods">
@@ -305,4 +306,5 @@
         </div>
     </footer>
 </body>
+
 </html>
