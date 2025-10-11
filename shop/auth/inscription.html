@@ -21,7 +21,6 @@
     </style>
 </head>
 <body>
-    <!-- Navigation moderne -->
     <header class="modern-header">
         <nav class="nav-container">
             <div class="nav-brand">
@@ -100,7 +99,6 @@
             </div>
         </section>
     </main>
-    <!-- Footer Moderne (identique à index) -->
     <footer class="modern-footer">
         <div class="container">
             <div class="footer-content">
@@ -180,13 +178,11 @@
         </div>
     </footer>
     <script>
-        // Gestion du menu mobile
         document.getElementById('mobile-menu-toggle').addEventListener('click', function() {
             const navMenu = document.getElementById('nav-menu');
             navMenu.classList.toggle('nav-open');
             this.classList.toggle('menu-open');
         });
-        // Gestion du formulaire d'inscription (simulation)
         document.getElementById('register-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = this.querySelector('.auth-btn');

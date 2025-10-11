@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", main);
 
 function main() {
@@ -6,18 +5,10 @@ function main() {
     const main = document.querySelector('main');
     const tvTrigger = document.getElementById("tv-garden");
 
-    //  Affiche la pop-in d'accès refusé (non connecté).
     function showAccessDeniedPopinTV() {
         if (document.getElementById('popin-access-denied-overlay')) return;
 
-        const html = `\
-                    <div id="popin-access-denied-overlay">\
-                        <div id="popin-access-denied">\
-                            <div id="popin-access-denied-title">Accès TV / Replay refusé</div>\
-                            <div id="popin-access-denied-msg">Vous devez être connecté(e) pour accéder à la TV / Replay.</div>\
-                            <button id="popin-access-denied-btn">OK</button>\
-                        </div>\
-                    </div>`;
+        const html = `<div id="popin-access-denied-overlay"><div id="popin-access-denied"><div id="popin-access-denied-title">Accès TV / Replay refusé</div><div id="popin-access-denied-msg">Vous devez être connecté(e) pour accéder à la TV / Replay.</div><button id="popin-access-denied-btn">OK</button></div></div>`;
 
         document.body.insertAdjacentHTML('beforeend', html);
 
@@ -27,10 +18,6 @@ function main() {
         };
     }
 
-    /**
-     * @param { MouseEvent | Event } event 
-     * @returns { void }
-     */
     function closeTv(event) {
         event.stopPropagation();
         const tvContainer = document.getElementById("tv-garden-view");
@@ -42,8 +29,7 @@ function main() {
         tvContainer.querySelector("#tv-close-btn").remove("click", closeTv);
     }
 
-    /** @returns { void } */
-    function fullScreenTv(/** @type { MouseEvent | Event } */ event) {
+    function fullScreenTv(event) {
         event.stopPropagation();
         const tvContainer = document.querySelector("#tv-garden-view");
         const tvIframe = tvContainer.querySelector("iframe");
@@ -54,15 +40,8 @@ function main() {
         tvIframe.classList.remove("full-screen");
     }
 
-
-
-    /**
-     * Charge et affiche l'iframe de la TV Garden en plein écran.
-     * @param {Event} event - L'objet Event de l'événement de clic.
-     */
     function loadTv(event) {
         event.stopPropagation();
-        /* Creating tv container element */
         const tvContainer = document.createElement("div");
         const quickCommands = document.createElement("span");
         const tvCloseBtn = document.createElement("span");
@@ -92,13 +71,11 @@ function main() {
         document.body.prepend(tvContainer);
     }
 
-    // Association de la fonction loadTv au clic sur l'élément #tv-garden
     if (tvTrigger) {
         tvTrigger.addEventListener("click", loadTv);
     }
 }
 
-// Style popin accès refusé TV (si pas déjà présent)
 if (!document.getElementById('popin-access-denied-style')) {
     const style = document.createElement('style');
     style.id = 'popin-access-denied-style';

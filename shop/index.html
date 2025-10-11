@@ -14,7 +14,6 @@
 </head>
 
 <body>
-    <!-- Navigation moderne -->
     <header class="modern-header">
         <nav class="nav-container">
             <div class="nav-brand">
@@ -36,7 +35,7 @@
                 </ul>
             </div>
 
-            <div class="nav-actions">
+            <div class="nav-actions">+
                 <div class="currency-selector">
                     <select id="country-selector" class="currency-select">
                         <option value="EUR">EUR</option>
@@ -102,7 +101,6 @@
             </div>
         </section>
 
-        <!-- Section Produits Vedettes Moderne -->
         <section class="featured-products" id="produits-featured">
             <div class="container">
                 <div class="section-header">
@@ -556,7 +554,6 @@
             </div>
         </section>
 
-        <!-- Section Catégories Moderne -->
         <section class="categories-modern" id="categories-section">
             <div class="container">
                 <div class="section-header">
@@ -761,7 +758,6 @@
                 const btnLeft = document.querySelector(".carousel-btn.left");
                 const btnRight = document.querySelector(".carousel-btn.right");
 
-                // Find the width of a single category item, including its margin
                 const itemWidth = document.querySelector(".categorie").offsetWidth + 20; // 20px is for the left and right margin
 
                 btnLeft.addEventListener("click", () => {
@@ -775,23 +771,19 @@
         </script>
 
         <script>
-            // Fonction pour afficher l'heure de Paris
             function afficherHeureParis() {
                 const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZone: 'Europe/Paris' };
                 const heureParis = new Intl.DateTimeFormat('fr-FR', options).format(new Date());
                 document.getElementById("horloge").textContent = heureParis;
             }
 
-            // Met à jour l'heure chaque seconde
             setInterval(afficherHeureParis, 1000);
-            afficherHeureParis(); // Affichage immédiat
+            afficherHeureParis(); 
         </script>
 
-        <!-- Section Contact et FAQ -->
         <section id="contact" class="contact-faq-section">
             <div class="container">
                 <div class="contact-faq-content">
-                    <!-- FAQ à gauche -->
                     <div class="faq-wrapper">
                         <div class="faq-header">
                             <h3>Questions Fréquentes</h3>
@@ -855,7 +847,6 @@
                         </div>
                     </div>
 
-                    <!-- Formulaire de contact à droite -->
                     <div class="contact-form-wrapper">
                         <div class="form-header">
                             <h3>Envoyez-nous un message</h3>
@@ -929,7 +920,6 @@
             </div>
         </section>
 
-        <!-- Section Avantages -->
         <section class="benefits-section">
             <div class="container">
                 <div class="benefits-grid">
@@ -976,7 +966,6 @@
             </div>
         </section>
 
-        <!-- Section Newsletter -->
         <section class="newsletter-section">
             <div class="container">
                 <div class="newsletter-content">
@@ -1003,7 +992,6 @@
             </div>
         </section>
 
-        <!-- Section Témoignages Clients -->
         <section class="testimonials-section">
             <div class="container">
                 <div class="section-header">
@@ -1070,7 +1058,6 @@
         </section>
     </main>
 
-    <!-- Footer Moderne -->
     <footer class="modern-footer">
         <div class="container">
             <div class="footer-content">
@@ -1157,16 +1144,13 @@
         </div>
     </footer>
 
-    <!-- Scripts JavaScript -->
     <script>
-        // Gestion du formulaire de contact
         document.addEventListener('DOMContentLoaded', function () {
             const contactForm = document.getElementById('contactForm');
             if (contactForm) {
                 contactForm.addEventListener('submit', function (e) {
                     e.preventDefault();
 
-                    // Validation simple
                     const requiredFields = contactForm.querySelectorAll('[required]');
                     let isValid = true;
 
@@ -1180,7 +1164,6 @@
                     });
 
                     if (isValid) {
-                        // Simulation d'envoi
                         const submitBtn = contactForm.querySelector('.contact-submit-btn');
                         const originalText = submitBtn.innerHTML;
 
@@ -1199,7 +1182,6 @@
                 });
             }
 
-            // Gestion de la FAQ accordéon
             const faqItems = document.querySelectorAll('.faq-item');
             faqItems.forEach(item => {
                 const question = item.querySelector('.faq-question');
@@ -1209,7 +1191,6 @@
                 question.addEventListener('click', () => {
                     const isActive = item.classList.contains('active');
 
-                    // Fermer tous les autres éléments
                     faqItems.forEach(otherItem => {
                         if (otherItem !== item) {
                             otherItem.classList.remove('active');
@@ -1218,7 +1199,6 @@
                         }
                     });
 
-                    // Basculer l'élément actuel
                     if (!isActive) {
                         item.classList.add('active');
                         answer.style.maxHeight = answer.scrollHeight + 'px';
@@ -1231,7 +1211,6 @@
                 });
             });
 
-            // Gestion de la newsletter
             const newsletterForm = document.querySelector('.newsletter-form');
             if (newsletterForm) {
                 newsletterForm.addEventListener('submit', function (e) {
@@ -1241,7 +1220,6 @@
                     const submitBtn = newsletterForm.querySelector('.newsletter-btn');
                     const email = emailInput.value.trim();
 
-                    // Validation email simple
                     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
                     if (!email) {
@@ -1256,13 +1234,11 @@
                         return;
                     }
 
-                    // Animation de soumission
                     const originalBtnContent = submitBtn.innerHTML;
                     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Inscription...</span>';
                     submitBtn.disabled = true;
                     emailInput.disabled = true;
 
-                    // Simulation d'inscription (remplacer par vraie API)
                     setTimeout(() => {
                         showNewsletterMessage('🎉 Inscription réussie ! Merci de rejoindre notre communauté.', 'success');
                         emailInput.value = '';
@@ -1270,7 +1246,6 @@
                         submitBtn.disabled = false;
                         emailInput.disabled = false;
 
-                        // Ajouter classe de succès temporaire
                         newsletterForm.classList.add('success-animation');
                         setTimeout(() => {
                             newsletterForm.classList.remove('success-animation');
@@ -1280,18 +1255,15 @@
             }
 
             function showNewsletterMessage(message, type) {
-                // Supprimer ancien message s'il existe
                 const existingMsg = document.querySelector('.newsletter-message');
                 if (existingMsg) {
                     existingMsg.remove();
                 }
 
-                // Créer nouveau message
                 const msgDiv = document.createElement('div');
                 msgDiv.className = `newsletter-message ${type}`;
                 msgDiv.textContent = message;
 
-                // Style inline pour le message
                 msgDiv.style.cssText = `
                     margin-top: 1rem;
                     padding: 1rem;
@@ -1305,10 +1277,8 @@
                     }
                 `;
 
-                // Insérer après le formulaire
                 newsletterForm.appendChild(msgDiv);
 
-                // Supprimer après 5 secondes
                 setTimeout(() => {
                     if (msgDiv.parentNode) {
                         msgDiv.style.opacity = '0';
@@ -1318,23 +1288,14 @@
                 }, 5000);
             }
 
-            // ========== GESTION DE LA CONVERSION DES DEVISES ==========
-
-            // Taux de change (mis à jour régulièrement)
             const exchangeRates = {
                 EUR: { rate: 1, symbol: '€', position: 'after', name: 'Euro' },
                 USD: { rate: 1.10, symbol: '$', position: 'before', name: 'Dollar américain' },
                 XAF: { rate: 655.957, symbol: 'FCFA', position: 'after', name: 'Franc CFA' }
             };
 
-            // Fonction pour mettre à jour les taux de change (optionnel - avec API réelle)
             async function updateExchangeRates() {
                 try {
-                    // Ici vous pouvez appeler une API de taux de change comme :
-                    // const response = await fetch('https://api.exchangerate-api.com/v4/latest/EUR');
-                    // const data = await response.json();
-                    // exchangeRates.USD.rate = data.rates.USD;
-                    // exchangeRates.XAF.rate = data.rates.XAF;
 
                     console.log('Taux de change initialisés:', exchangeRates);
                 } catch (error) {
@@ -1342,28 +1303,22 @@
                 }
             }
 
-            // Fonction de conversion des prix
             function convertPrice(priceInEur, targetCurrency) {
                 const rate = exchangeRates[targetCurrency].rate;
                 const convertedPrice = priceInEur * rate;
 
-                // Formatage selon la devise
                 let formattedPrice;
                 if (targetCurrency === 'XAF') {
-                    // Pour les FCFA, arrondir à l'entier et formater avec des espaces
                     formattedPrice = Math.round(convertedPrice).toLocaleString('fr-FR').replace(/,/g, ' ');
                 } else if (targetCurrency === 'USD') {
-                    // Pour les USD, 2 décimales
                     formattedPrice = convertedPrice.toFixed(2);
                 } else {
-                    // Pour les EUR, formater avec virgules
                     formattedPrice = convertedPrice.toLocaleString('fr-FR');
                 }
 
                 return formattedPrice;
             }
 
-            // Fonction pour formater l'affichage du prix avec symbole
             function formatPriceDisplay(price, currency) {
                 const currencyInfo = exchangeRates[currency];
 
@@ -1374,7 +1329,6 @@
                 }
             }
 
-            // Fonction pour mettre à jour tous les prix sur la page
             function updateAllPrices(targetCurrency) {
                 const priceElements = document.querySelectorAll('.price-current[data-original-price]');
 
@@ -1383,7 +1337,6 @@
                     const convertedPrice = convertPrice(originalPrice, targetCurrency);
                     const formattedDisplay = formatPriceDisplay(convertedPrice, targetCurrency);
 
-                    // Animation de changement de prix
                     priceElement.style.transform = 'scale(0.95)';
                     priceElement.style.opacity = '0.7';
 
@@ -1395,14 +1348,11 @@
                     }, 150);
                 });
 
-                // Mettre à jour les prix dans le panier si nécessaire
                 updateCartPrices(targetCurrency);
 
-                // Sauvegarder la devise sélectionnée
                 localStorage.setItem('selectedCurrency', targetCurrency);
             }
 
-            // Fonction pour mettre à jour les prix dans le panier
             function updateCartPrices(currency) {
                 const panier = JSON.parse(localStorage.getItem('panier')) || [];
 
@@ -1417,36 +1367,29 @@
                 localStorage.setItem('panier', JSON.stringify(panier));
             }
 
-            // Initialisation du sélecteur de devise
             const currencySelector = document.getElementById('country-selector');
             if (currencySelector) {
-                // Charger la devise sauvegardée ou par défaut EUR
                 const savedCurrency = localStorage.getItem('selectedCurrency') || 'EUR';
                 currencySelector.value = savedCurrency;
 
-                // Appliquer la devise sauvegardée au chargement
                 if (savedCurrency !== 'EUR') {
                     setTimeout(() => updateAllPrices(savedCurrency), 100);
                 }
 
-                // Écouter les changements de devise
                 currencySelector.addEventListener('change', function () {
                     const selectedCurrency = this.value;
                     updateAllPrices(selectedCurrency);
 
-                    // Animation du sélecteur
                     this.style.transform = 'scale(0.98)';
                     setTimeout(() => {
                         this.style.transform = 'scale(1)';
                         this.style.transition = 'transform 0.2s ease';
                     }, 100);
 
-                    // Notification de changement
                     showCurrencyChangeNotification(selectedCurrency);
                 });
             }
 
-            // Fonction pour afficher une notification de changement de devise
             function showCurrencyChangeNotification(currency) {
                 const currencyNames = {
                     EUR: 'Euro (€)',
@@ -1454,13 +1397,11 @@
                     XAF: 'Franc CFA'
                 };
 
-                // Supprimer ancienne notification
                 const existingNotif = document.querySelector('.currency-notification');
                 if (existingNotif) {
                     existingNotif.remove();
                 }
 
-                // Créer notification
                 const notification = document.createElement('div');
                 notification.className = 'currency-notification';
                 notification.innerHTML = `
@@ -1468,7 +1409,6 @@
                     <span>Devise changée vers ${currencyNames[currency]}</span>
                 `;
 
-                // Style de la notification
                 notification.style.cssText = `
                     position: fixed;
                     top: 20px;
@@ -1489,12 +1429,10 @@
 
                 document.body.appendChild(notification);
 
-                // Animation d'entrée
                 setTimeout(() => {
                     notification.style.transform = 'translateX(0)';
                 }, 10);
 
-                // Animation de sortie
                 setTimeout(() => {
                     notification.style.transform = 'translateX(100%)';
                     setTimeout(() => {
@@ -1505,17 +1443,12 @@
                 }, 3000);
             }
 
-            // ========== GESTION DU PANIER AVEC DEVISES ==========
-
-            // Fonction pour ajouter un produit au panier
             function ajouterAuPanier(nom, prixEur, image, lien) {
                 const currentCurrency = document.getElementById('country-selector').value;
                 const prixConverti = convertPrice(parseFloat(prixEur), currentCurrency);
 
-                // Récupérer le panier existant
                 let panier = JSON.parse(localStorage.getItem('panier')) || [];
 
-                // Vérifier si le produit existe déjà
                 const produitExistant = panier.find(item => item.nom === nom);
 
                 if (produitExistant) {
@@ -1524,7 +1457,7 @@
                     const nouveauProduit = {
                         nom: nom,
                         prix: parseFloat(prixConverti.replace(/\s/g, '').replace(',', '.')),
-                        prixOriginal: parseFloat(prixEur), // Prix en EUR pour les conversions futures
+                        prixOriginal: parseFloat(prixEur), 
                         devise: currentCurrency,
                         image: image,
                         lien: lien,
@@ -1533,17 +1466,13 @@
                     panier.push(nouveauProduit);
                 }
 
-                // Sauvegarder le panier
                 localStorage.setItem('panier', JSON.stringify(panier));
 
-                // Mettre à jour le compteur
                 updateCartCounter();
 
-                // Animation de confirmation
                 showAddToCartConfirmation(nom);
             }
 
-            // Fonction pour mettre à jour le compteur du panier
             function updateCartCounter() {
                 const compteur = document.getElementById("compteur-panier");
                 if (compteur) {
@@ -1551,7 +1480,6 @@
                     const totalArticles = panier.reduce((acc, item) => acc + item.quantite, 0);
                     compteur.textContent = totalArticles;
 
-                    // Animation du compteur
                     compteur.style.transform = 'scale(1.3)';
                     compteur.style.background = '#ef4444';
                     setTimeout(() => {
@@ -1562,7 +1490,6 @@
                 }
             }
 
-            // Fonction pour afficher la confirmation d'ajout au panier
             function showAddToCartConfirmation(productName) {
                 const confirmation = document.createElement('div');
                 confirmation.className = 'cart-confirmation';
@@ -1597,7 +1524,6 @@
                     confirmation.style.transform = 'translateX(0)';
                 }, 10);
 
-                // Animation de sortie
                 setTimeout(() => {
                     confirmation.style.transform = 'translateX(100%)';
                     setTimeout(() => {
@@ -1608,7 +1534,6 @@
                 }, 3000);
             }
 
-            // Initialiser les boutons "Ajouter au panier"
             document.querySelectorAll('.add-to-cart').forEach(button => {
                 button.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -1618,7 +1543,6 @@
                     const image = this.getAttribute('data-image');
                     const lien = this.getAttribute('data-lien');
 
-                    // Animation du bouton
                     this.style.transform = 'scale(0.95)';
                     this.style.opacity = '0.8';
 
@@ -1632,13 +1556,10 @@
                 });
             });
 
-            // Initialiser le compteur au chargement
             updateCartCounter();
 
-            // Initialiser les taux de change
             updateExchangeRates();
 
-            // Fonction de debug pour tester les conversions (développement uniquement)
             window.testCurrencyConversion = function () {
                 console.log('=== TEST DES CONVERSIONS DE DEVISES ===');
                 console.log('20€ en USD:', convertPrice(20, 'USD'), formatPriceDisplay(convertPrice(20, 'USD'), 'USD'));
@@ -1650,7 +1571,6 @@
                 console.log('Contenu du panier:', panier);
             };
 
-            // Smooth scroll pour les ancres
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -1666,7 +1586,6 @@
         });
     </script>
 
-    <!-- Bouton remonter en haut -->
     <button id="top-bar" aria-label="Remonter en haut">↑</button>
 
     <style>
@@ -1711,12 +1630,10 @@
         }
     </style>
 
-    <!-- Script pour le bouton remonter en haut -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const topButton = document.getElementById("top-bar");
 
-            // Montrer ou cacher selon le scroll
             window.addEventListener("scroll", () => {
                 if (window.scrollY > 300) {
                     topButton.style.display = "block";
@@ -1735,14 +1652,12 @@
                 }
             });
 
-            // Scroll vers le haut au clic
             topButton.addEventListener("click", () => {
                 window.scrollTo({
                     top: 0,
                     behavior: "smooth"
                 });
 
-                // Effet de clic
                 topButton.style.transform = "translateY(-4px) scale(0.9)";
                 setTimeout(() => {
                     topButton.style.transform = "translateY(0) scale(1)";
@@ -1751,19 +1666,16 @@
         });
     </script>
 
-    <!-- JavaScript pour le menu burger mobile -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
             const navMenu = document.getElementById('nav-menu');
             const navLinks = document.querySelectorAll('.nav-link');
 
-            // Fonction pour basculer le menu
             function toggleMenu() {
                 mobileMenuToggle.classList.toggle('menu-open');
                 navMenu.classList.toggle('nav-open');
 
-                // Empêcher le scroll du body quand le menu est ouvert
                 if (navMenu.classList.contains('nav-open')) {
                     document.body.style.overflow = 'hidden';
                 } else {
@@ -1771,10 +1683,8 @@
                 }
             }
 
-            // Événement clic sur le bouton burger
             mobileMenuToggle.addEventListener('click', toggleMenu);
 
-            // Fermer le menu quand on clique sur un lien
             navLinks.forEach(link => {
                 link.addEventListener('click', () => {
                     mobileMenuToggle.classList.remove('menu-open');
@@ -1783,7 +1693,6 @@
                 });
             });
 
-            // Fermer le menu quand on clique en dehors
             document.addEventListener('click', function (e) {
                 if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
                     mobileMenuToggle.classList.remove('menu-open');
@@ -1792,7 +1701,6 @@
                 }
             });
 
-            // Fermer le menu avec la touche Escape
             document.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape' && navMenu.classList.contains('nav-open')) {
                     mobileMenuToggle.classList.remove('menu-open');

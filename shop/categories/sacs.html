@@ -17,7 +17,6 @@
             </a>
         </div>
 
-        <!-- Menu burger pour mobile -->
         <button class="menu-burger" id="menu-burger" aria-label="Ouvrir le menu">
             <span></span>
             <span></span>
@@ -56,7 +55,7 @@
                     <button class="btn add-to-cart">Ajouter au panier</button>
                 </div>
 
-                
+
 
                 <!-- Produit 2 -->
                 <div class="produit">
@@ -147,17 +146,15 @@
         document.addEventListener("DOMContentLoaded", () => {
             updateCartCounter();
 
-            // Script pour le menu burger mobile
             const menuBurger = document.getElementById("menu-burger");
             const mainNav = document.getElementById("main-nav");
-            
+
             if (menuBurger && mainNav) {
                 menuBurger.addEventListener("click", () => {
                     mainNav.classList.toggle("nav-open");
                     menuBurger.classList.toggle("menu-open");
                 });
 
-                // Fermer le menu quand on clique sur un lien
                 const navLinks = mainNav.querySelectorAll("a");
                 navLinks.forEach(link => {
                     link.addEventListener("click", () => {
@@ -166,7 +163,6 @@
                     });
                 });
 
-                // Fermer le menu quand on clique en dehors
                 document.addEventListener("click", (e) => {
                     if (!mainNav.contains(e.target) && !menuBurger.contains(e.target)) {
                         mainNav.classList.remove("nav-open");
@@ -176,8 +172,7 @@
             }
         });
     </script>
-    
-    <!-- Footer Moderne -->
+
     <footer class="modern-footer">
         <div class="container">
             <div class="footer-content">
@@ -192,10 +187,12 @@
                         Votre boutique e-commerce de confiance pour des produits de qualité à des prix exceptionnels.
                     </p>
                     <div class="social-links">
-                        <a href="https://www.facebook.com/?locale=fr_FR" target="_blank" rel="noopener noreferrer" class="social-link">
+                        <a href="https://www.facebook.com/?locale=fr_FR" target="_blank" rel="noopener noreferrer"
+                            class="social-link">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="social-link">
+                        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer"
+                            class="social-link">
                             <i class="fab fa-instagram"></i>
                         </a>
                         <a href="#" class="social-link">
@@ -206,7 +203,7 @@
                         </a>
                     </div>
                 </div>
-                
+
                 <div class="footer-links">
                     <div class="link-group">
                         <h4>Navigation</h4>
@@ -217,7 +214,7 @@
                             <li><a href="../index.html#categories-section">Catégories</a></li>
                         </ul>
                     </div>
-                    
+
                     <div class="link-group">
                         <h4>Support</h4>
                         <ul>
@@ -227,7 +224,7 @@
                             <li><a href="#">Retours</a></li>
                         </ul>
                     </div>
-                    
+
                     <div class="link-group">
                         <h4>Mon Compte</h4>
                         <ul>
@@ -237,7 +234,7 @@
                             <li><a href="#">Mes Favoris</a></li>
                         </ul>
                     </div>
-                    
+
                     <div class="link-group">
                         <h4>Informations</h4>
                         <ul>
@@ -249,7 +246,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="footer-bottom">
                 <p>&copy; 2025 Shop Na Biso. Tous droits réservés.</p>
                 <div class="payment-methods">

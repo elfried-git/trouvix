@@ -15,7 +15,6 @@
         </a>
     </div>
 
-    <!-- Menu burger pour mobile -->
     <button class="menu-burger" id="menu-burger" aria-label="Ouvrir le menu">
         <span></span>
         <span></span>
@@ -153,7 +152,6 @@
         document.addEventListener("DOMContentLoaded", () => {
             updateCartCounter();
 
-            // Script pour le menu burger mobile
             const menuBurger = document.getElementById("menu-burger");
             const mainNav = document.getElementById("main-nav");
             
@@ -163,7 +161,6 @@
                     menuBurger.classList.toggle("menu-open");
                 });
 
-                // Fermer le menu quand on clique sur un lien
                 const navLinks = mainNav.querySelectorAll("a");
                 navLinks.forEach(link => {
                     link.addEventListener("click", () => {
@@ -172,7 +169,6 @@
                     });
                 });
 
-                // Fermer le menu quand on clique en dehors
                 document.addEventListener("click", (e) => {
                     if (!mainNav.contains(e.target) && !menuBurger.contains(e.target)) {
                         mainNav.classList.remove("nav-open");
@@ -183,7 +179,6 @@
         });
     </script>
     
-    <!-- Footer Moderne -->
     <footer class="modern-footer">
         <div class="container">
             <div class="footer-content">

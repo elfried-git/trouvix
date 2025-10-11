@@ -299,7 +299,6 @@
 	<button type="button" class="btn-main" style="margin-top:1.2em;background:linear-gradient(90deg,#444 60%,#00fff9 100%);color:#fff;" onclick="window.location.href='../index.html'">&#8592; Retour à l'accueil</button>
 	</div>
 	<script>
-		// Génère un code salon du type VIX-XXXX (4 chiffres/lettres majuscules)
 		function generateSalonCode() {
 			const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 			let code = '';
@@ -309,19 +308,16 @@
 			return 'VIX-' + code;
 		}
 
-		// Préremplir le champ pseudo et la photo avec la session utilisateur
 		const avatarPreview = document.getElementById('avatar-preview');
 		window.addEventListener('DOMContentLoaded', function () {
 			fetch('../backend/get_user_info.php')
 				.then(res => res.ok ? res.json() : null)
 				.then(data => {
 					if (data) {
-						// Nom hôte
 						const pseudoInput = document.getElementById('pseudo-hote');
 						if (data.nom && pseudoInput && !pseudoInput.value) {
 							pseudoInput.value = data.nom;
 						}
-						// Photo hôte
 						if (data.photo && avatarPreview) {
 							avatarPreview.src = data.photo;
 							avatarPreview.style.display = 'block';
@@ -333,7 +329,6 @@
 				});
 		});
 
-		// Préremplir le champ pseudo avec le nom de session si disponible
 		window.addEventListener('DOMContentLoaded', function () {
 			fetch('../backend/get_user_info.php')
 				.then(res => res.ok ? res.json() : null)
@@ -347,7 +342,6 @@
 				});
 		});
 
-		// Formulaire création salon
 		document.getElementById('creer-salon-form').addEventListener('submit', async function (e) {
 			e.preventDefault();
 			const nomSalon = document.getElementById('nom-hote').value.trim();
@@ -358,13 +352,10 @@
 				alert("Tous les champs sont obligatoires.");
 				return;
 			}
-			// Récupère la photo de l'utilisateur connecté (hôte)
 			let photo = avatarPreview.src;
 			if (!photo) photo = '../assets/avatar-default.png';
 			const codeSalon = generateSalonCode();
-			// Stocke le nombre de joueurs pour la page salon
 			localStorage.setItem('trouvix_nbJoueurs', nbJoueurs);
-			// Affiche la modal de confirmation avec les bons labels
 			showSalonModal({
 				nomSalon,
 				hote,
@@ -375,7 +366,6 @@
 			});
 		});
 
-		// Affiche la modal de confirmation salon créé
 		function showSalonModal({ nomSalon, hote, photo, code, nbJoueurs, nbMots }) {
 			let modal = document.getElementById('modal-salon-cree');
 			if (modal) modal.remove();
@@ -397,13 +387,10 @@
 				</div>
 			`;
 			document.body.appendChild(modal);
-			// Utiliser addEventListener pour éviter les problèmes de réattribution
 			const btnGoSalon = document.getElementById('btn-go-salon');
 			if (btnGoSalon) {
 				btnGoSalon.addEventListener('click', async function handleGoSalonClick(e) {
-					// Empêcher double clic
 					btnGoSalon.disabled = true;
-					// Récupère le nom de session si possible (sécurité)
 					let nomHote = hote;
 					try {
 						const userInfo = await fetch('../backend/get_user_info.php').then(r => r.ok ? r.json() : null);
@@ -411,7 +398,6 @@
 							nomHote = userInfo.nom;
 						}
 					} catch (e) {}
-					// Enregistrement du salon côté serveur via salons.php
 					try {
 						const response = await fetch('../backend/salons.php', {
 							method: 'POST',
@@ -443,7 +429,6 @@
 						btnGoSalon.disabled = false;
 						return;
 					}
-					// Redirection vers la page du salon avec le code
 					window.location.href = `salon.html?code=${code}`;
 				}, { once: true });
 			}

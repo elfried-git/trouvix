@@ -37,7 +37,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 </table>
             </div>
         `;
-        // Insérer la section après les stat cards
         const cards = document.querySelector('.admin-cards');
         cards.parentNode.insertBefore(salonsSection, cards.nextSibling);
         fetchSalons();

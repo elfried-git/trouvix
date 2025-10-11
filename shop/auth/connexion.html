@@ -58,7 +58,6 @@
 </head>
 
 <body>
-    <!-- Navigation moderne -->
     <header class="modern-header">
         <nav class="nav-container">
             <div class="nav-brand">
@@ -142,7 +141,6 @@
         </section>
     </main>
 
-    <!-- Footer Moderne (identique à index) -->
     <footer class="modern-footer">
         <div class="container">
             <div class="footer-content">
@@ -224,9 +222,7 @@
         </div>
     </footer>
 
-    <!-- Scripts -->
     <script>
-        // Gestion du toggle password
         document.querySelector('.toggle-password').addEventListener('click', function () {
             const passwordInput = document.getElementById('password');
             const icon = this.querySelector('i');
@@ -242,11 +238,9 @@
             }
         });
 
-        // Gestion du formulaire de connexion
         document.getElementById('login-form').addEventListener('submit', function (e) {
             e.preventDefault();
 
-            // Simulation de connexion
             const btn = this.querySelector('.auth-btn');
             const originalText = btn.innerHTML;
 
@@ -263,7 +257,6 @@
             }, 2000);
         });
 
-        // Menu mobile
         document.getElementById('mobile-menu-toggle').addEventListener('click', function () {
             const navMenu = document.getElementById('nav-menu');
             navMenu.classList.toggle('nav-open');

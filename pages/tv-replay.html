@@ -52,7 +52,6 @@
     <p style="text-align: center;">Page en construction.</p>
   </main>
   <script>
-  // Masque la carte TV tant que non connecté, affiche popin si clic
   document.addEventListener('DOMContentLoaded', function() {
     const isConnected = sessionStorage.getItem('user_nom');
     const tvCard = document.getElementById('tv-card-main');
@@ -76,7 +75,6 @@
       }
     }
   });
-  // Popin stylé pour accès refusé TV
   function showAccessDeniedPopinTV() {
     if (document.getElementById('popin-access-denied-overlay')) return;
     const html = `\

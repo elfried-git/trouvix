@@ -10,10 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* ========================================================================
-           RESET CSS ET STYLES COMPLETS
-           ======================================================================== */
-        
         * {
             margin: 0;
             padding: 0;
@@ -23,8 +19,8 @@
             hyphens: auto;
         }
 
-        /* Prévenir tout débordement horizontal */
-        html, body {
+        html,
+        body {
             max-width: 100vw;
             overflow-x: hidden;
         }
@@ -38,28 +34,29 @@
             overflow-x: hidden;
             word-wrap: break-word;
             hyphens: auto;
-            /* Background moderne avec les couleurs du site (bleu/violet) */
-            background: 
-                /* Gradient principal - tons bleu/violet du site */
-                linear-gradient(135deg, 
-                    rgba(102, 126, 234, 0.08) 0%,     /* Bleu principal */
-                    rgba(118, 75, 162, 0.08) 20%,     /* Violet */
-                    rgba(79, 172, 254, 0.08) 40%,     /* Bleu ciel */
-                    rgba(0, 242, 254, 0.06) 60%,      /* Cyan */
-                    rgba(102, 126, 234, 0.06) 80%,    /* Bleu principal */
-                    rgba(118, 75, 162, 0.08) 100%),   /* Violet */
-                /* Motifs géométriques avec couleurs du site */
+            background:
+                linear-gradient(135deg,
+                    rgba(102, 126, 234, 0.08) 0%,
+                    /* Bleu principal */
+                    rgba(118, 75, 162, 0.08) 20%,
+                    /* Violet */
+                    rgba(79, 172, 254, 0.08) 40%,
+                    /* Bleu ciel */
+                    rgba(0, 242, 254, 0.06) 60%,
+                    /* Cyan */
+                    rgba(102, 126, 234, 0.06) 80%,
+                    /* Bleu principal */
+                    rgba(118, 75, 162, 0.08) 100%),
+                /* Violet */
                 radial-gradient(circle at 15% 20%, rgba(102, 126, 234, 0.12) 0%, transparent 40%),
                 radial-gradient(circle at 85% 80%, rgba(79, 172, 254, 0.15) 0%, transparent 45%),
                 radial-gradient(circle at 50% 50%, rgba(118, 75, 162, 0.1) 0%, transparent 35%),
-                /* Base avec texture subtile */
                 linear-gradient(45deg, #ffffff 0%, #f8fafc 50%, #e2e8f0 100%);
             background-size: 100% 100%, 800px 800px, 600px 600px, 400px 400px, 100% 100%;
             background-position: 0 0, -200px -100px, 300px 200px, -100px 300px, 0 0;
             background-attachment: fixed, scroll, scroll, scroll, fixed;
         }
 
-        /* Background animé avec pseudo-éléments */
         body::before {
             content: '';
             position: fixed;
@@ -67,7 +64,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
+            background:
                 radial-gradient(circle at 30% 40%, rgba(102, 126, 234, 0.06) 0%, transparent 50%),
                 radial-gradient(circle at 70% 60%, rgba(79, 172, 254, 0.08) 0%, transparent 50%),
                 radial-gradient(circle at 50% 20%, rgba(118, 75, 162, 0.05) 0%, transparent 40%);
@@ -83,7 +80,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
+            background:
                 linear-gradient(60deg, transparent 47%, rgba(102, 126, 234, 0.025) 50%, transparent 53%),
                 linear-gradient(-60deg, transparent 47%, rgba(79, 172, 254, 0.03) 50%, transparent 53%),
                 radial-gradient(circle, transparent 30%, rgba(118, 75, 162, 0.02) 32%, transparent 34%);
@@ -93,23 +90,25 @@
             opacity: 0.8;
         }
 
-        /* Animation du background */
         @keyframes backgroundFloat {
-            0%, 100% { 
+
+            0%,
+            100% {
                 transform: scale(1) rotate(0deg);
                 opacity: 0.9;
             }
-            33% { 
+
+            33% {
                 transform: scale(1.05) rotate(0.5deg);
                 opacity: 1;
             }
-            66% { 
+
+            66% {
                 transform: scale(1.08) rotate(-0.3deg);
                 opacity: 0.95;
             }
         }
 
-        /* Variables CSS */
         :root {
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
@@ -134,7 +133,6 @@
             --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Bouton retour à l'accueil */
         .retour-accueil {
             padding: 2rem 0 1rem 0;
             max-width: 900px;
@@ -154,7 +152,7 @@
             border-radius: 25px;
             font-weight: 500;
             transition: var(--transition-smooth);
-            box-shadow: 
+            box-shadow:
                 0 8px 32px rgba(102, 126, 234, 0.4),
                 inset 0 1px 0 rgba(255, 255, 255, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -171,7 +169,6 @@
             font-size: 0.9rem;
         }
 
-        /* Container principal */
         .legal-document-wrapper {
             max-width: 900px;
             margin: var(--spacing-large) auto;
@@ -180,7 +177,7 @@
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border-radius: var(--border-radius-xl);
-            box-shadow: 
+            box-shadow:
                 0 25px 50px -12px rgba(0, 0, 0, 0.15),
                 0 0 0 1px rgba(255, 255, 255, 0.2),
                 inset 0 1px 0 rgba(255, 255, 255, 0.3);
@@ -212,7 +209,6 @@
             z-index: 1;
         }
 
-        /* Typographie */
         .legal-document-wrapper h1 {
             font-size: 2.5rem;
             font-weight: 700;
@@ -284,7 +280,6 @@
             text-align: justify;
         }
 
-        /* Styles pour les listes */
         .legal-document-wrapper ul {
             margin: var(--spacing-medium) 0;
             padding: var(--spacing-medium);
@@ -377,14 +372,10 @@
             z-index: 0;
         }
 
-        .contact-info > * {
+        .contact-info>* {
             position: relative;
             z-index: 1;
         }
-
-        /* ========================================================================
-           FOOTER MODERNE STYLISÉ
-           ======================================================================== */
 
         .modern-footer {
             background: rgba(44, 62, 80, 0.9);
@@ -393,7 +384,7 @@
             color: white;
             margin-top: 4rem;
             padding: 3rem 0 1.5rem 0;
-            box-shadow: 
+            box-shadow:
                 0 -10px 30px rgba(0, 0, 0, 0.1),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
             position: relative;
@@ -563,7 +554,6 @@
             transform: scale(1.1);
         }
 
-        /* Styles pour les sections */
         .terms-section {
             margin: var(--spacing-large) 0;
             padding: var(--spacing-medium);
@@ -579,7 +569,6 @@
             transform: translateY(-2px);
         }
 
-        /* Styles pour les sections */
         .terms-section {
             margin: var(--spacing-large) 0;
             padding: var(--spacing-medium);
@@ -595,7 +584,6 @@
             transform: translateY(-2px);
         }
 
-        /* Éléments flottants décoratifs */
         .background-elements {
             position: fixed;
             top: 0;
@@ -612,15 +600,15 @@
             border-radius: 50%;
             animation: float 18s infinite ease-in-out;
         }
-        
+
         .floating-shape:nth-child(1) {
             background: linear-gradient(45deg, rgba(102, 126, 234, 0.12), rgba(118, 75, 162, 0.12));
         }
-        
+
         .floating-shape:nth-child(2) {
             background: linear-gradient(45deg, rgba(79, 172, 254, 0.12), rgba(0, 242, 254, 0.12));
         }
-        
+
         .floating-shape:nth-child(3) {
             background: linear-gradient(45deg, rgba(118, 75, 162, 0.12), rgba(102, 126, 234, 0.12));
         }
@@ -650,21 +638,24 @@
         }
 
         @keyframes float {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translateY(0px) rotate(0deg);
                 opacity: 0.3;
             }
+
             33% {
                 transform: translateY(-20px) rotate(120deg);
                 opacity: 0.6;
             }
+
             66% {
                 transform: translateY(10px) rotate(240deg);
                 opacity: 0.4;
             }
         }
 
-        /* Styles pour les liens et texte visible */
         .legal-document-wrapper a {
             color: #87ceeb;
             text-decoration: none;
@@ -699,7 +690,6 @@
             transform: translateY(-2px);
         }
 
-        /* Sections d'avertissement */
         .warning-text {
             background: linear-gradient(135deg, rgba(255, 193, 7, 0.3) 0%, rgba(255, 152, 0, 0.3) 100%);
             border: 2px solid rgba(255, 193, 7, 0.8);
@@ -723,13 +713,12 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
         }
 
-        /* Responsive - Tablette */
         @media (max-width: 768px) {
             body {
                 background-attachment: scroll, scroll, scroll, scroll;
                 overflow-x: hidden;
             }
-            
+
             .legal-document-wrapper {
                 margin: 1rem 0.5rem;
                 padding: 1.5rem;
@@ -805,7 +794,7 @@
                 font-size: 0.9rem;
                 margin: 0 0.5rem;
             }
-            
+
             .floating-shape {
                 display: none;
             }
@@ -814,19 +803,18 @@
                 grid-template-columns: 1fr;
                 gap: 2rem;
             }
-            
+
             .modern-footer .footer-links {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 1.5rem;
             }
-            
+
             .modern-footer .footer-bottom {
                 flex-direction: column;
                 text-align: center;
             }
         }
 
-        /* Responsive - Mobile */
         @media (max-width: 480px) {
             body {
                 font-size: 14px;
@@ -920,7 +908,8 @@
                 padding: 0.75rem;
             }
 
-            .warning-text, .final-warning {
+            .warning-text,
+            .final-warning {
                 padding: 0.75rem;
                 margin: 0.75rem 0;
                 font-size: 0.9rem;
@@ -931,7 +920,7 @@
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
-            
+
             .modern-footer .container {
                 padding: 0 0.5rem;
             }
@@ -949,7 +938,6 @@
             }
         }
 
-        /* Extra small devices */
         @media (max-width: 320px) {
             .legal-document-wrapper {
                 margin: 0.25rem;
@@ -978,15 +966,13 @@
 </head>
 
 <body>
-    <!-- Éléments flottants décoratifs -->
     <div class="background-elements">
         <div class="floating-shape"></div>
         <div class="floating-shape"></div>
         <div class="floating-shape"></div>
     </div>
-    
+
     <main>
-        <!-- Bouton retour à l'accueil -->
         <div class="retour-accueil">
             <a href="../index.html" class="btn-retour">
                 <i class="fas fa-arrow-left"></i>
@@ -1008,7 +994,8 @@
 
             <section class="terms-section">
                 <h2>1. Objet des Conditions Générales</h2>
-                <p>Les présentes Conditions Générales définissent les modalités d'utilisation du site Shop Na Biso (CGU) et
+                <p>Les présentes Conditions Générales définissent les modalités d'utilisation du site Shop Na Biso (CGU)
+                    et
                     encadrent la relation contractuelle entre Shop Na Biso SARL et tout consommateur (le "Client") qui
                     achète un produit via le site (CGV).</p>
             </section>
@@ -1046,7 +1033,8 @@
                 contractuel.</p>
 
             <h3>3.2. Prix et Paiement</h3>
-            <p>Les prix des produits sont indiqués en <strong>Euros (€), Francs CFA (XAF) et Dollars US ($) Toutes Taxes Comprises (TTC)</strong>. Ils ne comprennent pas
+            <p>Les prix des produits sont indiqués en <strong>Euros (€), Francs CFA (XAF) et Dollars US ($) Toutes Taxes
+                    Comprises (TTC)</strong>. Ils ne comprennent pas
                 les frais de livraison, qui sont facturés en supplément et clairement indiqués avant la validation
                 finale de la commande.</p>
             <p>Shop Na Biso SARL se réserve le droit de modifier ses prix à tout moment. Le prix facturé au Client
@@ -1062,18 +1050,21 @@
             <h3>3.4. Livraison</h3>
             <p>La livraison est effectuée à l'adresse indiquée par le Client.</p>
             <p>Les délais de livraison sont indiqués avant la commande et sont donnés à titre indicatif. En cas de
-                dépassement excédant <strong>trente (30) jours</strong> par rapport au délai annoncé, le Client peut annuler sa
+                dépassement excédant <strong>trente (30) jours</strong> par rapport au délai annoncé, le Client peut
+                annuler sa
                 commande par lettre recommandée avec accusé de réception ou par écrit sur un autre support durable.</p>
             <p>Les risques liés aux produits sont transférés au Client dès lors qu'il prend physiquement possession des
                 produits.</p>
 
             <h3>3.5. Droit de Rétractation</h3>
             <p>Conformément aux lois de protection du consommateur, le Client dispose d'un délai de <strong>quatorze
-                (14) jours francs</strong> à compter de la réception du dernier produit de la commande pour exercer son droit
+                    (14) jours francs</strong> à compter de la réception du dernier produit de la commande pour exercer
+                son droit
                 de rétractation, sans avoir à justifier de motif ni à payer de pénalité.</p>
 
             <h3>3.6. Garanties Légales</h3>
-            <p>Tous les produits bénéficient de la <strong>garantie légale de conformité</strong> et de la <strong>garantie des vices cachés</strong> selon les lois applicables.</p>
+            <p>Tous les produits bénéficient de la <strong>garantie légale de conformité</strong> et de la
+                <strong>garantie des vices cachés</strong> selon les lois applicables.</p>
 
             <h2>4. Données Personnelles (RGPD)</h2>
             <p>Shop Na Biso SARL s'engage à protéger les données personnelles du Client.</p>
@@ -1081,13 +1072,14 @@
                 l'exécution du contrat.</p>
 
             <h2>5. Droit Applicable et Litiges</h2>
-            <p>Les présentes Conditions Générales sont soumises à la <strong>Loi de la République Démocratique du Congo</strong>.</p>
+            <p>Les présentes Conditions Générales sont soumises à la <strong>Loi de la République Démocratique du
+                    Congo</strong>.</p>
             <p>En cas de litige, le Client peut recourir à la médiation ou aux voies de recours disponibles.</p>
-            <p>Tout litige non résolu par voie amiable sera soumis aux tribunaux compétents de la République Démocratique du Congo.</p>
+            <p>Tout litige non résolu par voie amiable sera soumis aux tribunaux compétents de la République
+                Démocratique du Congo.</p>
         </div>
     </main>
 
-    <!-- Footer Moderne -->
     <footer class="modern-footer">
         <div class="container">
             <div class="footer-content">
@@ -1102,10 +1094,12 @@
                         Votre boutique e-commerce de confiance pour des produits de qualité à des prix exceptionnels.
                     </p>
                     <div class="social-links">
-                        <a href="https://www.facebook.com/?locale=fr_FR" target="_blank" rel="noopener noreferrer" class="social-link">
+                        <a href="https://www.facebook.com/?locale=fr_FR" target="_blank" rel="noopener noreferrer"
+                            class="social-link">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="social-link">
+                        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer"
+                            class="social-link">
                             <i class="fab fa-instagram"></i>
                         </a>
                         <a href="#" class="social-link">
@@ -1116,7 +1110,7 @@
                         </a>
                     </div>
                 </div>
-                
+
                 <div class="footer-links">
                     <div class="link-group">
                         <h4>Navigation</h4>
@@ -1127,7 +1121,7 @@
                             <li><a href="../index.html#categories-section">Catégories</a></li>
                         </ul>
                     </div>
-                    
+
                     <div class="link-group">
                         <h4>Support</h4>
                         <ul>
@@ -1137,7 +1131,7 @@
                             <li><a href="#">Retours</a></li>
                         </ul>
                     </div>
-                    
+
                     <div class="link-group">
                         <h4>Mon Compte</h4>
                         <ul>
@@ -1147,7 +1141,7 @@
                             <li><a href="#">Mes Favoris</a></li>
                         </ul>
                     </div>
-                    
+
                     <div class="link-group">
                         <h4>Informations</h4>
                         <ul>
@@ -1159,7 +1153,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="footer-bottom">
                 <p>&copy; 2025 Shop Na Biso. Tous droits réservés.</p>
                 <div class="payment-methods">

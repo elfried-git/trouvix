@@ -233,7 +233,6 @@
       padding: 0;
       margin: 0;
     }
-    /* --- Fin styles menu universel --- */
   </style>
 </head>
 <body>
@@ -268,7 +267,6 @@
   <button id="btn-hote" style="background:linear-gradient(90deg,#00fff9 60%,#ff00ff 100%);color:#181c3a;border:none;border-radius:0.7em;font-size:1em;font-weight:bold;padding:0.5em 2em;cursor:pointer;box-shadow:0 0 8px #00fff966;transition:background 0.2s;">Hôte</button>
   <button id="btn-admin" style="background:linear-gradient(90deg,#ff00ff 60%,#00fff9 100%);color:#181c3a;border:none;border-radius:0.7em;font-size:1em;font-weight:bold;padding:0.5em 2em;cursor:pointer;box-shadow:0 0 8px #ff00ff66;transition:background 0.2s;">Admin</button>
     </div>
-    <!-- Formulaire supprimé : Longueur du mot, liste déroulante et bouton Nouvelle Partie -->
     <div class="devichal-word" id="devichal-word"></div>
     <div class="devichal-letters" id="devichal-letters"></div>
     <div class="devichal-input" id="devichal-input" style="display:none;">
@@ -285,7 +283,6 @@
   </div>
   <script src="../mots.js"></script>
   <script>
-    // Actions des boutons Hôte et Joueurs
     document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('btn-hote').addEventListener('click', function() {
         window.location.href = 'creer-salon.html';
@@ -294,7 +291,6 @@
         window.location.href = 'admin-login.html';
       });
     });
-    // --- Logique du jeu DeviChal (mode solo, démo) ---
     let motSecret = '';
     let lettresTrouvees = [];
     let lettresRatees = [];
@@ -359,7 +355,6 @@
       afficherLettres();
       document.getElementById('devichal-guess').value = '';
       document.getElementById('devichal-guess').focus();
-      // Vérifier victoire
       if (motSecret.split('').every(l => lettresTrouvees.includes(l))) {
         partieEnCours = false;
         document.getElementById('devichal-message').textContent = 'Bravo ! Mot trouvé : ' + motSecret.toUpperCase();

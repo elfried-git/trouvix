@@ -15,7 +15,6 @@
 <body class="page-about">
 
     <main>
-        <!-- Bouton retour à l'accueil -->
         <div class="retour-accueil-container">
             <a href="../index.html" class="btn-retour-accueil">
                 <i class="fas fa-arrow-left"></i>
@@ -137,7 +136,6 @@
         </div>
     </main>
 
-    <!-- Script pour le compteur du panier -->
     <script>
         function updateCartCounter() {
             const compteur = document.getElementById("compteur-panier");
@@ -153,7 +151,6 @@
         });
     </script>
 
-    <!-- Script pour le menu burger mobile -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const menuBurger = document.getElementById("menu-burger");
@@ -165,7 +162,6 @@
                     menuBurger.classList.toggle("menu-open");
                 });
 
-                // Fermer le menu quand on clique sur un lien
                 const navLinks = mainNav.querySelectorAll("a");
                 navLinks.forEach(link => {
                     link.addEventListener("click", () => {
@@ -174,7 +170,6 @@
                     });
                 });
 
-                // Fermer le menu quand on clique en dehors
                 document.addEventListener("click", (e) => {
                     if (!mainNav.contains(e.target) && !menuBurger.contains(e.target)) {
                         mainNav.classList.remove("nav-open");
@@ -185,7 +180,6 @@
         });
     </script>
     
-    <!-- Footer Moderne -->
     <footer class="modern-footer">
         <div class="container">
             <div class="footer-content">
@@ -270,10 +264,8 @@
         </div>
     </footer>
 
-    <!-- Scripts simples -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // Animation des sections au scroll
             const observeOptions = {
                 threshold: 0.1,
                 rootMargin: "0px 0px -50px 0px"

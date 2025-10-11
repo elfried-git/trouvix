@@ -15,15 +15,15 @@
                 extend: {
                     colors: {
                         primary: {
-                            500: '#009B3A', // Green from Congo flag
+                            500: '#009B3A',
                             600: '#008030',
                         },
                         secondary: {
-                            500: '#FBDE4A', // Yellow from Congo flag
+                            500: '#FBDE4A',
                             600: '#F0D030',
                         },
                         accent: {
-                            500: '#DC241F', // Red from Congo flag
+                            500: '#DC241F',
                         }
                     }
                 }
@@ -117,50 +117,68 @@
     </style>
 </head>
 
-<body class="font-sans" style="background:linear-gradient(135deg,#009B3A 0%,#FBDE4A 50%,#DC241F 100%);min-height:100vh;">
-    <!-- Hymne national de la République du Congo (audio local, mp3) -->
+<body class="font-sans"
+    style="background:linear-gradient(135deg,#009B3A 0%,#FBDE4A 50%,#DC241F 100%);min-height:100vh;">
     <audio id="congo-anthem" src="congo-anthem.mp3" autoplay loop></audio>
-    <button id="anthem-play-btn" style="position:fixed;bottom:18px;right:18px;z-index:9999;display:none;background:#009B3A;color:#fff;border:none;border-radius:50%;width:48px;height:48px;box-shadow:0 2px 8px #0003;align-items:center;justify-content:center;font-size:1.5em;cursor:pointer;" title="Activer le son du site">&#9835;</button>
+    <button id="anthem-play-btn"
+        style="position:fixed;bottom:18px;right:18px;z-index:9999;display:none;background:#009B3A;color:#fff;border:none;border-radius:50%;width:48px;height:48px;box-shadow:0 2px 8px #0003;align-items:center;justify-content:center;font-size:1.5em;cursor:pointer;"
+        title="Activer le son du site">&#9835;</button>
     <script>
-    // Lecture automatique de l'hymne national (local, mp3)
-    document.addEventListener('DOMContentLoaded', function () {
-        const anthem = document.getElementById('congo-anthem');
-        const anthemBtn = document.getElementById('anthem-play-btn');
-        if (anthem) {
-            anthem.volume = 0.25;
-            anthem.play().catch(() => {
-                anthemBtn.style.display = 'flex';
-            });
-            anthemBtn.onclick = function() {
-                anthem.play();
-                anthemBtn.style.display = 'none';
-            };
-        }
-    });
+        document.addEventListener('DOMContentLoaded', function () {
+            const anthem = document.getElementById('congo-anthem');
+            const anthemBtn = document.getElementById('anthem-play-btn');
+            if (anthem) {
+                anthem.volume = 0.25;
+                anthem.play().catch(() => {
+                    anthemBtn.style.display = 'flex';
+                });
+                anthemBtn.onclick = function () {
+                    anthem.play();
+                    anthemBtn.style.display = 'none';
+                };
+            }
+        });
     </script>
-    <!-- Modal de confirmation publication -->
-    <div id="publish-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden" style="background:rgba(0,0,0,0.45);">
+    <div id="publish-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden"
+        style="background:rgba(0,0,0,0.45);">
         <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center animate-fadeIn relative">
             <div class="flex justify-center mb-3">
-                <svg width="48" height="48" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#009B3A"/><path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg width="48" height="48" fill="none" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="12" fill="#009B3A" />
+                    <path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
             </div>
             <h2 class="text-2xl font-bold mb-2 text-primary-600">Sujet soumis !</h2>
-            <p class="text-gray-700 mb-6">Votre sujet a été soumis et sera visible après validation par un administrateur.</p>
-            <button id="close-publish-modal" class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2 rounded-lg font-semibold shadow transition">Fermer</button>
+            <p class="text-gray-700 mb-6">Votre sujet a été soumis et sera visible après validation par un
+                administrateur.</p>
+            <button id="close-publish-modal"
+                class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2 rounded-lg font-semibold shadow transition">Fermer</button>
         </div>
     </div>
     <style>
-    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95);} to { opacity: 1; transform: scale(1);} }
-    .animate-fadeIn { animation: fadeIn 0.25s; }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.25s;
+        }
     </style>
-    <!-- Navigation simplifiée -->
     <nav class="bg-primary-500 text-white shadow-lg">
         <div class="w-full" style="background: linear-gradient(90deg, #009B3A 0%, #FBDE4A 50%, #DC241F 100%);">
             <div class="container mx-auto px-4 py-5 flex flex-col items-center justify-center relative">
                 <div class="flex flex-row items-center w-full justify-start pl-2 pr-10 relative"
                     style="min-height:3.5rem;">
 
-                    <!-- <span style="display:inline-block;width:2.2rem;height:2.2rem;border-radius:50%;overflow:hidden;border:2px solid #fff;box-shadow:0 0 8px #009B3A88;vertical-align:middle;background:linear-gradient(135deg,#009B3A 0 33%,#FBDE4A 33% 66%,#DC241F 66% 100%);margin-right:0.7rem;"></span> -->
                     <span
                         class="font-extrabold text-lg sm:text-xl md:text-2xl tracking-wide whitespace-nowrap overflow-hidden text-ellipsis"
                         style="color:#fff;font-family:'Orbitron','Segoe UI',Arial,sans-serif;letter-spacing:0.08em;max-width:60vw;text-align:left;line-height:1.2;">Rép.
@@ -191,7 +209,6 @@
                         style="font-family:'Orbitron','Segoe UI',Arial,sans-serif;letter-spacing:0.08em;line-height:1.2;">Sujets
                         récents</a>
                 </div>
-                <!-- Mobile menu -->
                 <div id="mobile-menu"
                     class="md:hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-40 z-50 hidden">
                     <div class="bg-white w-64 h-full shadow-lg p-6 flex flex-col absolute right-0 top-0">
@@ -210,7 +227,6 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <div class="hero-pattern bg-primary-50 py-12">
         <div class="container mx-auto px-4 text-center">
             <h1 class="text-4xl md:text-5xl font-bold text-primary-600 mb-4">Espace Communautaire</h1>
@@ -225,7 +241,6 @@
     </div>
 
     <main class="container mx-auto px-4 py-12">
-        <!-- Catégories -->
         <section id="categories" class="mb-12">
             <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
                 <i data-feather="grid" class="mr-2 text-primary-500"></i> Catégories
@@ -254,18 +269,15 @@
             </div>
         </section>
 
-        <!-- Sujets récents -->
         <section id="recents">
             <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
                 <i data-feather="clock" class="mr-2 text-primary-500"></i> Sujets récents
             </h2>
             <div id="topics-list" class="space-y-6">
-                <!-- Les sujets seront injectés ici par JS -->
             </div>
         </section>
     </main>
 
-    <!-- Modal Nouveau Sujet -->
     <div id="topic-modal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
             <button id="close-modal" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700">
@@ -299,23 +311,17 @@
         </div>
     </div>
 
-    <!-- Modal Sujet (thread) -->
     <div id="thread-modal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-xl shadow-lg w-full max-w-2xl p-6 relative">
             <button id="close-thread" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700">
                 <i data-feather="x"></i>
             </button>
             <div id="thread-content">
-                <!-- Sujet et réponses injectés ici -->
             </div>
         </div>
     </div>
 
     <script>
-    // Forum data (en mémoire, remplaçable par backend ou localStorage)
-    // Mode admin activé définitivement
-    // let isAdmin = true; // SUPPRIMÉ : le mode admin ne doit pas être activé en dur
-        // Charge les sujets depuis le localStorage (pour la validation)
         let topics = JSON.parse(localStorage.getItem('forumTopics') || `[{
             "id": 1,
             "title": "Bienvenue sur le forum !",
@@ -342,7 +348,6 @@
         function renderTopics() {
             const list = document.getElementById('topics-list');
             list.innerHTML = '';
-            // Seuls les sujets validés sont affichés
             let filtered = topics.filter(t => t.validated);
             if (currentCategory) {
                 filtered = filtered.filter(t => t.category === currentCategory);
@@ -367,14 +372,11 @@
                     </div>
                 `;
                 div.onclick = (e) => {
-                    // Ne pas ouvrir le thread si on clique sur un bouton admin
                     if (e.target.classList.contains('edit-topic-btn') || e.target.classList.contains('delete-topic-btn')) return;
                     openThread(topic.id);
                 };
                 list.appendChild(div);
             });
-            // Actions admin : suppression/édition
-            // SUPPRIMÉ : pas d'actions admin JS côté client
             feather.replace();
         }
 
@@ -399,7 +401,6 @@
             renderTopics();
         }
 
-        // Nouveau sujet
         document.getElementById('new-topic-btn').onclick = function () {
             document.getElementById('topic-modal').classList.remove('hidden');
             feather.replace();
@@ -433,21 +434,19 @@
                     url: URL.createObjectURL(attachment)
                 } : null,
                 replies: [],
-                validated: false // Par défaut, en attente de validation
+                validated: false
             };
             topics.push(newTopic);
             localStorage.setItem('forumTopics', JSON.stringify(topics));
             document.getElementById('topic-modal').classList.add('hidden');
             document.getElementById('topic-form').reset();
             renderTopics();
-            // Affiche la modal de confirmation stylée
             document.getElementById('publish-modal').classList.remove('hidden');
-            document.getElementById('close-publish-modal').onclick = function() {
+            document.getElementById('close-publish-modal').onclick = function () {
                 document.getElementById('publish-modal').classList.add('hidden');
             };
         };
 
-        // Thread (sujet + réponses)
         function openThread(id) {
             const topic = topics.find(t => t.id === id);
             if (!topic) return;
@@ -510,7 +509,6 @@
                     </div>
                 </form>
             `;
-            // SUPPRIMÉ : pas d'actions admin JS côté client
             document.getElementById('thread-modal').classList.remove('hidden');
             feather.replace();
             document.getElementById('reply-form').onsubmit = function (e) {
@@ -531,7 +529,6 @@
         };
 
         function embedVideo(url) {
-            // Gère YouTube, Vimeo, liens directs mp4/webm
             if (url.includes('youtube.com') || url.includes('youtu.be')) {
                 let id = url.split('v=')[1] || '';
                 if (url.includes('youtu.be/')) id = url.split('youtu.be/')[1];
@@ -548,8 +545,6 @@
             return url;
         }
 
-        // Initial rendering
-        // Recharge les sujets depuis le localStorage à chaque affichage
         function reloadTopics() {
             topics = JSON.parse(localStorage.getItem('forumTopics') || '[]');
             renderTopics();
@@ -557,14 +552,12 @@
         }
         reloadTopics();
 
-        // Mobile menu toggle
         document.getElementById('burger-btn').onclick = function () {
             document.getElementById('mobile-menu').classList.remove('hidden');
         };
         document.getElementById('close-mobile-menu').onclick = function () {
             document.getElementById('mobile-menu').classList.add('hidden');
         };
-        // Burger menu mobile
         const burgerBtn = document.getElementById('burger-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         const closeMobileMenu = document.getElementById('close-mobile-menu');
@@ -575,7 +568,6 @@
         closeMobileMenu && closeMobileMenu.addEventListener('click', function () {
             mobileMenu.classList.add('hidden');
         });
-        // Fermer le menu mobile si on clique en dehors
         mobileMenu && mobileMenu.addEventListener('click', function (e) {
             if (e.target === mobileMenu) {
                 mobileMenu.classList.add('hidden');

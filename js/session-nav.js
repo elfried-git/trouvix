@@ -1,5 +1,3 @@
-// Script global pour gestion connexion/navigation Trouvix
-// Placez ce fichier dans js/ et incluez-le sur toutes les pages avec une nav
 
 let activityPingInterval = null;
 function checkUserSessionAndUpdateNav() {
@@ -10,14 +8,11 @@ function checkUserSessionAndUpdateNav() {
             const userIcon = document.getElementById('menu-user-icon');
             const userNom = document.getElementById('menu-user-nom');
             if (data.connected) {
-                // Met à jour la dernière activité côté serveur
                 fetch('/Trouvix/backend/update_activity.php', { credentials: 'include' });
                 if (userNom) userNom.textContent = data.username || 'Connecté(e)';
                 if (userIcon) userIcon.style.display = 'inline-block';
                 if (loginLink) loginLink.style.display = 'none';
-                // Pour JS local : sessionStorage
                 if (data.username) sessionStorage.setItem('user_nom', data.username);
-                // Démarre le ping régulier si pas déjà lancé
                 if (!activityPingInterval) {
                     activityPingInterval = setInterval(() => {
                         fetch('/Trouvix/backend/update_activity.php', { credentials: 'include' });
@@ -29,7 +24,6 @@ function checkUserSessionAndUpdateNav() {
                 if (userNom) userNom.textContent = '';
                 sessionStorage.removeItem('user_nom');
                 if (typeof window.updateCardAccess === 'function') window.updateCardAccess();
-                // Stoppe le ping si déconnexion
                 if (activityPingInterval) {
                     clearInterval(activityPingInterval);
                     activityPingInterval = null;
@@ -43,45 +37,38 @@ function checkUserSessionAndUpdateNav() {
 
 document.addEventListener('DOMContentLoaded', () => {
     checkUserSessionAndUpdateNav();
-    // Menu responsive mobile
     const burger = document.getElementById('burger-menu');
     const closeMenu = document.getElementById('close-menu');
     const mainNav = document.getElementById('main-nav');
     if (burger && closeMenu && mainNav) {
-        // Ouvre le menu
         burger.addEventListener('click', (e) => {
             e.stopPropagation();
             mainNav.classList.add('open');
             closeMenu.style.display = 'block';
         });
-        // Ferme le menu
         closeMenu.addEventListener('click', (e) => {
             e.stopPropagation();
             mainNav.classList.remove('open');
             closeMenu.style.display = 'none';
         });
-        // Ferme le menu si on clique sur un lien du menu
         mainNav.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 mainNav.classList.remove('open');
                 closeMenu.style.display = 'none';
             });
         });
-        // Ferme le menu si on clique en dehors
         document.addEventListener('click', (e) => {
             if (mainNav.classList.contains('open') && !mainNav.contains(e.target) && e.target !== burger) {
                 mainNav.classList.remove('open');
                 closeMenu.style.display = 'none';
             }
         });
-        // Empêche la propagation du clic dans le menu
         mainNav.addEventListener('click', (e) => {
             e.stopPropagation();
         });
     }
 
 
-    // Ping rapide avant fermeture d'onglet/navigateur
     window.addEventListener('beforeunload', function() {
         if (activityPingInterval) {
             clearInterval(activityPingInterval);
@@ -95,7 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Synchronise l'état de connexion sur tous les onglets/pages
 window.addEventListener('storage', function(e) {
     if (e.key === 'user_nom') {
         checkUserSessionAndUpdateNav();

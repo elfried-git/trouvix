@@ -30,13 +30,11 @@
                             <span id="menu-user-nom" style="font-size:1em;"></span>
                         </a>
                     </li>
-                    <!-- <li id="menu-login-link"><a href="login.html">Connexion</a></li> -->
                     <li id="menu-logout-link" style="display:none"><form action="../pages/logout.php" method="post" style="display:inline;"><button type="submit" style="background:none;border:none;color:#0ff1ce;font-size:1em;cursor:pointer;">Déconnexion</button></form></li>
                 </ul>
             </nav>
         </div>
     </header>
-    <!-- Formulaire de connexion (modal affiché en page dédiée) -->
     <div class="hote-login-container">
         <div class="hote-title">Connexion Hôte</div>
         <form id="hote-login-form" autocomplete="off">
@@ -79,7 +77,6 @@ document.getElementById('hote-login-form').addEventListener('submit', async func
         if (data.success) {
             errorDiv.style.color = 'green';
             errorDiv.textContent = data.message;
-            // Stocke le nom de l'utilisateur pour affichage menu
             if (data.user_nom) {
                 sessionStorage.setItem('user_nom', data.user_nom);
             }
@@ -96,6 +93,5 @@ document.getElementById('hote-login-form').addEventListener('submit', async func
 });
 </script>
 </body>
-    <!-- Surveillance session utilisateur -->
     <script src="/Trouvix/js/session-nav.js"></script>
 </html>

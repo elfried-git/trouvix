@@ -1,8 +1,5 @@
-// mots.js
-
-// La variable 'words' contient plus de 1800 mots français pour le jeu.
-// Elle sera accessible par le fichier 'script.js' via le HTML.
 const words = [
+
     // ===========================================
     // LISTE STRICTE DE MOTS DE 6 LETTRES (SANS ACCENT)
     // ===========================================

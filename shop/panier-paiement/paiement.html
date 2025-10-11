@@ -9,178 +9,199 @@
     <link rel="stylesheet" href="../index-modern.css">
     <link rel="stylesheet" href="paiement.css">
     <style>
-    /* HEADER MODERNE - Copié depuis index-modern.css */
-    .modern-header {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(20px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 1000;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 2px 16px 0 rgba(102, 126, 234, 0.07);
-    }
-    .nav-container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 1rem 2rem;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-    .nav-brand .brand-link {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        text-decoration: none;
-        color: #2d3748;
-        font-weight: 700;
-        font-size: 1.5rem;
-    }
-    .brand-icon {
-        width: 2.5rem;
-        height: 2.5rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 0.75rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .brand-icon:hover {
-        transform: scale(1.1) rotate(5deg);
-    }
-    .nav-menu {
-        display: flex;
-        align-items: center;
-    }
-    .nav-list {
-        display: flex;
-        align-items: center;
-        gap: 2rem;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-    .nav-link {
-        text-decoration: none;
-        color: #718096;
-        font-weight: 500;
-        position: relative;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .nav-link:hover,
-    .nav-link.active {
-        color: #2d3748;
-    }
-    .nav-link::after {
-        content: '';
-        position: absolute;
-        bottom: -0.5rem;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .nav-link:hover::after,
-    .nav-link.active::after {
-        width: 100%;
-    }
-    .nav-actions {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-    .currency-select {
-        background: #f3f4f6;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .currency-select:hover {
-        background: #e5e7eb;
-    }
-    .action-btn {
-        width: 2.5rem;
-        height: 2.5rem;
-        border-radius: 0.75rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-        background: #f3f4f6;
-        color: #718096;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        border: none;
-        cursor: pointer;
-    }
-    .action-btn:hover {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        transform: translateY(-2px);
-    }
-    .cart-count {
-        position: absolute;
-        top: -0.25rem;
-        right: -0.25rem;
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        color: white;
-        font-size: 0.75rem;
-        font-weight: 600;
-        padding: 0.25rem 0.5rem;
-        border-radius: 9999px;
-        min-width: 1.25rem;
-        height: 1.25rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .mobile-menu-toggle {
-        display: none;
-        flex-direction: column;
-        gap: 0.25rem;
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 0.5rem;
-    }
-    .mobile-menu-toggle span {
-        width: 1.5rem;
-        height: 2px;
-        background: #2d3748;
-        border-radius: 2px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    body {
-        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-        overflow-x: hidden;
-        margin: 0;
-        padding: 0;
-    }
-    main {
-        background: #f8fafc;
-        min-height: 100vh;
-        padding-top: 110px;
-    }
-    @media (max-width: 900px) {
+        .modern-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 16px 0 rgba(102, 126, 234, 0.07);
+        }
+
         .nav-container {
-            flex-direction: column;
-            gap: 1rem;
-            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
+
+        .nav-brand .brand-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: #2d3748;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .brand-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .brand-icon:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+        }
+
         .nav-list {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #718096;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #2d3748;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
             gap: 1rem;
         }
-    }
+
+        .currency-select {
+            background: #f3f4f6;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .currency-select:hover {
+            background: #e5e7eb;
+        }
+
+        .action-btn {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            background: #f3f4f6;
+            color: #718096;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            border: none;
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -0.25rem;
+            right: -0.25rem;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            min-width: 1.25rem;
+            height: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 0.25rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-toggle span {
+            width: 1.5rem;
+            height: 2px;
+            background: #2d3748;
+            border-radius: 2px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        main {
+            background: #f8fafc;
+            min-height: 100vh;
+            padding-top: 110px;
+        }
+
+        @media (max-width: 900px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .nav-list {
+                gap: 1rem;
+            }
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -242,7 +263,6 @@
 </head>
 
 <body>
-    <!-- Header moderne et navigation -->
     <header class="modern-header">
         <nav class="nav-container">
             <div class="nav-brand">
@@ -386,7 +406,6 @@
         </div>
     </main>
     <script>
-        // Highlight selected payment method and show details
         const methods = document.querySelectorAll('.payment-method');
         const paymentDetails = document.getElementById('payment-details');
 
@@ -641,7 +660,6 @@
             });
         });
 
-        // Validation helpers pour la carte bancaire
         function validateCardName(value) {
             return /^[A-Za-zÀ-ÿ\s]+$/.test(value);
         }
@@ -653,7 +671,6 @@
         }
 
         function validateExpiry(value) {
-            // value format: yyyy-mm
             if (!/^\d{4}-\d{2}$/.test(value)) return false;
             const [year, month] = value.split('-').map(Number);
             const now = new Date();
@@ -661,34 +678,29 @@
             return exp >= new Date(now.getFullYear(), now.getMonth());
         }
 
-        // Form submission
         document.getElementById('payment-form').addEventListener('submit', function (e) {
             e.preventDefault();
             const selected = document.querySelector('input[name="payment-method"]:checked');
             if (!selected) return;
 
             if (selected.value === 'carte') {
-                // Champs
                 const name = document.getElementById('card-name').value.trim();
                 const number = document.getElementById('card-number').value.trim();
                 const cvv = document.getElementById('card-cvv').value.trim();
 
                 let valid = true;
-                // Titulaire
                 if (!validateCardName(name)) {
                     document.getElementById('card-name-error').style.display = 'block';
                     valid = false;
                 } else {
                     document.getElementById('card-name-error').style.display = 'none';
                 }
-                // Numéro
                 if (!validateCardNumber(number)) {
                     document.getElementById('card-number-error').style.display = 'block';
                     valid = false;
                 } else {
                     document.getElementById('card-number-error').style.display = 'none';
                 }
-                // Expiry
                 const expiry = document.getElementById('card-expiry').value.trim();
                 if (!validateExpiry(expiry)) {
                     document.getElementById('card-expiry-error').style.display = 'block';
@@ -696,7 +708,6 @@
                 } else {
                     document.getElementById('card-expiry-error').style.display = 'none';
                 }
-                // CVV
                 if (!validateCVV(cvv)) {
                     document.getElementById('card-cvv-error').style.display = 'block';
                     valid = false;
@@ -706,7 +717,6 @@
 
                 if (!valid) return;
                 alert('Paiement par carte accepté (simulation).');
-                // Ici, logique réelle ou redirection
             } else if (selected.value === 'mtn') {
                 const mtnNumber = document.getElementById('mtn-number').value.trim();
                 if (!/^\d{8,15}$/.test(mtnNumber)) {
@@ -724,8 +734,6 @@
             }
         });
 
-        // Afficher le formulaire de la méthode sélectionnée au chargement si déjà coché
-        // Met à jour le compteur du panier dans le header
         function updateCartCounter() {
             const compteur = document.getElementById("compteur-panier");
             if (compteur) {

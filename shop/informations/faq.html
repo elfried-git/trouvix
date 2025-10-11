@@ -23,7 +23,6 @@
             </a>
         </div>
 
-        <!-- Menu burger pour mobile -->
         <button class="menu-burger" id="menu-burger" aria-label="Ouvrir le menu">
             <span></span>
             <span></span>
@@ -68,7 +67,6 @@
                 </div>
 
                 <div class="faq-grid">
-                    <!-- Catégorie Commandes -->
                     <div class="faq-item" data-category="commande">
                         <div class="faq-question">
                             <h3>Comment passer une commande ?</h3>
@@ -115,7 +113,6 @@
                         </div>
                     </div>
 
-                    <!-- Catégorie Livraison -->
                     <div class="faq-item" data-category="livraison">
                         <div class="faq-question">
                             <h3>Quels sont les délais de livraison ?</h3>
@@ -155,7 +152,6 @@
                         </div>
                     </div>
 
-                    <!-- Catégorie Paiement -->
                     <div class="faq-item" data-category="paiement">
                         <div class="faq-question">
                             <h3>Quels modes de paiement acceptez-vous ?</h3>
@@ -180,7 +176,6 @@
                         </div>
                     </div>
 
-                    <!-- Catégorie Produits -->
                     <div class="faq-item" data-category="produits">
                         <div class="faq-question">
                             <h3>Les produits sont-ils neufs ou d'occasion ?</h3>
@@ -259,7 +254,6 @@
                         </div>
                     </div>
 
-                    <!-- Catégorie Compte -->
                     <div class="faq-item" data-category="compte">
                         <div class="faq-question">
                             <h3>Comment créer un compte ?</h3>
@@ -296,7 +290,6 @@
                         </div>
                     </div>
 
-                    <!-- Questions générales -->
                     <div class="faq-item" data-category="all">
                         <div class="faq-question">
                             <h3>Comment contacter le service client ?</h3>
@@ -358,7 +351,6 @@
         document.addEventListener("DOMContentLoaded", () => {
             updateCartCounter();
 
-            // Script pour le menu burger mobile
             const menuBurger = document.getElementById("menu-burger");
             const mainNav = document.getElementById("main-nav");
 
@@ -368,7 +360,6 @@
                     menuBurger.classList.toggle("menu-open");
                 });
 
-                // Fermer le menu quand on clique sur un lien
                 const navLinks = mainNav.querySelectorAll("a");
                 navLinks.forEach(link => {
                     link.addEventListener("click", () => {
@@ -377,7 +368,6 @@
                     });
                 });
 
-                // Fermer le menu quand on clique en dehors
                 document.addEventListener("click", (e) => {
                     if (!mainNav.contains(e.target) && !menuBurger.contains(e.target)) {
                         mainNav.classList.remove("nav-open");
@@ -386,11 +376,9 @@
                 });
             }
 
-            // FAQ Interactivity
             const faqItems = document.querySelectorAll('.faq-item');
             const categoryBtns = document.querySelectorAll('.category-btn');
 
-            // Accordéon FAQ
             faqItems.forEach(item => {
                 const question = item.querySelector('.faq-question');
                 const answer = item.querySelector('.faq-answer');
@@ -399,7 +387,6 @@
                 question.addEventListener('click', () => {
                     const isActive = item.classList.contains('active');
 
-                    // Fermer tous les autres éléments
                     faqItems.forEach(otherItem => {
                         if (otherItem !== item) {
                             otherItem.classList.remove('active');
@@ -410,7 +397,6 @@
                         }
                     });
 
-                    // Basculer l'élément actuel
                     if (!isActive) {
                         item.classList.add('active');
                         answer.style.maxHeight = answer.scrollHeight + 'px';
@@ -423,23 +409,19 @@
                 });
             });
 
-            // Filtres par catégorie
             categoryBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     const category = btn.dataset.category;
 
-                    // Mise à jour des boutons actifs
                     categoryBtns.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
 
-                    // Filtrage des FAQ
                     faqItems.forEach(item => {
                         const itemCategory = item.dataset.category;
                         if (category === 'all' || itemCategory === category) {
                             item.style.display = 'block';
                         } else {
                             item.style.display = 'none';
-                            // Fermer si ouvert
                             item.classList.remove('active');
                             const answer = item.querySelector('.faq-answer');
                             const icon = item.querySelector('.faq-question i');
@@ -452,7 +434,6 @@
         });
     </script>
     
-    <!-- Footer Moderne -->
     <footer class="modern-footer">
         <div class="container">
             <div class="footer-content">

@@ -9,182 +9,202 @@
     <link rel="stylesheet" href="../index-modern.css">
     <link rel="stylesheet" href="panier.css">
     <style>
-    /* HEADER MODERNE - Copié depuis index-modern.css */
-    .modern-header {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(20px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 1000;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .nav-container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 1rem 2rem;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-    .nav-brand .brand-link {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        text-decoration: none;
-        color: #2d3748;
-        font-weight: 700;
-        font-size: 1.5rem;
-    }
-    .brand-icon {
-        width: 2.5rem;
-        height: 2.5rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 0.75rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .brand-icon:hover {
-        transform: scale(1.1) rotate(5deg);
-    }
-    .nav-menu {
-        display: flex;
-        align-items: center;
-    }
-    .nav-list {
-        display: flex;
-        align-items: center;
-        gap: 2rem;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-    .nav-link {
-        text-decoration: none;
-        color: #718096;
-        font-weight: 500;
-        position: relative;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .nav-link:hover,
-    .nav-link.active {
-        color: #2d3748;
-    }
-    .nav-link::after {
-        content: '';
-        position: absolute;
-        bottom: -0.5rem;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .nav-link:hover::after,
-    .nav-link.active::after {
-        width: 100%;
-    }
-    .nav-actions {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-    .currency-select {
-        background: #f3f4f6;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .currency-select:hover {
-        background: #e5e7eb;
-    }
-    .action-btn {
-        width: 2.5rem;
-        height: 2.5rem;
-        border-radius: 0.75rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-        background: #f3f4f6;
-        color: #718096;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        border: none;
-        cursor: pointer;
-    }
-    .action-btn:hover {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        transform: translateY(-2px);
-    }
-    .cart-count {
-        position: absolute;
-        top: -0.25rem;
-        right: -0.25rem;
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        color: white;
-        font-size: 0.75rem;
-        font-weight: 600;
-        padding: 0.25rem 0.5rem;
-        border-radius: 9999px;
-        min-width: 1.25rem;
-        height: 1.25rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .mobile-menu-toggle {
-        display: none;
-        flex-direction: column;
-        gap: 0.25rem;
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 0.5rem;
-    }
-    .mobile-menu-toggle span {
-        width: 1.5rem;
-        height: 2px;
-        background: #2d3748;
-        border-radius: 2px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    /* Ajout d'un fond dégradé sous la barre de menu comme sur index.html */
-    body {
-        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-        overflow-x: hidden;
-        margin: 0;
-        padding: 0;
-    }
-    main {
-        background: #f8fafc;
-        min-height: 100vh;
-        padding-top: 110px;
-    }
-    .modern-header {
-        box-shadow: 0 2px 16px 0 rgba(102, 126, 234, 0.07);
-    }
-    /* Responsive ajustement pour le header */
-    @media (max-width: 900px) {
+        .modern-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         .nav-container {
-            flex-direction: column;
-            gap: 1rem;
-            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
+
+        .nav-brand .brand-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: #2d3748;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .brand-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .brand-icon:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+        }
+
         .nav-list {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #718096;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #2d3748;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
             gap: 1rem;
         }
-    }
+
+        .currency-select {
+            background: #f3f4f6;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .currency-select:hover {
+            background: #e5e7eb;
+        }
+
+        .action-btn {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            background: #f3f4f6;
+            color: #718096;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            border: none;
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -0.25rem;
+            right: -0.25rem;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            min-width: 1.25rem;
+            height: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 0.25rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-toggle span {
+            width: 1.5rem;
+            height: 2px;
+            background: #2d3748;
+            border-radius: 2px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        main {
+            background: #f8fafc;
+            min-height: 100vh;
+            padding-top: 110px;
+        }
+
+        .modern-header {
+            box-shadow: 0 2px 16px 0 rgba(102, 126, 234, 0.07);
+        }
+
+        @media (max-width: 900px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .nav-list {
+                gap: 1rem;
+            }
+        }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -193,7 +213,6 @@
 </head>
 
 <body>
-    <!-- Header moderne et navigation -->
     <header class="modern-header">
         <nav class="nav-container">
             <div class="nav-brand">
@@ -240,9 +259,8 @@
                 <p class="panier-subtitle">Gérez vos articles et finalisez votre commande</p>
             </div>
 
-            <!-- Panier vide (caché par défaut) -->
             <div class="panier-vide" id="panier-vide" style="display: none;">
-                
+
                 <h2>Votre panier est vide</h2>
                 <a href="../index.html" class="btn btn-primary">
                     <i class="fas fa-arrow-left"></i>
@@ -250,33 +268,31 @@
                 </a>
             </div>
 
-            <!-- Contenu du panier -->
             <div class="panier-content" id="panier-content">
                 <div class="panier-items" id="panier-items">
-                    <!-- Les articles seront injectés ici par JavaScript -->
                 </div>
 
                 <div class="panier-summary">
                     <div class="summary-card">
                         <h3><i class="fas fa-receipt"></i> Résumé de la commande</h3>
-                        
+
                         <div class="summary-line">
                             <span>Sous-total (<span id="items-count">0</span> articles)</span>
                             <span id="subtotal">0€</span>
                         </div>
-                        
+
                         <div class="summary-line">
                             <span>Frais de livraison</span>
                             <span id="shipping-cost" class="free">Gratuit</span>
                         </div>
-                        
+
                         <div class="summary-line promo" style="display: none;">
                             <span>Code promo</span>
                             <span id="promo-discount">-0€</span>
                         </div>
-                        
+
                         <hr class="summary-divider">
-                        
+
                         <div class="summary-line total">
                             <span><strong>Total</strong></span>
                             <span id="total-price"><strong>0€</strong></span>
@@ -307,7 +323,6 @@
         </div>
     </main>
 
-    <!-- Footer -->
     <footer class="modern-footer">
         <div class="container">
             <div class="footer-content">
@@ -323,7 +338,7 @@
                     </p>
                 </div>
             </div>
-            
+
             <div class="footer-bottom">
                 <p>&copy; 2025 Shop Na Biso. Tous droits réservés.</p>
                 <div class="payment-methods">
@@ -337,9 +352,7 @@
     </footer>
 
     <script>
-        // Gestion du panier avec localStorage et conversion de devises
-        
-        // Taux de change (cohérent avec index.html)
+
         const exchangeRates = {
             EUR: { rate: 1, symbol: '€', position: 'after' },
             USD: { rate: 1.10, symbol: '$', position: 'before' },
@@ -348,7 +361,7 @@
 
         function formatPrice(price, currency = 'EUR') {
             const currencyInfo = exchangeRates[currency];
-            
+
             let formattedPrice;
             if (currency === 'XAF') {
                 formattedPrice = Math.round(price).toLocaleString('fr-FR').replace(/,/g, ' ');
@@ -357,7 +370,7 @@
             } else {
                 formattedPrice = price.toLocaleString('fr-FR');
             }
-            
+
             if (currencyInfo.position === 'before') {
                 return `${currencyInfo.symbol}${formattedPrice}`;
             } else {
@@ -387,11 +400,11 @@
             panier.forEach((item, index) => {
                 const itemElement = document.createElement('div');
                 itemElement.className = 'panier-item';
-                
-                const itemPrice = item.prixOriginal ? 
-                    (item.prixOriginal * exchangeRates[currentCurrency].rate) : 
+
+                const itemPrice = item.prixOriginal ?
+                    (item.prixOriginal * exchangeRates[currentCurrency].rate) :
                     item.prix;
-                
+
                 const itemTotal = itemPrice * item.quantite;
                 total += itemTotal;
 
@@ -427,21 +440,20 @@
                 panierItems.appendChild(itemElement);
             });
 
-            // Mettre à jour le résumé
             updateSummary(total, panier.length, currentCurrency);
             updateCartCounter();
         }
 
         function updateQuantity(index, change) {
             let panier = JSON.parse(localStorage.getItem('panier')) || [];
-            
+
             if (panier[index]) {
                 panier[index].quantite += change;
-                
+
                 if (panier[index].quantite <= 0) {
                     panier.splice(index, 1);
                 }
-                
+
                 localStorage.setItem('panier', JSON.stringify(panier));
                 loadCart();
             }
@@ -451,7 +463,6 @@
             showDeleteModal(index);
         }
 
-        // Popin de confirmation suppression
         function showDeleteModal(index) {
             let modal = document.getElementById('delete-modal');
             if (!modal) {
@@ -472,14 +483,11 @@
             } else {
                 modal.style.display = 'flex';
             }
-            // Show modal
             modal.style.display = 'flex';
-            // Cancel
-            document.getElementById('modal-cancel').onclick = function() {
+            document.getElementById('modal-cancel').onclick = function () {
                 modal.style.display = 'none';
             };
-            // Confirm
-            document.getElementById('modal-confirm').onclick = function() {
+            document.getElementById('modal-confirm').onclick = function () {
                 let panier = JSON.parse(localStorage.getItem('panier')) || [];
                 panier.splice(index, 1);
                 localStorage.setItem('panier', JSON.stringify(panier));
@@ -492,11 +500,10 @@
         function updateSummary(total, itemCount, currency) {
             document.getElementById('items-count').textContent = itemCount;
             document.getElementById('subtotal').textContent = formatPrice(total, currency);
-            
-            // Frais de livraison gratuits si > 50€ en EUR
+
             const freeShippingThreshold = 50 * exchangeRates[currency].rate;
             const shippingCost = total >= freeShippingThreshold ? 0 : (5 * exchangeRates[currency].rate);
-            
+
             const shippingElement = document.getElementById('shipping-cost');
             if (shippingCost === 0) {
                 shippingElement.textContent = 'Gratuit';
@@ -505,7 +512,7 @@
                 shippingElement.textContent = formatPrice(shippingCost, currency);
                 shippingElement.className = '';
             }
-            
+
             const finalTotal = total + shippingCost;
             document.getElementById('total-price').innerHTML = `<strong>${formatPrice(finalTotal, currency)}</strong>`;
         }
@@ -526,7 +533,7 @@
                 <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
                 <span>${message}</span>
             `;
-            
+
             notification.style.cssText = `
                 position: fixed;
                 top: 20px;
@@ -544,31 +551,29 @@
                 transform: translateX(100%);
                 transition: transform 0.3s ease;
             `;
-            
+
             document.body.appendChild(notification);
-            
+
             setTimeout(() => {
                 notification.style.transform = 'translateX(0)';
             }, 10);
-            
+
             setTimeout(() => {
                 notification.style.transform = 'translateX(100%)';
                 setTimeout(() => notification.remove(), 300);
             }, 3000);
         }
 
-        // Gestion du code promo
-        document.getElementById('apply-promo').addEventListener('click', function() {
+        document.getElementById('apply-promo').addEventListener('click', function () {
             const promoCode = document.getElementById('promo-code').value.trim();
-            
+
             if (promoCode) {
-                // Simulation de validation de code promo
                 const validCodes = {
                     'WELCOME10': 10,
                     'SAVE20': 20,
                     'FIRST5': 5
                 };
-                
+
                 if (validCodes[promoCode.toUpperCase()]) {
                     const discount = validCodes[promoCode.toUpperCase()];
                     showNotification(`Code promo appliqué ! -${discount}%`, 'success');
@@ -577,25 +582,22 @@
                 } else {
                     showNotification('Code promo invalide', 'error');
                 }
-                
+
                 document.getElementById('promo-code').value = '';
             }
         });
 
-        // Finaliser la commande
-        document.getElementById('checkout-btn').addEventListener('click', function() {
+        document.getElementById('checkout-btn').addEventListener('click', function () {
             const panier = JSON.parse(localStorage.getItem('panier')) || [];
-            
+
             if (panier.length === 0) {
                 showNotification('Votre panier est vide', 'error');
                 return;
             }
-            
-            // Redirection vers la page de paiement
+
             window.location.href = 'paiement.html';
         });
 
-        // Menu burger
         const menuBurger = document.getElementById("menu-burger");
         const mainNav = document.getElementById("main-nav");
 
@@ -606,10 +608,8 @@
             });
         }
 
-        // Initialisation
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             loadCart();
-            // Ajout du style pour la popin de confirmation
             const style = document.createElement('style');
             style.innerHTML = `
             #delete-modal {
@@ -685,4 +685,5 @@
         });
     </script>
 </body>
+
 </html>
