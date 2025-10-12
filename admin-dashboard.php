@@ -25,7 +25,6 @@ if (!isset($_SESSION['admin_id']) || !isset($_SESSION['is_admin']) || $_SESSION[
                 $row = $stmt->fetch();
                 if ($row) {
                     $adminName = trim($row['nom']) !== '' ? $row['nom'] : '(nom vide)';
-                    // Debug visuel : affiche l'id et le nom récupéré
                     echo '<div style="color:#0ff;background:#222;padding:4px 8px;margin-bottom:8px;">Debug: id=' . htmlspecialchars($row['id']) . ' nom=' . htmlspecialchars($row['nom']) . '</div>';
                 } else {
                     $adminError = "Aucun administrateur trouvé pour cet identifiant (id=" . htmlspecialchars($_SESSION['admin_id']) . ")";

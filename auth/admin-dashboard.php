@@ -183,7 +183,9 @@
         <nav class="admin-sidebar">
         <div class="logo-text">TROUVIX</div>
         <img src="../assets/avatar-default.png" alt="Avatar" class="avatar-round" style="display:block;margin:0 auto 1.5em auto;">
-    <a href="#" class="hote-btn" id="btn-notifications" style="position:relative;">Notifications <span id="notif-badge" style="display:none;background:#ff2d55;color:#fff;border-radius:50%;padding:0.2em 0.6em;font-size:0.9em;position:absolute;right:-1.2em;top:0.2em;">0</span></a>
+    <a href="notification-detail.html" class="hote-btn" id="btn-notifications" style="position:relative;">Notifications
+        <span id="notif-badge" style="display:none;position:absolute;top:-10px;right:-10px;min-width:22px;height:22px;background:#ff2d55;color:#fff;border-radius:50%;font-size:1em;font-weight:bold;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(248, 0, 0, 0.2);border:2px solid #fff;z-index:2;">0</span>
+    </a>
     <a href="#" class="hote-btn">Dashboard</a>
     <a href="#" class="hote-btn" id="btn-utilisateurs">Utilisateurs</a>
     <a href="#" class="hote-btn" id="forum-link" target="_blank" rel="noopener">Forum</a>
@@ -191,20 +193,27 @@
     <a href="#" class="hote-btn">Paramètres</a>
         </nav>
         <script>
-        // Ouvre la popin notifications dans un nouvel onglet
+        // Affiche le panneau notifications directement dans le dashboard
         document.addEventListener('DOMContentLoaded', function() {
             var notifBtn = document.getElementById('btn-notifications');
-            if (notifBtn) {
+            var notifPanel = document.getElementById('notifications-panel');
+            if (notifBtn && notifPanel) {
                 notifBtn.onclick = function(e) {
                     e.preventDefault();
-                    window.open('../pages/notifications-admin.html', '_blank', 'noopener');
+                    notifPanel.style.display = (notifPanel.style.display==='none'||!notifPanel.style.display)?'block':'none';
+                    if (notifPanel.style.display==='block') {
+                        fetchNotifications().then(renderNotifications);
+                    }
                 };
             }
             var badge = document.getElementById('notif-badge');
-            if (badge) {
+            if (badge && notifPanel) {
                 badge.onclick = function(e) {
                     e.preventDefault();
-                    window.open('../pages/notifications-admin.html', '_blank', 'noopener');
+                    notifPanel.style.display = (notifPanel.style.display==='none'||!notifPanel.style.display)?'block':'none';
+                    if (notifPanel.style.display==='block') {
+                        fetchNotifications().then(renderNotifications);
+                    }
                 };
                 badge.style.cursor = 'pointer';
             }
@@ -212,53 +221,7 @@
         </script>
         <!-- Main content -->
         <div class="admin-main">
-            <!-- Notifications Popup -->
-            <div id="notifications-panel" style="display:none;position:fixed;top:70px;right:40px;z-index:3000;background:#181c3a;border-radius:1em;box-shadow:0 0 24px #00fff966;min-width:340px;max-width:90vw;max-height:70vh;overflow:hidden;">
-                <div style="position:sticky;top:0;z-index:10;background:rgba(24,28,58,0.98);border-radius:1em 1em 0 0;padding:1.2em 2em 0.7em 2em;display:flex;justify-content:space-between;align-items:center;gap:1em;">
-                    <button id="btn-delete-all-notifs" style="background:#ff2d55;color:#fff;border:none;padding:0.4em 1.2em;border-radius:0.5em;cursor:pointer;font-size:1em;">Supprimer</button>
-                    <button id="btn-fermer-notif-panel" style="background:#222;color:#fff;border:none;padding:0.4em 1.2em;border-radius:0.5em;cursor:pointer;font-size:1em;">Fermer</button>
-                </div>
-                <div id="notifications-list" style="padding:1.5em 2em 1.5em 2em;max-height:calc(70vh - 70px);overflow-y:auto;"></div>
-            <script>
-            // ...existing code...
-            document.getElementById('btn-fermer-notif-panel').onclick = async function() {
-                // Marquer toutes les notifications comme lues côté serveur
-                await fetch('../backend/mark_notifications_read.php');
-                // Vider la liste côté client
-                document.getElementById('notifications-list').innerHTML = '';
-                document.getElementById('notif-badge').style.display = 'none';
-                document.getElementById('notifications-panel').style.display = 'none';
-            };
-                        document.getElementById('btn-delete-all-notifs').onclick = function() {
-                                // Crée une modale personnalisée
-                                let modal = document.getElementById('modal-confirm-delete-notifs');
-                                if (modal) modal.remove();
-                                modal = document.createElement('div');
-                                modal.id = 'modal-confirm-delete-notifs';
-                                modal.style = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(10,16,40,0.7);z-index:4000;display:flex;align-items:center;justify-content:center;';
-                                modal.innerHTML = `
-                                    <div style="background:#181c3a;padding:2em 2.5em 2em 2.5em;border-radius:1.2em;box-shadow:0 0 32px #00fff966,0 0 0 2px #00fff933;text-align:center;max-width:90vw;min-width:320px;">
-                                        <div style='font-size:1.2em;color:#ff2d55;font-weight:bold;margin-bottom:1.2em;'>Supprimer toutes les notifications ?</div>
-                                        <div style='color:#eaf6fb;margin-bottom:1.5em;'>Voulez-vous vraiment supprimer tout l'historique des notifications ?</div>
-                                        <div style='display:flex;gap:1.2em;justify-content:center;'>
-                                            <button id="btn-confirm-delete-notifs" style="background:#ff2d55;color:#fff;border:none;padding:0.6em 1.5em;border-radius:0.5em;font-weight:600;font-size:1em;cursor:pointer;">Oui, supprimer</button>
-                                            <button id="btn-cancel-delete-notifs" style="background:#aaa;color:#181c3a;border:none;padding:0.6em 1.5em;border-radius:0.5em;font-weight:600;font-size:1em;cursor:pointer;">Annuler</button>
-                                        </div>
-                                    </div>
-                                `;
-                                document.body.appendChild(modal);
-                                document.getElementById('btn-cancel-delete-notifs').onclick = function() {
-                                    modal.remove();
-                                };
-                                document.getElementById('btn-confirm-delete-notifs').onclick = async function() {
-                                    await fetch('../backend/delete_all_notifications.php');
-                                    document.getElementById('notifications-list').innerHTML = '';
-                                    document.getElementById('notif-badge').style.display = 'none';
-                                    modal.remove();
-                                };
-                        };
-            </script>
-            </div>
+            <!-- Popin notifications supprimée : redirection vers notification-detail.html -->
             <!-- Header -->
             <header class="admin-header">
                 <h1 style="color:#0ff1ce;font-size:2em;margin:0;">Espace Administration</h1>
@@ -284,64 +247,7 @@
             </header>
             <!-- Stat cards -->
             <script>
-            async function fetchNotifications() {
-                const res = await fetch('../backend/get_notifications.php');
-                if (!res.ok) return [];
-                return await res.json();
-            }
-            function renderNotifications(notifs) {
-                const list = document.getElementById('notifications-list');
-                list.innerHTML = '';
-                let unreadCount = 0;
-                notifs.forEach(n => {
-                    const notifDiv = document.createElement('div');
-                    notifDiv.className = 'notif-item';
-                    notifDiv.style = 'margin-bottom:1.2em;padding:1em 1em 1em 1.5em;border-radius:0.7em;background:' + (n.is_read==0 ? '#232a4d' : '#20243a') + ';position:relative;box-shadow:0 0 8px #00fff933;';
-                    if (n.is_read==0) {
-                        notifDiv.innerHTML = `<span style="display:inline-block;width:12px;height:12px;background:#ff2d55;border-radius:50%;position:absolute;left:-18px;top:1.2em;animation:blink 1s infinite;"></span>`;
-                        notifDiv.style.animation = 'notif-blink 1s infinite';
-                        unreadCount++;
-                    }
-                    notifDiv.innerHTML += `<b style='color:#0ff1ce;'>${n.host}</b> (<span style='color:#fff;'>Salon: ${extractSalonCode(n.message)}</span>)<br><span style='color:#fff;'>${n.message}</span><br><span style='font-size:0.9em;color:#aaa;'>${formatDate(n.created_at)}</span>`;
-                    list.appendChild(notifDiv);
-                });
-                // Badge
-                const badge = document.getElementById('notif-badge');
-                if (unreadCount > 0) {
-                    badge.textContent = unreadCount;
-                    badge.style.display = 'inline-block';
-                } else {
-                    badge.style.display = 'none';
-                }
-            }
-            function extractSalonCode(msg) {
-                // Extrait le code du salon du message si présent
-                const match = msg.match(/code\s*:?\s*([A-Z0-9]{4,})/i);
-                return match ? match[1] : '-';
-            }
-            function formatDate(dt) {
-                const d = new Date(dt);
-                return d.toLocaleString('fr-FR');
-            }
-            // Clignotement CSS
-            const style = document.createElement('style');
-            style.innerHTML = `@keyframes notif-blink {0%{box-shadow:0 0 8px #ff2d55;}50%{box-shadow:0 0 24px #ff2d55;}100%{box-shadow:0 0 8px #ff2d55;}}`;
-            document.head.appendChild(style);
-            // Ouvre/ferme le panneau
-            document.getElementById('btn-notifications').onclick = async function(e) {
-                e.preventDefault();
-                const panel = document.getElementById('notifications-panel');
-                panel.style.display = (panel.style.display==='none'||!panel.style.display)?'block':'none';
-                if (panel.style.display==='block') {
-                    const notifs = await fetchNotifications();
-                    renderNotifications(notifs);
-                }
-            };
-            // Rafraîchissement auto toutes les 5s
-            setInterval(async ()=>{
-                const notifs = await fetchNotifications();
-                renderNotifications(notifs);
-            }, 5000);
+            // Popin notifications supprimée : tout est géré dans notification-detail.html
             </script>
             <div class="admin-cards">
                 <div style="display:flex;gap:2em;width:100%;">
@@ -598,5 +504,28 @@
     });
     </script>
     <script src="../js/admin-dashboard.js"></script>
+    <script>
+    // Badge rouge sur Notifications si non lues (temps réel)
+    function updateNotifBadge() {
+        const badge = document.getElementById('notif-badge');
+        fetch('../backend/get_notifications.php')
+            .then(r => r.json())
+            .then(list => {
+                if(Array.isArray(list)) {
+                    const unread = list.filter(n => n.is_read == 0).length;
+                    if(unread > 0) {
+                        badge.textContent = unread;
+                        badge.style.display = 'flex';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+            });
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        updateNotifBadge();
+        setInterval(updateNotifBadge, 3000);
+    });
+    </script>
 </body>
 </html>

@@ -7,6 +7,78 @@
     <title>Trouvix</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        .contact h2 {
+            text-align: center;
+        }
+        /* Style moderne pour les champs du formulaire de contact */
+        #contactFormIndex {
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 2.5em 2em 2em 2em;
+            background: rgba(24,28,58,0.98);
+            border-radius: 1.2em;
+            box-shadow: 0 0 32px #00fff933, 0 0 0 2px #00fff933;
+        }
+        #contactFormIndex .form-group {
+            margin-bottom: 1.7em;
+        }
+        #contactFormIndex label {
+            color: #0ff1ce;
+            font-weight: 700;
+            margin-bottom: 0.5em;
+            display: block;
+            font-size: 1.13em;
+            letter-spacing: 0.01em;
+        }
+        #contactFormIndex input[type="text"],
+        #contactFormIndex input[type="email"],
+        #contactFormIndex textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 1.1em 1.2em;
+            border: none;
+            border-radius: 0.8em;
+            background: #232a4d;
+            color: #fff;
+            font-size: 1.13em;
+            margin-bottom: 0.2em;
+            box-shadow: 0 2px 12px #00fff922;
+            transition: box-shadow 0.2s, background 0.2s;
+            outline: none;
+            display: block;
+        }
+        #contactFormIndex input[type="text"]:focus,
+        #contactFormIndex input[type="email"]:focus,
+        #contactFormIndex textarea:focus {
+            background: #181c3a;
+            box-shadow: 0 0 18px #00fff966, 0 0 0 2px #00fff933;
+        }
+        #contactFormIndex textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+        @media (max-width: 600px) {
+            #contactFormIndex {
+                max-width: 98vw;
+                padding: 1.2em 0.5em;
+            }
+        }
+        #contactFormIndex input[type="text"]:focus,
+        #contactFormIndex input[type="email"]:focus,
+        #contactFormIndex textarea:focus {
+            background: #181c3a;
+            box-shadow: 0 0 16px #00fff966, 0 0 0 2px #00fff933;
+        }
+        #contactFormIndex label {
+            color: #0ff1ce;
+            font-weight: 600;
+            margin-bottom: 0.4em;
+            display: block;
+        }
+        #contactFormIndex textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
         #popin-access-denied-overlay {
             position: fixed;
             top: 0;
@@ -176,13 +248,66 @@
             </div>
         </section>
         <section id="contact" class="contact">
-            <h2>Contact</h2>
-            <form aria-label="Formulaire de contact">
-                <input type="text" placeholder="Nom" required aria-label="Votre nom">
-                <input type="email" placeholder="Email" required aria-label="Votre email">
-                <textarea placeholder="Votre message" required aria-label="Votre message"></textarea>
+            <h2>Merci de me laisser vos avis.</h2>
+            <form aria-label="Formulaire de contact" id="contactFormIndex">
+                <div class="form-group">
+                    <label for="contact-nom">Nom *</label>
+                    <input type="text" id="contact-nom" name="nom" placeholder="Votre nom" required autocomplete="name">
+                </div>
+                <div class="form-group">
+                    <label for="contact-email">Email *</label>
+                    <input type="email" id="contact-email" name="email" placeholder="Votre email" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="contact-message">Message *</label>
+                    <textarea id="contact-message" name="message" placeholder="Votre message" required rows="4"></textarea>
+                </div>
                 <button type="submit">Envoyer</button>
             </form>
+            <div id="contact-success-index" style="display:none;color:#27ae60;font-weight:600;margin-top:1em;"></div>
+</section>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('contactFormIndex');
+    const successMsg = document.getElementById('contact-success-index');
+    if(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nom = form.nom.value;
+            const data = {
+                firstName: nom,
+                lastName: nom, // Correction : on met le même nom dans les deux champs pour satisfaire le backend
+                email: form.email.value,
+                phone: '',
+                subject: 'Avis/Contact',
+                orderNumber: '',
+                message: form.message.value
+            };
+            fetch('backend/contact_message.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(r => r.json())
+            .then(res => {
+                if(res.success) {
+                    form.reset();
+                    if(successMsg) {
+                        successMsg.textContent = 'Votre message a bien été envoyé à l\'administrateur.';
+                        successMsg.style.display = 'block';
+                        setTimeout(() => {
+                            successMsg.style.display = 'none';
+                        }, 3000);
+                    }
+                } else {
+                    alert(res.error || 'Erreur lors de l\'envoi.');
+                }
+            })
+            .catch(() => alert('Erreur lors de l\'envoi.'));
+        });
+    }
+});
+</script>
         </section>
     </main>
     <button id="tv-close-btn" aria-label="Fermer la TV"
@@ -198,7 +323,7 @@
     <script type="text/javascript" src="js/tv-garden.js" defer></script>
 </body>
 <footer>
-    <p>&copy; 2025 Trouvix. Tous droits réservés.</p>
-    </body>
+    <p>&COPY; 2025 Trouvix. Tous droits réservés.</p>
+</footer>
 
 </html>
