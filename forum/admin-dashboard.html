@@ -214,8 +214,13 @@ window.addEventListener('DOMContentLoaded', function() {
         let topics = []; // Variable globale pour stocker les sujets
 
         function loadTopics() {
-            // Charge TOUS les sujets, y compris non validés
-            topics = JSON.parse(localStorage.getItem('forumTopics') || '[]');
+            // Charge TOUS les sujets depuis le backend
+            // Cette fonction devient asynchrone
+            return fetch('../backend/get_topics.php')
+                .then(r => r.json())
+                .then(data => {
+                    topics = Array.isArray(data) ? data : [];
+                });
         }
 
         function saveTopics() {
@@ -276,12 +281,26 @@ window.addEventListener('DOMContentLoaded', function() {
         }
 
         function validateTopic(id) {
-            const topic = topics.find(t => t.id === id);
+            const topic = topics.find(t => t.id == id);
             if (topic) {
                 showValidateModal(topic, function() {
-                    topic.validated = true;
-                    saveTopics();
-                    // Optionnel : afficher une notification de succès
+                    fetch('../backend/validate_topic.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id })
+                    })
+                    .then(r => r.json())
+                    .then(res => {
+                        if (res.success) {
+                            renderAdminTopics();
+                            renderAllAdminTopics();
+                        } else {
+                            alert(res.error || 'Erreur lors de la validation');
+                        }
+                    })
+                    .catch(() => {
+                        alert('Erreur réseau');
+                    });
                 });
             }
         }
@@ -319,9 +338,23 @@ window.addEventListener('DOMContentLoaded', function() {
 
         function deleteTopic(id) {
             showDeleteModal(function() {
-                topics = topics.filter(t => t.id !== id);
-                saveTopics();
-                // Optionnel : afficher une notification de succès
+                fetch('../backend/delete_topic.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                })
+                .then(r => r.json())
+                .then(res => {
+                    if (res.success) {
+                        renderAdminTopics();
+                        renderAllAdminTopics();
+                    } else {
+                        alert(res.error || 'Erreur lors de la suppression');
+                    }
+                })
+                .catch(() => {
+                    alert('Erreur réseau');
+                });
             });
         }
 
@@ -329,88 +362,67 @@ window.addEventListener('DOMContentLoaded', function() {
 
         /** Affiche les sujets en attente de validation. */
         function renderAdminTopics() {
-            loadTopics();
-            const list = document.getElementById('admin-topics-list');
-            list.innerHTML = '';
-
-            const pendingTopics = topics.filter(t => !t.validated).slice().reverse();
-
-            if (pendingTopics.length === 0) {
-                list.innerHTML = '<div class="text-gray-500 p-4 bg-white rounded-lg border border-gray-200">Aucun sujet en attente de validation.</div>';
-                return;
-            }
-
-            pendingTopics.forEach(topic => {
-                const div = document.createElement('div');
-                div.className = 'bg-pending p-6 rounded-xl shadow-md border-secondary-500 border-2';
-                let attachmentHtml = '';
-                if (topic.attachment) {
-                    const file = topic.attachment;
-                    const ext = file.name.split('.').pop().toLowerCase();
-                    let downloadBtn = `<a href='${file.url}' download='${file.name}' class='ml-2 bg-primary-500 hover:bg-primary-600 text-white px-3 py-1 rounded text-xs font-semibold transition' title='Télécharger'>Télécharger</a>`;
-                    let openBtn = `<a href='${file.url}' target='_blank' rel='noopener' class='ml-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs font-semibold transition' title='Ouvrir dans un nouvel onglet'>Ouvrir</a>`;
-                    if (["jpg","jpeg","png","gif","bmp","webp"].includes(ext)) {
-                        attachmentHtml = `<div class='mb-4'><span class='text-xs text-blue-600'>Image :</span><br><img src='${file.url}' alt='${file.name}' class='max-h-40 rounded border mt-1'>${downloadBtn}${openBtn}</div>`;
-                    } else if (["pdf"].includes(ext)) {
-                        attachmentHtml = `<div class='mb-4'><span class='text-xs text-blue-600'>PDF :</span><br><embed src='${file.url}' type='application/pdf' class='w-full' style='height:320px;'/><br>${downloadBtn}${openBtn}</div>`;
-                    } else if (["mp4","webm","ogg","avi","mov","mkv"].includes(ext)) {
-                        attachmentHtml = `<div class='mb-4'><span class='text-xs text-blue-600'>Vidéo :</span><br><video src='${file.url}' controls class='w-full max-h-56 rounded mt-1'></video><br>${downloadBtn}${openBtn}</div>`;
-                    } else if (file.url && (file.url.startsWith('http://') || file.url.startsWith('https://'))) {
-                        attachmentHtml = `<div class='mb-4'><span class='text-xs text-blue-600'>Lien :</span> <a href='${file.url}' target='_blank' rel='noopener' class='underline text-primary-500'>${file.name}</a> ${openBtn}</div>`;
-                    } else {
-                        attachmentHtml = `<div class='mb-4'><span class='text-xs text-blue-600'>Fichier :</span> <a href='${file.url}' download='${file.name}' class='underline text-primary-500'>${file.name}</a> ${downloadBtn}${openBtn}</div>`;
-                    }
+            loadTopics().then(() => {
+                const list = document.getElementById('admin-topics-list');
+                list.innerHTML = '';
+                const pendingTopics = topics.filter(t => !parseInt(t.validated)).slice().reverse();
+                if (pendingTopics.length === 0) {
+                    list.innerHTML = '<div class="text-gray-500 p-4 bg-white rounded-lg border border-gray-200">Aucun sujet en attente de validation.</div>';
+                    return;
                 }
-                div.innerHTML = `
-                    <div class="flex items-center mb-2">
-                        <span class="text-xs bg-primary-100 text-primary-500 px-2 py-1 rounded-full mr-2">${categoryLabel(topic.category)}</span>
-                        <span class="text-xs text-gray-500">${topic.date}</span>
-                        <span class="ml-auto text-sm font-semibold text-pending">EN ATTENTE</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-1">${escapeHtml(topic.title)}</h3>
-                    <p class="text-gray-700 mb-4">${escapeHtml(topic.content).slice(0, 200)}${topic.content.length > 200 ? '...' : ''}</p>
-                    <div class="flex justify-between items-center text-gray-500 text-sm mb-4">
-                        <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline w-4 h-4 mr-1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> ${escapeHtml(topic.author || 'Anonyme')}</span>
-                        <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline w-4 h-4 mr-1"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> ${topic.replies.length} réponse(s)</span>
-                    </div>
-                    ${topic.video ? `<p class="text-xs text-blue-600 mb-4">Contient une vidéo : ${topic.video.slice(0, 50)}...</p>` : ''}
-                    ${attachmentHtml}
-                    <div class="flex justify-end mt-4">
-                        <button class="validate-btn" onclick="validateTopic(${topic.id})">Valider</button>
-                        <button class="delete-btn" onclick="deleteTopic(${topic.id})">Supprimer</button>
-                    </div>
-                `;
-                list.appendChild(div);
+                pendingTopics.forEach(topic => {
+                    const div = document.createElement('div');
+                    div.className = 'bg-pending p-6 rounded-xl shadow-md border-secondary-500 border-2';
+                    div.innerHTML = `
+                        <div class="flex items-center mb-2">
+                            <span class="text-xs bg-primary-100 text-primary-500 px-2 py-1 rounded-full mr-2">${categoryLabel(topic.category)}</span>
+                            <span class="text-xs text-gray-500">${topic.date}</span>
+                            <span class="ml-auto text-sm font-semibold text-pending">EN ATTENTE</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-1">${escapeHtml(topic.title)}</h3>
+                        <p class="text-gray-700 mb-4">${escapeHtml(topic.content).slice(0, 200)}${topic.content.length > 200 ? '...' : ''}</p>
+                        <div class="flex justify-between items-center text-gray-500 text-sm mb-4">
+                            <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline w-4 h-4 mr-1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> ${escapeHtml(topic.author || 'Anonyme')}</span>
+                            <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline w-4 h-4 mr-1"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> 0 réponse(s)</span>
+                        </div>
+                        ${topic.video ? `<p class="text-xs text-blue-600 mb-4">Contient une vidéo : ${topic.video.slice(0, 50)}...</p>` : ''}
+                        <div class="flex justify-end mt-4">
+                            <button class="validate-btn" onclick="validateTopic(${topic.id})">Valider</button>
+                            <button class="delete-btn" onclick="deleteTopic(${topic.id})">Supprimer</button>
+                        </div>
+                    `;
+                    list.appendChild(div);
+                });
+                feather.replace();
             });
-            feather.replace(); // Remplace les icônes si elles sont utilisées
         }
 
         /** Affiche TOUS les sujets (validés et non validés) dans une autre liste. */
         function renderAllAdminTopics() {
-            const allList = document.getElementById('all-admin-topics-list');
-            allList.innerHTML = '';
-
-            topics.slice().reverse().forEach(topic => {
-                const statusClass = topic.validated ? 'border-primary-500' : 'bg-pending border-secondary-500';
-                const statusText = topic.validated ?
-                    '<span class="ml-auto text-sm font-semibold text-primary-500">VALIDÉ</span>' :
-                    '<span class="ml-auto text-sm font-semibold text-pending">EN ATTENTE</span>';
-
-                const div = document.createElement('div');
-                div.className = `p-4 rounded-xl shadow-md border-2 ${statusClass}`;
-                div.innerHTML = `
-                    <div class="flex items-center mb-2">
-                        <span class="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full mr-2">${categoryLabel(topic.category)}</span>
-                        <span class="text-xs text-gray-400">${topic.date}</span>
-                        ${statusText}
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-800 mb-1">${escapeHtml(topic.title)}</h3>
-                    <div class="flex justify-end mt-4">
-                        <button class="validate-btn" onclick="validateTopic(${topic.id})" ${topic.validated ? 'disabled' : ''}>${topic.validated ? 'Validé' : 'Valider'}</button>
-                        <button class="delete-btn" onclick="deleteTopic(${topic.id})">Supprimer</button>
-                    </div>
-                `;
-                allList.appendChild(div);
+            loadTopics().then(() => {
+                const allList = document.getElementById('all-admin-topics-list');
+                allList.innerHTML = '';
+                topics.slice().reverse().forEach(topic => {
+                    const statusClass = parseInt(topic.validated) ? 'border-primary-500' : 'bg-pending border-secondary-500';
+                    const statusText = parseInt(topic.validated) ?
+                        '<span class="ml-auto text-sm font-semibold text-primary-500">VALIDÉ</span>' :
+                        '<span class="ml-auto text-sm font-semibold text-pending">EN ATTENTE</span>';
+                    const div = document.createElement('div');
+                    div.className = `p-4 rounded-xl shadow-md border-2 ${statusClass}`;
+                    div.innerHTML = `
+                        <div class="flex items-center mb-2">
+                            <span class="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full mr-2">${categoryLabel(topic.category)}</span>
+                            <span class="text-xs text-gray-400">${topic.date}</span>
+                            ${statusText}
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-1">${escapeHtml(topic.title)}</h3>
+                        <div class="flex justify-end mt-4">
+                            <button class="validate-btn" onclick="validateTopic(${topic.id})" ${parseInt(topic.validated) ? 'disabled' : ''}>${parseInt(topic.validated) ? 'Validé' : 'Valider'}</button>
+                            <button class="delete-btn" onclick="deleteTopic(${topic.id})">Supprimer</button>
+                        </div>
+                    `;
+                    allList.appendChild(div);
+                });
             });
         }
 
@@ -420,6 +432,21 @@ window.addEventListener('DOMContentLoaded', function() {
             renderAdminTopics();
             renderAllAdminTopics();
             feather.replace();
+            // Rafraîchissement automatique toutes les 5 secondes
+            setInterval(() => {
+                renderAdminTopics();
+                renderAllAdminTopics();
+                feather.replace();
+            }, 5000);
+        });
+
+        // Synchronisation automatique si le localStorage change (nouvelle publication depuis index.html)
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'forumTopics') {
+                renderAdminTopics();
+                renderAllAdminTopics();
+                feather.replace();
+            }
         });
     </script>
 </body>

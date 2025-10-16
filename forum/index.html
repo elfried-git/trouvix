@@ -229,7 +229,7 @@
 
     <div class="hero-pattern bg-primary-50 py-12">
         <div class="container mx-auto px-4 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-primary-600 mb-4">Espace Communautaire</h1>
+            <h1 class="text-4xl md:text-5xl font-bold text-primary-600 mb-4">Forum</h1>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
                 Partagez vos questions, idées et expériences. Pas de compte requis.
             </p>
@@ -322,33 +322,18 @@
     </div>
 
     <script>
-        let topics = JSON.parse(localStorage.getItem('forumTopics') || `[{
-            "id": 1,
-            "title": "Bienvenue sur le forum !",
-            "content": "Présentez-vous, posez vos questions, partagez vos idées.",
-            "author": "",
-            "category": "general",
-            "date": "2025-10-09 09:00",
-            "replies": [
-                { "author": "Visiteur", "content": "Merci pour ce forum !", "date": "2025-10-09 09:10" }
-            ],
-            "validated": true
-        }, {
-            "id": 2,
-            "title": "Annonce : Nouvelle fonctionnalité",
-            "content": "Nous venons d'ajouter la section Entraide.",
-            "author": "",
-            "category": "annonces",
-            "date": "2025-10-09 08:00",
-            "replies": [],
-            "validated": true
-        }]`);
+        let topics = [];
+
+        // Initialisation : charger les sujets depuis le backend dès l'ouverture
+        document.addEventListener('DOMContentLoaded', () => {
+            reloadTopicsFromBackend();
+        });
 
         let currentCategory = null;
         function renderTopics() {
             const list = document.getElementById('topics-list');
             list.innerHTML = '';
-            let filtered = topics.filter(t => t.validated);
+            let filtered = topics.filter(t => parseInt(t.validated) === 1);
             if (currentCategory) {
                 filtered = filtered.filter(t => t.category === currentCategory);
             }
@@ -368,7 +353,7 @@
                     <div class="text-gray-600 mb-2">${escapeHtml(topic.content).slice(0, 120)}${topic.content.length > 120 ? '...' : ''}</div>
                     <div class="flex justify-between text-gray-500 text-sm">
                         <span><i data-feather="user" class="inline w-4 h-4 mr-1"></i> ${escapeHtml(topic.author || 'Anonyme')}</span>
-                        <span><i data-feather="message-square" class="inline w-4 h-4 mr-1"></i> ${topic.replies.length} réponse(s)</span>
+                        <span><i data-feather="message-square" class="inline w-4 h-4 mr-1"></i> 0 réponse(s)</span>
                     </div>
                 `;
                 div.onclick = (e) => {
@@ -415,37 +400,59 @@
             const author = document.getElementById('topic-author').value.trim() || 'Anonyme';
             const video = document.getElementById('topic-video').value.trim();
             const attachmentInput = document.getElementById('topic-attachment');
-            let attachment = null;
+            let attachment = '';
             if (attachmentInput.files && attachmentInput.files.length > 0) {
-                attachment = attachmentInput.files[0];
+                // Pour simplifier, on ne gère que le nom du fichier ici
+                attachment = attachmentInput.files[0].name;
             }
             const category = document.getElementById('topic-category').value;
             if (!title || !content) return;
-            const newTopic = {
-                id: Date.now(),
-                title,
-                content,
-                author,
-                category: category,
-                date: new Date().toISOString().slice(0, 16).replace('T', ' '),
-                video: video || null,
-                attachment: attachment ? {
-                    name: attachment.name,
-                    url: URL.createObjectURL(attachment)
-                } : null,
-                replies: [],
-                validated: false
-            };
-            topics.push(newTopic);
-            localStorage.setItem('forumTopics', JSON.stringify(topics));
-            document.getElementById('topic-modal').classList.add('hidden');
-            document.getElementById('topic-form').reset();
-            renderTopics();
-            document.getElementById('publish-modal').classList.remove('hidden');
-            document.getElementById('close-publish-modal').onclick = function () {
-                document.getElementById('publish-modal').classList.add('hidden');
-            };
+            fetch('../backend/add_topic.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title,
+                    content,
+                    author,
+                    category,
+                    video,
+                    attachment
+                })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) {
+                    document.getElementById('topic-modal').classList.add('hidden');
+                    document.getElementById('topic-form').reset();
+                    document.getElementById('publish-modal').classList.remove('hidden');
+                    document.getElementById('close-publish-modal').onclick = function () {
+                        document.getElementById('publish-modal').classList.add('hidden');
+                    };
+                    // Optionnel : recharger les sujets depuis le backend
+                    reloadTopicsFromBackend();
+                } else {
+                    alert(res.error || 'Erreur lors de la publication');
+                }
+            })
+            .catch(() => {
+                alert('Erreur réseau');
+            });
         };
+
+        // Nouvelle fonction pour recharger les sujets depuis le backend
+        function reloadTopicsFromBackend() {
+            fetch('../backend/get_topics.php')
+                .then(r => r.json())
+                .then(data => {
+                    topics = Array.isArray(data) ? data : [];
+                    renderTopics();
+                });
+        }
+
+        // Rafraîchissement automatique toutes les 5 secondes pour afficher les publications validées
+        setInterval(() => {
+            reloadTopicsFromBackend();
+        }, 5000);
 
         function openThread(id) {
             const topic = topics.find(t => t.id === id);
