@@ -341,9 +341,14 @@
                 list.innerHTML = '<div class="text-gray-500">Aucun sujet pour cette catégorie.</div>';
                 return;
             }
+            // Mémoriser le formulaire de réponse ouvert (topicId)
+            const openReplyFormId = window._openReplyFormId;
+            // Mémoriser le contenu saisi si le formulaire est ouvert
+            const replyDraft = window._replyDraft || {};
             filtered.slice().reverse().forEach(topic => {
                 const div = document.createElement('div');
-                div.className = 'bg-white rounded-xl shadow-md p-6 cursor-pointer hover:shadow-lg transition relative';
+                div.className = 'bg-white rounded-xl shadow-md p-6 mb-6 relative';
+                const replyFormId = `reply-form-${topic.id}`;
                 div.innerHTML = `
                     <div class="flex items-center mb-2">
                         <span class="text-xs bg-primary-100 text-primary-500 px-2 py-1 rounded-full mr-2">${categoryLabel(topic.category)}</span>
@@ -351,13 +356,121 @@
                     </div>
                     <h3 class="text-lg font-bold text-gray-800 mb-1">${escapeHtml(topic.title)}</h3>
                     <div class="text-gray-600 mb-2">${escapeHtml(topic.content).slice(0, 120)}${topic.content.length > 120 ? '...' : ''}</div>
-                    <div class="flex justify-between text-gray-500 text-sm">
+                    <div class="flex justify-between text-gray-500 text-sm mb-2">
                         <span><i data-feather="user" class="inline w-4 h-4 mr-1"></i> ${escapeHtml(topic.author || 'Anonyme')}</span>
-                        <span><i data-feather="message-square" class="inline w-4 h-4 mr-1"></i> 0 réponse(s)</span>
+                        <span class="reply-btn" data-topic-id="${topic.id}" style="cursor:pointer;"><i data-feather="message-square" class="inline w-4 h-4 mr-1"></i> 0 réponse(s)</span>
                     </div>
+                    <div id="${replyFormId}-container"></div>
                 `;
+                // Afficher le formulaire si c'est celui qui était ouvert
+                if (openReplyFormId && openReplyFormId == topic.id) {
+                    const formContainer = div.querySelector(`#${replyFormId}-container`);
+                    if (formContainer) {
+                        formContainer.innerHTML = `<form id="${replyFormId}" class="forum-reply-form mt-2 bg-gray-100 rounded p-3 flex flex-col gap-2">
+                            <input type="text" name="author" placeholder="Votre nom (optionnel)" class="border rounded p-2" value="${replyDraft.author || ''}" />
+                            <textarea name="content" placeholder="Votre réponse..." class="border rounded p-2" required>${replyDraft.content || ''}</textarea>
+                            <button type="submit" class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-1 rounded">Répondre</button>
+                        </form>`;
+                        const form = document.getElementById(replyFormId);
+                        // Sauvegarder le brouillon à chaque saisie
+                        form.author.oninput = form.content.oninput = function() {
+                            window._replyDraft = {
+                                author: form.author.value,
+                                content: form.content.value
+                            };
+                        };
+                        form.onsubmit = function(ev) {
+                            ev.preventDefault();
+                            const author = form.author.value.trim() || 'Anonyme';
+                            const content = form.content.value.trim();
+                            if (!content) return;
+                            fetch('../backend/add_reply.php', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    topic_id: topic.id,
+                                    author,
+                                    content
+                                })
+                            })
+                            .then(r => r.json())
+                            .then(res => {
+                                if (res.success) {
+                                    window._openReplyFormId = null;
+                                    window._replyDraft = {};
+                                    reloadTopicsFromBackend();
+                                    form.reset();
+                                    form.remove();
+                                } else {
+                                    alert(res.error || 'Erreur lors de l\'envoi de la réponse');
+                                }
+                            })
+                            .catch(() => {
+                                alert('Erreur réseau');
+                            });
+                        };
+                    }
+                }
+                // Gestion du clic sur l'icône message-square
+                setTimeout(() => {
+                    const replyBtn = div.querySelector('.reply-btn');
+                    if (replyBtn) {
+                        replyBtn.onclick = function(e) {
+                            e.stopPropagation();
+                            // Fermer tous les autres formulaires
+                            document.querySelectorAll('.forum-reply-form').forEach(f => f.remove());
+                            window._openReplyFormId = topic.id;
+                            // Afficher le formulaire sous ce post sans recharger toute la liste
+                            const formContainer = div.querySelector(`#${replyFormId}-container`);
+                            if (formContainer) {
+                                formContainer.innerHTML = `<form id="${replyFormId}" class="forum-reply-form mt-2 bg-gray-100 rounded p-3 flex flex-col gap-2">
+                                    <input type="text" name="author" placeholder="Votre nom (optionnel)" class="border rounded p-2" value="${window._replyDraft && window._replyDraft.author ? window._replyDraft.author : ''}" />
+                                    <textarea name="content" placeholder="Votre réponse..." class="border rounded p-2" required>${window._replyDraft && window._replyDraft.content ? window._replyDraft.content : ''}</textarea>
+                                    <button type="submit" class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-1 rounded">Répondre</button>
+                                </form>`;
+                                const form = document.getElementById(replyFormId);
+                                form.author.oninput = form.content.oninput = function() {
+                                    window._replyDraft = {
+                                        author: form.author.value,
+                                        content: form.content.value
+                                    };
+                                };
+                                form.onsubmit = function(ev) {
+                                    ev.preventDefault();
+                                    const author = form.author.value.trim() || 'Anonyme';
+                                    const content = form.content.value.trim();
+                                    if (!content) return;
+                                    fetch('../backend/add_reply.php', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({
+                                            topic_id: topic.id,
+                                            author,
+                                            content
+                                        })
+                                    })
+                                    .then(r => r.json())
+                                    .then(res => {
+                                        if (res.success) {
+                                            window._openReplyFormId = null;
+                                            window._replyDraft = {};
+                                            reloadTopicsFromBackend();
+                                            form.reset();
+                                            form.remove();
+                                        } else {
+                                            alert(res.error || 'Erreur lors de l\'envoi de la réponse');
+                                        }
+                                    })
+                                    .catch(() => {
+                                        alert('Erreur réseau');
+                                    });
+                                };
+                            }
+                        };
+                    }
+                }, 0);
                 div.onclick = (e) => {
-                    if (e.target.classList.contains('edit-topic-btn') || e.target.classList.contains('delete-topic-btn')) return;
+                    if (e.target.classList.contains('edit-topic-btn') || e.target.classList.contains('delete-topic-btn') || e.target.closest('.forum-reply-form')) return;
                     openThread(topic.id);
                 };
                 list.appendChild(div);
