@@ -13,6 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ville = $_POST['ville'] ?? null;
     $otp = $_POST['otp'] ?? '';
 
+    // Hashage du mot de passe
+    $hashedOtp = password_hash($otp, PASSWORD_DEFAULT);
+
     // Validation simple
     if (empty($nom) || empty($email) || empty($otp)) {
         http_response_code(400);
@@ -49,9 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Insérer l'utilisateur avec la photo
+    // Insérer l'utilisateur avec le mot de passe hashé et la photo
     $stmt = $pdo->prepare('INSERT INTO users (nom, email, ville, otp, photo) VALUES (?, ?, ?, ?, ?)');
-    $stmt->execute([$nom, $email, $ville, $otp, $photoPath]);
+    $stmt->execute([$nom, $email, $ville, $hashedOtp, $photoPath]);
 
     echo json_encode(['success' => true, 'message' => 'Inscription réussie !']);
     exit;

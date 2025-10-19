@@ -17,11 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $stmt = $pdo->prepare('SELECT * FROM users WHERE email = ? AND otp = ?');
-    $stmt->execute([$email, $otp]);
+    $stmt = $pdo->prepare('SELECT * FROM users WHERE email = ?');
+    $stmt->execute([$email]);
     $user = $stmt->fetch();
 
-    if ($user) {
+    if ($user && password_verify($otp, $user['otp'])) {
         // Met à jour la dernière activité
         $stmt = $pdo->prepare('UPDATE users SET last_activity = NOW() WHERE id = ?');
         $stmt->execute([$user['id']]);
