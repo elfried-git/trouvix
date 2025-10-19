@@ -12,14 +12,7 @@ Site web statique moderne, prêt pour hébergement (Netlify, Vercel, GitHub Page
 - `/assets/` : images, icônes, polices
 
 ## Hébergement
+
 - Placez tous les fichiers à la racine de votre hébergeur.
 - Les chemins sont relatifs à la racine (`/`).
 - Pour GitHub Pages, placez tout dans la branche `main` ou `gh-pages`.
-- Pour Netlify/Vercel, déployez la racine du projet.
-
-## Accessibilité & SEO
-- Balises meta, lang, titres structurés.
-- Navigation clavier et responsive.
-
-## Licence
-MIT
