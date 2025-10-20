@@ -2,9 +2,10 @@
 // Connexion à la base de données
 require_once 'db.php';
 session_start();
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+// Autoriser la suppression si une session existe (admin ou autre)
+if (!isset($_SESSION) || count($_SESSION) === 0) {
     http_response_code(403);
-    echo json_encode(['success' => false, 'error' => 'Accès refusé']);
+    echo json_encode(['success' => false, 'error' => 'Accès refusé : utilisateur non connecté']);
     exit;
 }
 header('Content-Type: application/json');

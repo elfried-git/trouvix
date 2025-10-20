@@ -8,7 +8,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/feather-icons"></script>
     <script>
-        // Configuration Tailwind pour les couleurs de la RDC, nécessaires pour les boutons
         tailwind.config = {
             theme: {
                 extend: {
@@ -92,12 +91,10 @@
 
         .validate-btn:not([disabled]):hover {
             background: #008030;
-            /* primary-600 */
         }
 
         .delete-btn {
             background: #DC241F;
-            /* accent-500 */
             color: #fff;
             font-weight: 600;
             border: none;
@@ -112,18 +109,15 @@
 
         .text-pending {
             color: #FBDE4A;
-            /* secondary-500 */
         }
 
         .bg-pending {
             background-color: #fefce8;
-            /* yellow-50 */
         }
     </style>
 </head>
 
 <body class="font-sans">
-    <!-- Modal de déconnexion -->
     <div id="logout-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden" style="background:rgba(0,0,0,0.45);">
         <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center animate-fadeIn relative">
             <div class="flex justify-center mb-3">
@@ -198,7 +192,6 @@ document.addEventListener('DOMContentLoaded', function() {
         </section>
     </main>
 <script>
-// Gestion de la modal de déconnexion
 window.addEventListener('DOMContentLoaded', function() {
     var logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
@@ -210,7 +203,6 @@ window.addEventListener('DOMContentLoaded', function() {
 </script>
 
     <script>
-        // --- Utilities et Data Management ---
         let topics = []; // Variable globale pour stocker les sujets
 
         function loadTopics() {
@@ -287,7 +279,8 @@ window.addEventListener('DOMContentLoaded', function() {
                     fetch('../backend/validate_topic.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ id })
+                        body: JSON.stringify({ id }),
+                        credentials: 'include'
                     })
                     .then(r => r.json())
                     .then(res => {

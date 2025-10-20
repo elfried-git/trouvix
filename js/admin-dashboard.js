@@ -1,3 +1,30 @@
+// --- Validation de sujet forum (admin) ---
+window.validateTopic = function(id) {
+    if (!window.topics) return alert('Erreur: sujets non chargés');
+    const topic = window.topics.find(t => t.id == id);
+    if (topic) {
+        showValidateModal(topic, function() {
+            fetch('../backend/validate_topic.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id }),
+                credentials: 'include'
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) {
+                    if (typeof renderAdminTopics === 'function') renderAdminTopics();
+                    if (typeof renderAllAdminTopics === 'function') renderAllAdminTopics();
+                } else {
+                    alert(res.error || 'Erreur lors de la validation');
+                }
+            })
+            .catch(() => {
+                alert('Erreur réseau');
+            });
+        });
+    }
+}
 // Script JS pour gérer l'affichage du tableau des salons dans le dashboard admin
 
 document.addEventListener('DOMContentLoaded', function() {

@@ -2,9 +2,10 @@
 // Connexion à la base de données
 require_once 'db.php';
 session_start();
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+// Autoriser tous les utilisateurs connectés (ayant un identifiant en session)
+if (!isset($_SESSION['user_id'])) {
     http_response_code(403);
-    echo json_encode(['success' => false, 'error' => 'Accès refusé']);
+    echo json_encode(['success' => false, 'error' => 'Accès refusé : utilisateur non connecté']);
     exit;
 }
 header('Content-Type: application/json');
