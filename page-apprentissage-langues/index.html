@@ -2,6 +2,25 @@
 <html lang="fr">
 
 <head>
+        <style>
+            .flag {
+                width: 32px;
+                height: 22px;
+                vertical-align: middle;
+                margin: 0 0.5em;
+                border-radius: 4px;
+                box-shadow: 0 0 4px #0002;
+                transition: transform 0.15s;
+            }
+            nav a {
+                display: inline-block;
+                padding: 0.2em 0.7em;
+            }
+            nav a:hover .flag {
+                transform: scale(1.13) rotate(-3deg);
+                box-shadow: 0 0 8px #0ff1ce88;
+            }
+        </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trouvix - Apprentissage des Langues</title>
@@ -18,11 +37,9 @@
             });
         </script>
         <nav>
-            <a href="#anglais">Anglais</a>
-            <a href="#espagnol">Espagnol</a>
-            <a href="#francais">Français</a>
-            <a href="#italien">Italien</a>
-            <a href="#swahili">Swahili</a>
+            <a href="#anglais"><img src="../assets/eng.jpg" alt="Anglais" class="flag"></a>
+            <a href="#espagnol"><img src="../assets/es.jpg" alt="Espagnol" class="flag"></a>
+            <a href="#italien"><img src="../assets/it.jpg" alt="Italien" class="flag"></a>
         </nav>
     </header>
     <main>
@@ -51,11 +68,6 @@
                     <li>Exercices pratiques</li>
                     <li>Culture & Contexte</li>
                 </ul>
-                <!-- <a class="lw-btn" href="espagnol.html">Découvrir</a> -->
-                <a class="lw-btn" href="#">Bientôt disponible...</a>
-            </div>
-            <div class="lw-lang-card" id="francais">
-                <h3>🇫🇷 Français</h3>
                 <ul>
                     <li>Cours & Grammaire</li>
                     <li>Exercices oraux & Prononciation</li>
@@ -63,7 +75,7 @@
                     <li>Exercices pratiques</li>
                     <li>Culture & Contexte</li>
                 </ul>
-                <!-- <a class="lw-btn" href="francais.html">Découvrir</a> -->
+                <!-- <a class="lw-btn" href="italien.html">Découvrir</a> -->
                 <a class="lw-btn" href="#">Bientôt disponible...</a>
             </div>
             <div class="lw-lang-card" id="italien">
@@ -75,19 +87,6 @@
                     <li>Exercices pratiques</li>
                     <li>Culture & Contexte</li>
                 </ul>
-                <!-- <a class="lw-btn" href="italien.html">Découvrir</a> -->
-                <a class="lw-btn" href="#">Bientôt disponible...</a>
-            </div>
-            <div class="lw-lang-card" id="swahili">
-                <h3>🇰🇪 Swahili</h3>
-                <ul>
-                    <li>Cours & Grammaire</li>
-                    <li>Exercices oraux & Prononciation</li>
-                    <li>Expressions du quotidien</li>
-                    <li>Exercices pratiques</li>
-                    <li>Culture & Contexte</li>
-                </ul>
-                <!-- <a class="lw-btn" href="swahili.html">Découvrir</a> -->
                 <a class="lw-btn" href="#">Bientôt disponible...</a>
             </div>
         </section>

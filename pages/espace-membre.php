@@ -860,12 +860,16 @@ renderMemberSalonBlock();
     top: 0.1em;
 }
 @media (max-width: 600px) {
-    .profile-card, .client-space-content {
-        min-width: unset;
-        padding: 1.2rem 0.5rem;
-    }
-    .client-space-content {
-        max-width: 98vw;
-    }
+  .profile-card, .client-space-content {
+    min-width: unset;
+    padding: 2.5rem 0.5rem;
+  }
+  .client-space-content {
+    max-width: 100vw !important;
+    width: 100vw !important;
+    min-width: 0 !important;
+    border-radius: 2em !important;
+    font-size: 1.5em !important;
+  }
 }
 </style>
