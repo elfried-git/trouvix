@@ -10,7 +10,6 @@
         .contact h2 {
             text-align: center;
         }
-        /* Style moderne pour les champs du formulaire de contact */
         #contactFormIndex {
             max-width: 420px;
             margin: 0 auto;
@@ -276,7 +275,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const nom = form.nom.value;
             const data = {
                 firstName: nom,
-                lastName: nom, // Correction : on met le même nom dans les deux champs pour satisfaire le backend
+                lastName: nom, 
                 email: form.email.value,
                 phone: '',
                 subject: 'Avis/Contact',
@@ -321,6 +320,11 @@ document.addEventListener('DOMContentLoaded', function() {
     <script src="js/login-modal-ui.js"></script>
     <script src="js/card-navigation.js"></script>
     <script type="text/javascript" src="js/tv-garden.js" defer></script>
+            <script>
+                window.addEventListener('unload', function () {
+                    navigator.sendBeacon('logout.php');
+                });
+            </script>
 </body>
 <footer>
     <p>&COPY; 2025 Trouvix. Tous droits réservés.</p>
