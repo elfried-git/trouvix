@@ -1,5 +1,4 @@
 body {
-/* Container for centering the register form and separating it from the nav */
 .register-container {
     max-width: 430px;
     margin: 3.5rem auto 0 auto;
@@ -12,18 +11,15 @@ body {
     z-index: 1;
 }
 
-/* Space below the nav for auth pages */
 body .main-nav {
     margin-bottom: 2.2rem;
 }
 
-/* Reduce nav font size for auth pages */
 body .main-nav ul li a {
     font-size: 1.08em;
     padding: 0.5em 1.1em;
 }
 
-/* Center the header row and add spacing */
 body .header-row {
     display: flex;
     align-items: center;
@@ -33,7 +29,6 @@ body .header-row {
     padding: 1.2em 1.2em 0.2em 1.2em;
 }
 
-/* Logo spacing for auth pages */
 body .logo {
     margin-right: 1.2em;
 }
@@ -46,7 +41,6 @@ body .logo {
     font-size: 20px;
     letter-spacing: 0.02em;
 }
-/* CSS spécifique pour les pages de connexion et de création de compte dans /auth */
 .hote-login-container, .modal-content {
     max-width: 400px;
     margin: 4rem auto;
@@ -111,7 +105,6 @@ body .logo {
     padding: 0.6em 0;
     width: 100%;
 }
-/* .hote-btn.quitter supprimé : le bouton déconnexion reprend le style général .hote-btn */
 .hote-btn:disabled {
     background: #222;
     color: #888;

@@ -1,6 +1,4 @@
 <?php
-// backend/db.php
-// Connexion à la base de données MySQL
 $host = 'localhost';
 $db   = 'trouvix';
 $user = 'root';

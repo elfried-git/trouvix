@@ -1,10 +1,4 @@
 <?php
-// backend/migrate_salons.php
-// Script pour migrer les salons du localStorage (JSON) vers la base MySQL
-// Utilisation :
-// 1. Exportez le contenu de votre localStorage (clé DEVITAL_SALONS) en JSON dans un fichier salons_local.json
-// 2. Placez ce fichier dans le dossier backend/
-// 3. Lancez ce script une seule fois via navigateur ou terminal
 
 $DB_HOST = 'localhost';
 $DB_NAME = 'trouvix'; // À adapter
@@ -31,7 +25,6 @@ try {
 
 $inserted = 0;
 foreach ($salons as $salon) {
-    // Validation et nettoyage
     $nom = isset($salon['nom']) ? substr(strip_tags($salon['nom']), 0, 50) : '';
     $code = isset($salon['code']) ? substr(strip_tags($salon['code']), 0, 10) : '';
     $maxJoueurs = isset($salon['maxJoueurs']) ? (int)$salon['maxJoueurs'] : 0;

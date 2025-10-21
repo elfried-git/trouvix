@@ -1,12 +1,9 @@
 <?php
-ini_set('display_errors', 0); // Désactive l'affichage des erreurs dans la réponse AJAX
+ini_set('display_errors', 0); 
 if (php_sapi_name() !== 'cli') {
     header('Content-Type: application/json');
 }
-
-// backend/login.php
 require_once 'db.php';
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $otp = $_POST['otp'] ?? '';
@@ -16,17 +13,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['error' => 'Email et OTP sont requis.']);
         exit;
     }
-
     $stmt = $pdo->prepare('SELECT * FROM users WHERE email = ?');
     $stmt->execute([$email]);
     $user = $stmt->fetch();
 
     if ($user && password_verify($otp, $user['otp'])) {
-        // Vérifie si le compte est déjà connecté (last_activity < 2min)
         $alreadyConnected = false;
         if (!empty($user['last_activity'])) {
             $last = strtotime($user['last_activity']);
-            if ($last && (time() - $last) < 30) { // 30 secondes
+            if ($last && (time() - $last) < 30) { 
                 $alreadyConnected = true;
             }
         }
@@ -35,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(['error' => 'Ce compte est déjà connecté sur un autre appareil ou navigateur. Veuillez vous déconnecter d’abord.']);
             exit;
         }
-        // Met à jour la dernière activité
         $stmt = $pdo->prepare('UPDATE users SET last_activity = NOW() WHERE id = ?');
         $stmt->execute([$user['id']]);
 

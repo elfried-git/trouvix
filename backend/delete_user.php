@@ -1,5 +1,4 @@
 <?php
-// backend/delete_user.php
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
@@ -9,14 +8,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
 }
-
-// --- CONFIG ---
 $DB_HOST = 'localhost';
-$DB_NAME = 'trouvix'; // À adapter si besoin
-$DB_USER = 'root';   // À adapter si besoin
+$DB_NAME = 'trouvix'; 
+$DB_USER = 'root';   
 $DB_PASS = '';
 
-// --- Connexion PDO ---
 try {
     $pdo = new PDO("mysql:host=$DB_HOST;dbname=$DB_NAME;charset=utf8", $DB_USER, $DB_PASS, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
@@ -26,8 +22,6 @@ try {
     echo json_encode(['error' => 'Erreur connexion BDD']);
     exit;
 }
-
-// --- Lecture de l'email à supprimer ---
 $data = json_decode(file_get_contents('php://input'), true);
 if (!isset($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
     http_response_code(400);
@@ -36,7 +30,6 @@ if (!isset($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL)
 }
 $email = $data['email'];
 
-// --- Sécurité : ne jamais supprimer l'admin principal ---
 $adminEmail = 'atexotest20@gmail.com';
 if (strtolower($email) === strtolower($adminEmail)) {
     http_response_code(403);

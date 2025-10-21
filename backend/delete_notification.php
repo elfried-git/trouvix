@@ -1,5 +1,4 @@
 <?php
-// backend/delete_notification.php
 header('Content-Type: application/json');
 require_once 'db.php';
 

@@ -179,7 +179,6 @@
 </head>
 <body class="body" style="margin:0;padding:0;">
     <div style="display:flex;min-height:100vh;">
-        <!-- Sidebar -->
         <nav class="admin-sidebar">
         <div class="logo-text">TROUVIX</div>
         <img src="../assets/avatar-default.png" alt="Avatar" class="avatar-round" style="display:block;margin:0 auto 1.5em auto;">
@@ -193,7 +192,6 @@
     <a href="#" class="hote-btn">Paramètres</a>
         </nav>
         <script>
-        // Affiche le panneau notifications directement dans le dashboard
         document.addEventListener('DOMContentLoaded', function() {
             var notifBtn = document.getElementById('btn-notifications');
             var notifPanel = document.getElementById('notifications-panel');
@@ -219,10 +217,7 @@
             }
         });
         </script>
-        <!-- Main content -->
         <div class="admin-main">
-            <!-- Popin notifications supprimée : redirection vers notification-detail.html -->
-            <!-- Header -->
             <header class="admin-header">
                 <h1 style="color:#0ff1ce;font-size:2em;margin:0;">Espace Administration</h1>
                 <div style="display:flex;align-items:center;gap:2em;margin-right:6vw;">
@@ -245,9 +240,7 @@
                     " onmouseover="this.style.background='linear-gradient(90deg,#a259ff 0%,#00fff9 100%)';this.style.color='#181c3a';" onmouseout="this.style.background='linear-gradient(90deg,#00fff9 0%,#a259ff 100%)';this.style.color='#181c3a';">Déconnexion</a>
                 </div>
             </header>
-            <!-- Stat cards -->
             <script>
-            // Popin notifications supprimée : tout est géré dans notification-detail.html
             </script>
             <div class="admin-cards">
                 <div style="display:flex;gap:2em;width:100%;">
@@ -271,7 +264,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Utilisateurs connectés (en haut) -->
             <section class="admin-table-section" id="users-section">
                 <h2>Utilisateurs connectés (temps réel)</h2>
                 <div class="admin-table-container">
@@ -291,7 +283,6 @@
                     </table>
                 </div>
             </section>
-            <!-- Section Salons créés par les hôtes (en bas) -->
             <section class="admin-table-section" id="salons-section" style="display:none;">
                 <h2>Salons créés par les hôtes</h2>
                 <div class="admin-table-container">
@@ -316,13 +307,11 @@
         </div>
     </div>
     <script>
-    // Gestion du menu latéral pour afficher/masquer les sections et Forum
     document.addEventListener('DOMContentLoaded', function() {
         const btnUtilisateurs = document.getElementById('btn-utilisateurs');
         const btnSalons = document.getElementById('btn-salons');
         const usersSection = document.getElementById('users-section');
         const salonsSection = document.getElementById('salons-section');
-        // Par défaut, utilisateurs connectés visible, salons masqué
         usersSection.style.display = '';
         salonsSection.style.display = 'none';
         btnUtilisateurs.addEventListener('click', function(e) {
@@ -337,21 +326,16 @@
             fetchSalons();
         });
 
-        // Lien Forum : transmet les infos admin via localStorage/sessionStorage puis ouvre le forum
         const forumLink = document.getElementById('forum-link');
         forumLink.addEventListener('click', function(e) {
             e.preventDefault();
             if (window.ADMIN_SESSION && ADMIN_SESSION.nom) {
-                // On ne transmet JAMAIS le mot de passe en clair, mais si vous souhaitez le faire, ajoutez-le ici
-                // let adminData = { nom: ADMIN_SESSION.nom, password: ADMIN_SESSION.password };
                 let adminData = { nom: ADMIN_SESSION.nom };
-                // Utilisez localStorage ou sessionStorage selon le besoin
                 localStorage.setItem('ADMIN_SESSION', JSON.stringify(adminData));
             }
             window.open('http://localhost/Trouvix/forum/admin-login.html', '_blank');
         });
     });
-        // Affiche le nom et l'email de l'admin connecté et stocke l'email pour l'identification dans le tableau
         var ADMIN_SESSION = null;
         fetch('../backend/get_user_info.php')
             .then(res => res.ok ? res.json() : null)
@@ -370,12 +354,10 @@
                 tbody.innerHTML = '';
                 let totalOnline = 0;
                 let adminOnline = false;
-                // Email admin en dur pour identification fiable
                 let adminEmail = 'atexotest20@gmail.com';
                 if (users.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Aucun utilisateur</td></tr>';
                 } else {
-                    // Sépare admin et autres utilisateurs
                     let adminUser = null;
                     let otherUsers = [];
                     users.forEach(user => {
@@ -385,7 +367,6 @@
                             otherUsers.push(user);
                         }
                     });
-                    // Affiche l'admin en premier
                     if (adminUser) {
                         let nomCell = `<span style='color:#e74c3c;font-weight:bold;'>${adminUser.nom}</span>`;
                         let emailCell = `<span style='color:#e74c3c;font-weight:bold;'>${adminUser.email}</span>`;
@@ -402,7 +383,6 @@
                             <td></td>
                         </tr>`;
                     }
-                    // Puis les autres utilisateurs
                     otherUsers.forEach(user => {
                         let nomCell = user.nom;
                         let emailCell = user.email;
@@ -423,13 +403,11 @@
                         </tr>`;
                     });
                 }
-                // Ajout du handler de suppression utilisateur
                 tbody.querySelectorAll('.btn-supprimer-user').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const tr = this.closest('tr');
                         const email = tr.getAttribute('data-email');
                         if (!email) return;
-                        // Modale personnalisée
                         let modal = document.getElementById('modal-suppr-user');
                         if (modal) modal.remove();
                         modal = document.createElement('div');
@@ -470,10 +448,8 @@
                         };
                     });
                 });
-                // Statistiques dynamiques
                 document.getElementById('stat-users').textContent = users.length;
                 document.getElementById('stat-online').textContent = totalOnline;
-                // Statut admin header
                 const adminStatus = document.getElementById('admin-status');
                 if (adminStatus) {
                     if (adminOnline) {
@@ -489,12 +465,10 @@
     }
     fetchOnlineUsers();
     setInterval(fetchOnlineUsers, 1000);
-    // Ping régulier pour que l'admin soit vu comme en ligne (et tous les utilisateurs)
     setInterval(function() {
         fetch('../backend/update_activity.php', { credentials: 'include' });
     }, 5000);
 
-    // Déconnexion propre à la fermeture de l'onglet/fenêtre
     window.addEventListener('beforeunload', function() {
         if (navigator.sendBeacon) {
             navigator.sendBeacon('../backend/logout.php');
@@ -505,7 +479,6 @@
     </script>
     <script src="../js/admin-dashboard.js"></script>
     <script>
-    // Badge rouge sur Notifications si non lues (temps réel)
     function updateNotifBadge() {
         const badge = document.getElementById('notif-badge');
         fetch('../backend/get_notifications.php')

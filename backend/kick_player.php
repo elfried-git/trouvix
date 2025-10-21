@@ -1,5 +1,4 @@
 <?php
-// backend/kick_player.php
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
@@ -26,7 +25,6 @@ if (!isset($data['code']) || !isset($data['nom'])) {
 $code = substr(strip_tags($data['code']), 0, 10);
 $nomARetirer = substr(strip_tags($data['nom']), 0, 50);
 
-// --- CONFIG BDD ---
 $DB_HOST = 'localhost';
 $DB_NAME = 'trouvix';
 $DB_USER = 'root';
@@ -40,7 +38,6 @@ try {
     echo json_encode(['error' => 'Erreur connexion BDD']);
     exit;
 }
-// Vérifie que l'utilisateur connecté est bien l'hôte du salon
 $stmt = $pdo->prepare('SELECT joueurs FROM salons WHERE code = ?');
 $stmt->execute([$code]);
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -55,19 +52,16 @@ if (!is_array($joueurs) || !isset($joueurs[0]['nom']) || $_SESSION['user_nom'] !
     echo json_encode(['error' => 'Seul l\'hôte peut retirer un joueur']);
     exit;
 }
-// On ne peut pas retirer l'hôte
 if ($nomARetirer === $joueurs[0]['nom']) {
     http_response_code(403);
     echo json_encode(['error' => 'Impossible de retirer l\'hôte']);
     exit;
 }
-// Retirer le joueur
 $nouveauxJoueurs = [];
 foreach ($joueurs as $j) {
     if (!isset($j['nom']) || $j['nom'] !== $nomARetirer) {
         $nouveauxJoueurs[] = $j;
     } else {
-        // Place vide (slot)
         $nouveauxJoueurs[] = [ 'nom' => '', 'photo' => '', 'estHote' => false ];
     }
 }

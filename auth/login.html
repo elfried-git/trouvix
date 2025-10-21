@@ -141,9 +141,7 @@ document.getElementById('hote-login-form').addEventListener('submit', async func
     }
 });
 
-// Affiche une alerte modale si le compte est déjà connecté
 function showAccountConnectedAlert() {
-    // Supprime toute ancienne modale
     let old = document.getElementById('account-connected-modal');
     if (old) old.remove();
     const modal = document.createElement('div');

@@ -1,5 +1,4 @@
 <?php
-// backend/contact_message.php
 header('Content-Type: application/json');
 require_once 'db.php';
 
@@ -18,14 +17,10 @@ if (!$prenom || !$nom || !$email || !$sujet || !$message) {
     echo json_encode(['success' => false, 'error' => 'Champs obligatoires manquants']);
     exit;
 }
-
-// Formatage du message pour l'admin
 $msg = "[Contact] $prenom $nom ($email)\n";
 if ($telephone) $msg .= "Téléphone: $telephone\n";
 if ($num_commande) $msg .= "Commande: $num_commande\n";
 $msg .= "Sujet: $sujet\nMessage: $message";
-
-// Insertion dans la table notifications
 $stmt = $pdo->prepare('INSERT INTO notifications (host, message, is_read, created_at) VALUES (?, ?, 0, NOW())');
 $stmt->execute(["Contact", $msg]);
 

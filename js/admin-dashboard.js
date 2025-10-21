@@ -1,46 +1,39 @@
-// --- Validation de sujet forum (admin) ---
-window.validateTopic = function(id) {
+window.validateTopic = function (id) {
     if (!window.topics) return alert('Erreur: sujets non chargés');
     const topic = window.topics.find(t => t.id == id);
     if (topic) {
-        showValidateModal(topic, function() {
+        showValidateModal(topic, function () {
             fetch('../backend/validate_topic.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id }),
                 credentials: 'include'
             })
-            .then(r => r.json())
-            .then(res => {
-                if (res.success) {
-                    if (typeof renderAdminTopics === 'function') renderAdminTopics();
-                    if (typeof renderAllAdminTopics === 'function') renderAllAdminTopics();
-                } else {
-                    alert(res.error || 'Erreur lors de la validation');
-                }
-            })
-            .catch(() => {
-                alert('Erreur réseau');
-            });
+                .then(r => r.json())
+                .then(res => {
+                    if (res.success) {
+                        if (typeof renderAdminTopics === 'function') renderAdminTopics();
+                        if (typeof renderAllAdminTopics === 'function') renderAllAdminTopics();
+                    } else {
+                        alert(res.error || 'Erreur lors de la validation');
+                    }
+                })
+                .catch(() => {
+                    alert('Erreur réseau');
+                });
         });
     }
 }
-// Script JS pour gérer l'affichage du tableau des salons dans le dashboard admin
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Sélection du bouton Utilisateurs (2e bouton du menu)
+document.addEventListener('DOMContentLoaded', function () {
     const btnUtilisateurs = document.querySelectorAll('.hote-btn')[1];
-    // Section où afficher le tableau
     let salonsSection = null;
 
-    btnUtilisateurs.addEventListener('click', function(e) {
+    btnUtilisateurs.addEventListener('click', function (e) {
         e.preventDefault();
-        // Si la section existe déjà, toggle l'affichage
         if (salonsSection) {
             salonsSection.style.display = salonsSection.style.display === 'none' ? '' : 'none';
             return;
         }
-        // Créer la section
         salonsSection = document.createElement('section');
         salonsSection.className = 'admin-table-section';
         salonsSection.innerHTML = `
@@ -69,7 +62,6 @@ document.addEventListener('DOMContentLoaded', function() {
         fetchSalons();
     });
 });
-
 function fetchSalons() {
     fetch('../backend/salons.php')
         .then(response => response.json())
@@ -101,9 +93,8 @@ function fetchSalons() {
                     <td><button class="btn-supprimer" style="color:#fff;background:#e74c3c;border:none;padding:0.4em 0.8em;border-radius:0.4em;cursor:pointer;">Supprimer</button></td>
                 </tr>`;
             });
-            // Ajout listeners Modifier/Supprimer
             tbody.querySelectorAll('.btn-modifier').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     const tr = this.closest('tr');
                     const tdNom = tr.querySelector('.salon-nom');
                     const oldNom = tdNom.textContent;
@@ -115,7 +106,7 @@ function fetchSalons() {
                             <button class="btn-annuler" style="background:#aaa;color:#181c3a;border:none;padding:0.5em 1.4em;border-radius:0.4em;font-weight:600;font-size:1em;cursor:pointer;">Annuler</button>
                         </div>
                     `;
-                    tdNom.querySelector('.btn-valider').onclick = function() {
+                    tdNom.querySelector('.btn-valider').onclick = function () {
                         const newNom = tdNom.querySelector('input').value.trim();
                         if (!newNom) return alert('Nom invalide');
                         fetch('../backend/update_salon.php', {
@@ -123,29 +114,28 @@ function fetchSalons() {
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ id: tr.dataset.id, nom: newNom })
                         })
-                        .then(r => r.json())
-                        .then(res => {
-                            if (res.success) {
-                                tdNom.textContent = newNom;
-                            } else {
-                                alert(res.error || 'Erreur lors de la modification');
+                            .then(r => r.json())
+                            .then(res => {
+                                if (res.success) {
+                                    tdNom.textContent = newNom;
+                                } else {
+                                    alert(res.error || 'Erreur lors de la modification');
+                                    tdNom.textContent = oldNom;
+                                }
+                            })
+                            .catch(() => {
+                                alert('Erreur réseau');
                                 tdNom.textContent = oldNom;
-                            }
-                        })
-                        .catch(() => {
-                            alert('Erreur réseau');
-                            tdNom.textContent = oldNom;
-                        });
+                            });
                     };
-                    tdNom.querySelector('.btn-annuler').onclick = function() {
+                    tdNom.querySelector('.btn-annuler').onclick = function () {
                         tdNom.textContent = oldNom;
                     };
                 });
             });
             tbody.querySelectorAll('.btn-supprimer').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     const tr = this.closest('tr');
-                    // Création de la modale personnalisée
                     let modal = document.getElementById('modal-suppr-salon');
                     if (modal) modal.remove();
                     modal = document.createElement('div');
@@ -160,31 +150,30 @@ function fetchSalons() {
                         </div>
                     `;
                     document.body.appendChild(modal);
-                    document.getElementById('btn-annuler-suppr').onclick = function() {
+                    document.getElementById('btn-annuler-suppr').onclick = function () {
                         modal.remove();
                     };
-                    document.getElementById('btn-confirmer-suppr').onclick = function() {
+                    document.getElementById('btn-confirmer-suppr').onclick = function () {
                         fetch('../backend/delete_salon.php', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ id: tr.dataset.id })
                         })
-                        .then(r => r.json())
-                        .then(res => {
-                            if (res.success) {
-                                tr.remove();
+                            .then(r => r.json())
+                            .then(res => {
+                                if (res.success) {
+                                    tr.remove();
+                                    modal.remove();
+                                    localStorage.setItem('salon-supprime', Date.now());
+                                } else {
+                                    alert(res.error || 'Erreur lors de la suppression');
+                                    modal.remove();
+                                }
+                            })
+                            .catch(() => {
+                                alert('Erreur réseau');
                                 modal.remove();
-                                // Signal suppression pour tous les onglets/clients
-                                localStorage.setItem('salon-supprime', Date.now());
-                            } else {
-                                alert(res.error || 'Erreur lors de la suppression');
-                                modal.remove();
-                            }
-                        })
-                        .catch(() => {
-                            alert('Erreur réseau');
-                            modal.remove();
-                        });
+                            });
                     };
                 });
             });

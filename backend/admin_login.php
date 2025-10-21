@@ -14,8 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($row['is_admin'] == 1 && password_verify($password, $row['otp'])) {
             $_SESSION['admin_id'] = $row['id'];
             $_SESSION['is_admin'] = true;
-            $_SESSION['user_id'] = $row['id']; // Pour la détection online
-            // Récupère le nom et l'email pour la session
+            $_SESSION['user_id'] = $row['id']; 
             $stmt2 = $conn->prepare('SELECT nom, email FROM users WHERE id = ? LIMIT 1');
             $stmt2->bind_param('i', $row['id']);
             $stmt2->execute();

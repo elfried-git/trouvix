@@ -324,7 +324,6 @@
     <script>
         let topics = [];
 
-        // Initialisation : charger les sujets depuis le backend dès l'ouverture
         document.addEventListener('DOMContentLoaded', () => {
             reloadTopicsFromBackend();
         });
@@ -341,9 +340,7 @@
                 list.innerHTML = '<div class="text-gray-500">Aucun sujet pour cette catégorie.</div>';
                 return;
             }
-            // Mémoriser le formulaire de réponse ouvert (topicId)
             const openReplyFormId = window._openReplyFormId;
-            // Mémoriser le contenu saisi si le formulaire est ouvert
             const replyDraft = window._replyDraft || {};
             filtered.slice().reverse().forEach(topic => {
                 const div = document.createElement('div');
@@ -362,7 +359,6 @@
                     </div>
                     <div id="${replyFormId}-container"></div>
                 `;
-                // Afficher le formulaire si c'est celui qui était ouvert
                 if (openReplyFormId && openReplyFormId == topic.id) {
                     const formContainer = div.querySelector(`#${replyFormId}-container`);
                     if (formContainer) {
@@ -372,14 +368,13 @@
                             <button type="submit" class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-1 rounded">Répondre</button>
                         </form>`;
                         const form = document.getElementById(replyFormId);
-                        // Sauvegarder le brouillon à chaque saisie
-                        form.author.oninput = form.content.oninput = function() {
+                        form.author.oninput = form.content.oninput = function () {
                             window._replyDraft = {
                                 author: form.author.value,
                                 content: form.content.value
                             };
                         };
-                        form.onsubmit = function(ev) {
+                        form.onsubmit = function (ev) {
                             ev.preventDefault();
                             const author = form.author.value.trim() || 'Anonyme';
                             const content = form.content.value.trim();
@@ -393,34 +388,31 @@
                                     content
                                 })
                             })
-                            .then(r => r.json())
-                            .then(res => {
-                                if (res.success) {
-                                    window._openReplyFormId = null;
-                                    window._replyDraft = {};
-                                    reloadTopicsFromBackend();
-                                    form.reset();
-                                    form.remove();
-                                } else {
-                                    alert(res.error || 'Erreur lors de l\'envoi de la réponse');
-                                }
-                            })
-                            .catch(() => {
-                                alert('Erreur réseau');
-                            });
+                                .then(r => r.json())
+                                .then(res => {
+                                    if (res.success) {
+                                        window._openReplyFormId = null;
+                                        window._replyDraft = {};
+                                        reloadTopicsFromBackend();
+                                        form.reset();
+                                        form.remove();
+                                    } else {
+                                        alert(res.error || 'Erreur lors de l\'envoi de la réponse');
+                                    }
+                                })
+                                .catch(() => {
+                                    alert('Erreur réseau');
+                                });
                         };
                     }
                 }
-                // Gestion du clic sur l'icône message-square
                 setTimeout(() => {
                     const replyBtn = div.querySelector('.reply-btn');
                     if (replyBtn) {
-                        replyBtn.onclick = function(e) {
+                        replyBtn.onclick = function (e) {
                             e.stopPropagation();
-                            // Fermer tous les autres formulaires
                             document.querySelectorAll('.forum-reply-form').forEach(f => f.remove());
                             window._openReplyFormId = topic.id;
-                            // Afficher le formulaire sous ce post sans recharger toute la liste
                             const formContainer = div.querySelector(`#${replyFormId}-container`);
                             if (formContainer) {
                                 formContainer.innerHTML = `<form id="${replyFormId}" class="forum-reply-form mt-2 bg-gray-100 rounded p-3 flex flex-col gap-2">
@@ -429,13 +421,13 @@
                                     <button type="submit" class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-1 rounded">Répondre</button>
                                 </form>`;
                                 const form = document.getElementById(replyFormId);
-                                form.author.oninput = form.content.oninput = function() {
+                                form.author.oninput = form.content.oninput = function () {
                                     window._replyDraft = {
                                         author: form.author.value,
                                         content: form.content.value
                                     };
                                 };
-                                form.onsubmit = function(ev) {
+                                form.onsubmit = function (ev) {
                                     ev.preventDefault();
                                     const author = form.author.value.trim() || 'Anonyme';
                                     const content = form.content.value.trim();
@@ -449,21 +441,21 @@
                                             content
                                         })
                                     })
-                                    .then(r => r.json())
-                                    .then(res => {
-                                        if (res.success) {
-                                            window._openReplyFormId = null;
-                                            window._replyDraft = {};
-                                            reloadTopicsFromBackend();
-                                            form.reset();
-                                            form.remove();
-                                        } else {
-                                            alert(res.error || 'Erreur lors de l\'envoi de la réponse');
-                                        }
-                                    })
-                                    .catch(() => {
-                                        alert('Erreur réseau');
-                                    });
+                                        .then(r => r.json())
+                                        .then(res => {
+                                            if (res.success) {
+                                                window._openReplyFormId = null;
+                                                window._replyDraft = {};
+                                                reloadTopicsFromBackend();
+                                                form.reset();
+                                                form.remove();
+                                            } else {
+                                                alert(res.error || 'Erreur lors de l\'envoi de la réponse');
+                                            }
+                                        })
+                                        .catch(() => {
+                                            alert('Erreur réseau');
+                                        });
                                 };
                             }
                         };
@@ -515,7 +507,6 @@
             const attachmentInput = document.getElementById('topic-attachment');
             let attachment = '';
             if (attachmentInput.files && attachmentInput.files.length > 0) {
-                // Pour simplifier, on ne gère que le nom du fichier ici
                 attachment = attachmentInput.files[0].name;
             }
             const category = document.getElementById('topic-category').value;
@@ -532,27 +523,25 @@
                     attachment
                 })
             })
-            .then(r => r.json())
-            .then(res => {
-                if (res.success) {
-                    document.getElementById('topic-modal').classList.add('hidden');
-                    document.getElementById('topic-form').reset();
-                    document.getElementById('publish-modal').classList.remove('hidden');
-                    document.getElementById('close-publish-modal').onclick = function () {
-                        document.getElementById('publish-modal').classList.add('hidden');
-                    };
-                    // Optionnel : recharger les sujets depuis le backend
-                    reloadTopicsFromBackend();
-                } else {
-                    alert(res.error || 'Erreur lors de la publication');
-                }
-            })
-            .catch(() => {
-                alert('Erreur réseau');
-            });
+                .then(r => r.json())
+                .then(res => {
+                    if (res.success) {
+                        document.getElementById('topic-modal').classList.add('hidden');
+                        document.getElementById('topic-form').reset();
+                        document.getElementById('publish-modal').classList.remove('hidden');
+                        document.getElementById('close-publish-modal').onclick = function () {
+                            document.getElementById('publish-modal').classList.add('hidden');
+                        };
+                        reloadTopicsFromBackend();
+                    } else {
+                        alert(res.error || 'Erreur lors de la publication');
+                    }
+                })
+                .catch(() => {
+                    alert('Erreur réseau');
+                });
         };
 
-        // Nouvelle fonction pour recharger les sujets depuis le backend
         function reloadTopicsFromBackend() {
             fetch('../backend/get_topics.php')
                 .then(r => r.json())
@@ -562,7 +551,6 @@
                 });
         }
 
-        // Rafraîchissement automatique toutes les 5 secondes pour afficher les publications validées
         setInterval(() => {
             reloadTopicsFromBackend();
         }, 5000);

@@ -118,39 +118,61 @@
 </head>
 
 <body class="font-sans">
-    <div id="logout-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden" style="background:rgba(0,0,0,0.45);">
+    <div id="logout-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden"
+        style="background:rgba(0,0,0,0.45);">
         <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center animate-fadeIn relative">
             <div class="flex justify-center mb-3">
-                <svg width="48" height="48" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#FBDE4A"/><path d="M16 17l-4 4m0 0l-4-4m4 4V3" stroke="#DC241F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg width="48" height="48" fill="none" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="12" fill="#FBDE4A" />
+                    <path d="M16 17l-4 4m0 0l-4-4m4 4V3" stroke="#DC241F" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
             </div>
             <h2 class="text-2xl font-bold mb-2 text-primary-600">Déconnexion</h2>
             <p class="text-gray-700 mb-6">Voulez-vous vraiment vous déconnecter et quitter l'espace admin ?</p>
             <div class="flex justify-center gap-4">
-                <button id="logout-yes" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-semibold shadow transition">Oui, quitter</button>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var yesBtn = document.getElementById('logout-yes');
-    if (yesBtn) {
-        yesBtn.onclick = function() {
-            window.location.href = '../auth/admin-dashboard.php';
-        };
-    }
-});
-</script>
-                <button id="logout-no" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-lg font-semibold shadow transition">Annuler</button>
+                <button id="logout-yes"
+                    class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-semibold shadow transition">Oui,
+                    quitter</button>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        var yesBtn = document.getElementById('logout-yes');
+                        if (yesBtn) {
+                            yesBtn.onclick = function () {
+                                window.location.href = '../auth/admin-dashboard.php';
+                            };
+                        }
+                    });
+                </script>
+                <button id="logout-no"
+                    class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-lg font-semibold shadow transition">Annuler</button>
             </div>
-            <button id="logout-close" class="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-2xl leading-none">&times;</button>
+            <button id="logout-close"
+                class="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-2xl leading-none">&times;</button>
         </div>
     </div>
     <style>
-    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95);} to { opacity: 1; transform: scale(1);} }
-    .animate-fadeIn { animation: fadeIn 0.25s; }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.25s;
+        }
     </style>
     <nav>
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <span class="font-extrabold text-2xl tracking-wide text-white">Tableau de bord Admin</span>
             <button id="logout-btn" type="button"></button></button>
-                Retour au Dashboard
+            Retour au Dashboard
             </button>
         </div>
     </nav>
@@ -191,23 +213,21 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </section>
     </main>
-<script>
-window.addEventListener('DOMContentLoaded', function() {
-    var logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-        logoutBtn.onclick = function() {
-            window.location.href = '../auth/admin-dashboard.php';
-        };
-    }
-});
-</script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            var logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.onclick = function () {
+                    window.location.href = '../auth/admin-dashboard.php';
+                };
+            }
+        });
+    </script>
 
     <script>
-        let topics = []; // Variable globale pour stocker les sujets
+        let topics = [];
 
         function loadTopics() {
-            // Charge TOUS les sujets depuis le backend
-            // Cette fonction devient asynchrone
             return fetch('../backend/get_topics.php')
                 .then(r => r.json())
                 .then(data => {
@@ -217,7 +237,6 @@ window.addEventListener('DOMContentLoaded', function() {
 
         function saveTopics() {
             localStorage.setItem('forumTopics', JSON.stringify(topics));
-            // Après sauvegarde, on rafraîchit les deux listes du dashboard
             renderAdminTopics();
             renderAllAdminTopics();
         }
@@ -237,10 +256,6 @@ window.addEventListener('DOMContentLoaded', function() {
                 default: return cat;
             }
         }
-
-        // --- Admin Actions ---
-
-        // Modal de validation personnalisée
         let validateModal = null;
         let validateModalCallback = null;
         function showValidateModal(topic, onConfirm) {
@@ -263,11 +278,11 @@ window.addEventListener('DOMContentLoaded', function() {
             validateModal.querySelector('#validate-modal-title').textContent = `"${topic.title}"`;
             validateModal.style.display = '';
             validateModalCallback = onConfirm;
-            validateModal.querySelector('#validate-modal-ok').onclick = function() {
+            validateModal.querySelector('#validate-modal-ok').onclick = function () {
                 validateModal.style.display = 'none';
                 if (validateModalCallback) validateModalCallback();
             };
-            validateModal.querySelector('#validate-modal-cancel').onclick = function() {
+            validateModal.querySelector('#validate-modal-cancel').onclick = function () {
                 validateModal.style.display = 'none';
             };
         }
@@ -275,30 +290,28 @@ window.addEventListener('DOMContentLoaded', function() {
         function validateTopic(id) {
             const topic = topics.find(t => t.id == id);
             if (topic) {
-                showValidateModal(topic, function() {
+                showValidateModal(topic, function () {
                     fetch('../backend/validate_topic.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ id }),
                         credentials: 'include'
                     })
-                    .then(r => r.json())
-                    .then(res => {
-                        if (res.success) {
-                            renderAdminTopics();
-                            renderAllAdminTopics();
-                        } else {
-                            alert(res.error || 'Erreur lors de la validation');
-                        }
-                    })
-                    .catch(() => {
-                        alert('Erreur réseau');
-                    });
+                        .then(r => r.json())
+                        .then(res => {
+                            if (res.success) {
+                                renderAdminTopics();
+                                renderAllAdminTopics();
+                            } else {
+                                alert(res.error || 'Erreur lors de la validation');
+                            }
+                        })
+                        .catch(() => {
+                            alert('Erreur réseau');
+                        });
                 });
             }
         }
-
-        // Modal de suppression personnalisée
         let deleteModal = null;
         let deleteModalCallback = null;
         function showDeleteModal(onConfirm) {
@@ -320,40 +333,36 @@ window.addEventListener('DOMContentLoaded', function() {
             }
             deleteModal.style.display = '';
             deleteModalCallback = onConfirm;
-            deleteModal.querySelector('#delete-modal-ok').onclick = function() {
+            deleteModal.querySelector('#delete-modal-ok').onclick = function () {
                 deleteModal.style.display = 'none';
                 if (deleteModalCallback) deleteModalCallback();
             };
-            deleteModal.querySelector('#delete-modal-cancel').onclick = function() {
+            deleteModal.querySelector('#delete-modal-cancel').onclick = function () {
                 deleteModal.style.display = 'none';
             };
         }
 
         function deleteTopic(id) {
-            showDeleteModal(function() {
+            showDeleteModal(function () {
                 fetch('../backend/delete_topic.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id })
                 })
-                .then(r => r.json())
-                .then(res => {
-                    if (res.success) {
-                        renderAdminTopics();
-                        renderAllAdminTopics();
-                    } else {
-                        alert(res.error || 'Erreur lors de la suppression');
-                    }
-                })
-                .catch(() => {
-                    alert('Erreur réseau');
-                });
+                    .then(r => r.json())
+                    .then(res => {
+                        if (res.success) {
+                            renderAdminTopics();
+                            renderAllAdminTopics();
+                        } else {
+                            alert(res.error || 'Erreur lors de la suppression');
+                        }
+                    })
+                    .catch(() => {
+                        alert('Erreur réseau');
+                    });
             });
         }
-
-        // --- Rendering Functions ---
-
-        /** Affiche les sujets en attente de validation. */
         function renderAdminTopics() {
             loadTopics().then(() => {
                 const list = document.getElementById('admin-topics-list');
@@ -389,8 +398,6 @@ window.addEventListener('DOMContentLoaded', function() {
                 feather.replace();
             });
         }
-
-        /** Affiche TOUS les sujets (validés et non validés) dans une autre liste. */
         function renderAllAdminTopics() {
             loadTopics().then(() => {
                 const allList = document.getElementById('all-admin-topics-list');
@@ -418,23 +425,17 @@ window.addEventListener('DOMContentLoaded', function() {
                 });
             });
         }
-
-
-        // Initialisation
         document.addEventListener('DOMContentLoaded', () => {
             renderAdminTopics();
             renderAllAdminTopics();
             feather.replace();
-            // Rafraîchissement automatique toutes les 5 secondes
             setInterval(() => {
                 renderAdminTopics();
                 renderAllAdminTopics();
                 feather.replace();
             }, 5000);
         });
-
-        // Synchronisation automatique si le localStorage change (nouvelle publication depuis index.html)
-        window.addEventListener('storage', function(e) {
+        window.addEventListener('storage', function (e) {
             if (e.key === 'forumTopics') {
                 renderAdminTopics();
                 renderAllAdminTopics();
