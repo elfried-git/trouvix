@@ -589,7 +589,7 @@ $user_email = $_SESSION['user_email'];
                 <div id="member-salon-code" style="text-align:center;font-size:1.12em;font-weight:600;color:#ff00ff;margin-bottom:1.1em;text-shadow:0 0 8px #ff00ff99;"></div>
                 <div id="member-host-info" style="text-align:center;margin-bottom:2em;"></div>
                 <div class="players" id="member-players-list"></div>
-                <button id="btn-betou-kouenda" style="display:block;margin:2em auto 0 auto;padding:0.9em 2.2em;font-size:1.18em;font-weight:bold;border-radius:1em;background:linear-gradient(90deg,#00fff9 0%,#ff00ff 100%);color:#181c3a;box-shadow:0 0 16px #00fff9cc,0 0 32px #ff00ff99;border:none;cursor:pointer;transition:background 0.2s,box-shadow 0.2s;">Betou Kouenda</button>
+                <button id="btn-jouons" style="display:block;margin:2em auto 0 auto;padding:0.9em 2.2em;font-size:1.18em;font-weight:bold;border-radius:1em;background:linear-gradient(90deg,#00fff9 0%,#ff00ff 100%);color:#181c3a;box-shadow:0 0 16px #00fff9cc,0 0 32px #ff00ff99;border:none;cursor:pointer;transition:background 0.2s,box-shadow 0.2s;">Jouons</button>
         <div id="member-salon-message" style="text-align:center;font-size:1.18em;font-weight:bold;margin-bottom:1.1em;color:#00fff9;text-shadow:0 0 8px #00fff9cc;"></div>
         <div id="member-salon-code" style="text-align:center;font-size:1.12em;font-weight:600;color:#ff00ff;margin-bottom:1.1em;text-shadow:0 0 8px #ff00ff99;"></div>
         <div id="member-host-info" style="text-align:center;margin-bottom:2em;"></div>

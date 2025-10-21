@@ -169,8 +169,7 @@
         <div class="players" id="players-list"></div>
         <div class="salon-btns" style="display:flex;justify-content:center;margin-top:2.5em;">
             <button class="btn-betou" id="btn-betou-kouenda"
-                style="background:linear-gradient(90deg,#00fff9 0%,#ff00ff 100%);color:#181c3a;font-weight:bold;font-size:1.13em;padding:0.7em 2.2em;border-radius:0.8em;border:none;box-shadow:0 0 16px #00fff9cc,0 0 32px #ff00ff99;cursor:pointer;margin-right:1.2em;">Betou
-                Kouenda</button>
+                style="background:linear-gradient(90deg,#00fff9 0%,#ff00ff 100%);color:#181c3a;font-weight:bold;font-size:1.13em;padding:0.7em 2.2em;border-radius:0.8em;border:none;box-shadow:0 0 16px #00fff9cc,0 0 32px #ff00ff99;cursor:pointer;margin-right:1.2em;">Jouer</button>
             <button class="btn-retour" id="btn-retour">&#8592; Retour</button>
         </div>
     </div>
@@ -247,9 +246,22 @@
                 return;
             }
             if (userNom && !salon.joueurs.some(j => j && j.nom === userNom)) {
-                alert('Vous avez été retiré du salon.');
-                window.location.href = 'espace-membre.php';
-                return;
+                                // Popin stylée pour l'expulsion
+                                let popin = document.createElement('div');
+                                popin.innerHTML = `
+                                    <div id="popin-kick-bg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(10,20,40,0.65);z-index:99999;display:flex;align-items:center;justify-content:center;">
+                                        <div id="popin-kick" style="background:#181c3a;padding:2.2em 2em 1.5em 2em;border-radius:1.2em;box-shadow:0 0 32px #00fff966,0 0 0 2px #00fff933;min-width:260px;text-align:center;">
+                                            <div style="color:#ff0055;font-size:1.18em;font-weight:bold;margin-bottom:1.2em;">Vous avez été retiré du salon.</div>
+                                            <button id="popin-kick-ok" style="background:linear-gradient(90deg,#00fff9 60%,#ff00ff 100%);color:#181c3a;border:none;border-radius:0.7em;padding:0.7em 2.2em;font-size:1.13em;font-weight:bold;cursor:pointer;box-shadow:0 0 16px #00fff966;">OK</button>
+                                        </div>
+                                    </div>
+                                `;
+                                document.body.appendChild(popin);
+                                document.getElementById('popin-kick-ok').onclick = function() {
+                                    popin.remove();
+                                    window.location.href = 'espace-membre.php';
+                                };
+                                return;
             }
             document.getElementById('salon-code').textContent = `Code du salon : ${salon.code}`;
             let nomHoteSession = null;
@@ -320,18 +332,57 @@
             document.querySelectorAll('.btn-retirer-joueur').forEach(btn => {
                 btn.onclick = async function () {
                     const nomARetirer = this.getAttribute('data-nom');
-                    if (!confirm(`Retirer ${nomARetirer} du salon ?`)) return;
+                                        // Popin personnalisée
+                                        let popin = document.createElement('div');
+                                        popin.innerHTML = `
+                                            <div id="popin-confirm-bg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(10,20,40,0.65);z-index:99999;display:flex;align-items:center;justify-content:center;">
+                                                <div id="popin-confirm" style="background:#181c3a;padding:2.2em 2em 1.5em 2em;border-radius:1.2em;box-shadow:0 0 32px #00fff966,0 0 0 2px #00fff933;min-width:260px;text-align:center;">
+                                                    <div style="color:#0ff1ce;font-size:1.18em;font-weight:bold;margin-bottom:1.2em;">Retirer <span style='color:#ff00ff'>${nomARetirer}</span> du salon ?</div>
+                                                    <button id="popin-ok" style="background:linear-gradient(90deg,#00fff9 60%,#ff00ff 100%);color:#181c3a;border:none;border-radius:0.7em;padding:0.7em 2.2em;font-size:1.13em;font-weight:bold;cursor:pointer;box-shadow:0 0 16px #00fff966;margin-right:1.2em;">Oui</button>
+                                                    <button id="popin-cancel" style="background:#222a44;color:#fff;border:none;border-radius:0.7em;padding:0.7em 2.2em;font-size:1.13em;font-weight:bold;cursor:pointer;box-shadow:0 0 8px #222a44;">Annuler</button>
+                                                </div>
+                                            </div>
+                                        `;
+                                        document.body.appendChild(popin);
+                                        document.getElementById('popin-cancel').onclick = function() {
+                                            popin.remove();
+                                        };
+                                        document.getElementById('popin-ok').onclick = async function() {
+                                            popin.remove();
+                                            try {
+                                                const res = await fetch('../backend/kick_player.php', {
+                                                        method: 'POST',
+                                                        headers: { 'Content-Type': 'application/json' },
+                                                        body: JSON.stringify({ code: salon.code, nom: nomARetirer })
+                                                });
+                                                const result = await res.json();
+                                                if (result && result.success) {
+                                                        renderSalon();
+                                                } else {
+                                                        alert(result && result.error ? result.error : 'Erreur lors du retrait');
+                                                }
+                                            } catch (e) {
+                                                alert('Erreur réseau lors du retrait');
+                                            }
+                                        };
+                                        return;
                     try {
                         const res = await fetch('../backend/kick_player.php', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ code: salon.code, nom: nomARetirer })
+                            body: JSON.stringify({ code: salon.code, nom: nomARetirer }),
+                            credentials: 'same-origin'
                         });
                         const result = await res.json();
                         if (result && result.success) {
                             renderSalon();
                         } else {
-                            alert(result && result.error ? result.error : 'Erreur lors du retrait');
+                            // Afficher l'erreur dans la popin
+                            let errMsg = result && result.error ? result.error : 'Erreur lors du retrait';
+                            let errDiv = document.createElement('div');
+                            errDiv.style = 'color:#ff0055;font-weight:bold;margin-top:1.2em;font-size:1.08em;';
+                            errDiv.textContent = errMsg;
+                            document.getElementById('popin-confirm').appendChild(errDiv);
                         }
                     } catch (e) {
                         alert('Erreur réseau lors du retrait');
