@@ -189,7 +189,6 @@
     <a href="#" class="hote-btn" id="btn-utilisateurs">Utilisateurs</a>
     <a href="#" class="hote-btn" id="forum-link" target="_blank" rel="noopener">Forum</a>
     <a href="#" class="hote-btn" id="btn-salons">Salons</a>
-    <a href="#" class="hote-btn">Paramètres</a>
         </nav>
         <script>
         document.addEventListener('DOMContentLoaded', function() {
