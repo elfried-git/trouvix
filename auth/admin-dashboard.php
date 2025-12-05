@@ -34,7 +34,6 @@
             box-shadow: 0 0 12px #FFD60099;
             background: #222;
         }
-        }
         .admin-sidebar a {
             width: 100%;
             margin-bottom: 0;
