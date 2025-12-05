@@ -74,9 +74,21 @@ if (!$trouve) {
 
 $stmt = $pdo->prepare('UPDATE salons SET joueurs = ? WHERE code = ?');
 if ($stmt->execute([json_encode($joueurs), $code])) {
-    // Notify listeners that joueurs changed
+    // Notify listeners that joueurs changed (file fallback)
     $eventFilename = __DIR__ . '/../tmp/salon_event_' . preg_replace('/[^a-zA-Z0-9_-]/', '', $code) . '.json';
     @file_put_contents($eventFilename, json_encode(['event' => 'joueurs_modifies', 'code' => $code, 'left' => $userNom]));
+    // Try to notify WebSocket server (best-effort)
+    $wsPayload = json_encode(['event' => 'joueurs_modifies', 'code' => $code, 'left' => $userNom]);
+    $wsUrl = 'http://127.0.0.1:3001/notify';
+    $ch = curl_init($wsUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $wsPayload);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, 200);
+    curl_setopt($ch, CURLOPT_TIMEOUT_MS, 600);
+    curl_exec($ch);
+    curl_close($ch);
     echo json_encode(['success' => true]);
     exit;
 } else {
