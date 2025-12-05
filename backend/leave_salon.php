@@ -9,6 +9,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['error' => 'Méthode non autorisée']);
+    exit;
+}
+
 session_start();
 if (!isset($_SESSION['user_nom'])) {
     http_response_code(401);
@@ -17,13 +23,13 @@ if (!isset($_SESSION['user_nom'])) {
 }
 
 $data = json_decode(file_get_contents('php://input'), true);
-if (!isset($data['code']) || !isset($data['nom'])) {
+if (!isset($data['code'])) {
     http_response_code(400);
     echo json_encode(['error' => 'Champs manquants']);
     exit;
 }
 $code = substr(strip_tags($data['code']), 0, 10);
-$nomARetirer = substr(strip_tags($data['nom']), 0, 50);
+$userNom = substr(strip_tags($_SESSION['user_nom']), 0, 50);
 
 $DB_HOST = 'localhost';
 $DB_NAME = 'trouvix';
@@ -38,6 +44,7 @@ try {
     echo json_encode(['error' => 'Erreur connexion BDD']);
     exit;
 }
+
 $stmt = $pdo->prepare('SELECT joueurs FROM salons WHERE code = ?');
 $stmt->execute([$code]);
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -46,29 +53,36 @@ if (!$row) {
     echo json_encode(['error' => 'Salon introuvable']);
     exit;
 }
+
 $joueurs = json_decode($row['joueurs'], true);
-if (!is_array($joueurs) || !isset($joueurs[0]['nom']) || $_SESSION['user_nom'] !== $joueurs[0]['nom']) {
-    http_response_code(403);
-    echo json_encode(['error' => 'Seul l\'hôte peut retirer un joueur']);
-    exit;
-}
-if ($nomARetirer === $joueurs[0]['nom']) {
-    http_response_code(403);
-    echo json_encode(['error' => 'Impossible de retirer l\'hôte']);
-    exit;
-}
-$nouveauxJoueurs = [];
-foreach ($joueurs as $j) {
-    if (!isset($j['nom']) || $j['nom'] !== $nomARetirer) {
-        $nouveauxJoueurs[] = $j;
-    } else {
-        $nouveauxJoueurs[] = [ 'nom' => '', 'photo' => '', 'estHote' => false ];
+if (!is_array($joueurs)) $joueurs = [];
+
+$trouve = false;
+for ($i = 0; $i < count($joueurs); $i++) {
+    if (isset($joueurs[$i]['nom']) && $joueurs[$i]['nom'] === $userNom) {
+        $joueurs[$i] = [ 'nom' => '', 'photo' => '', 'estHote' => false ];
+        $trouve = true;
+        break;
     }
 }
+
+if (!$trouve) {
+    http_response_code(404);
+    echo json_encode(['error' => 'Utilisateur non présent dans le salon']);
+    exit;
+}
+
 $stmt = $pdo->prepare('UPDATE salons SET joueurs = ? WHERE code = ?');
-$stmt->execute([json_encode($nouveauxJoueurs), $code]);
-// Notify listeners that joueurs changed
-$eventFilename = __DIR__ . '/../tmp/salon_event_' . preg_replace('/[^a-zA-Z0-9_-]/', '', $code) . '.json';
-@file_put_contents($eventFilename, json_encode(['event' => 'joueurs_modifies', 'code' => $code, 'removed' => $nomARetirer]));
-echo json_encode(['success' => true]);
-exit;
+if ($stmt->execute([json_encode($joueurs), $code])) {
+    // Notify listeners that joueurs changed
+    $eventFilename = __DIR__ . '/../tmp/salon_event_' . preg_replace('/[^a-zA-Z0-9_-]/', '', $code) . '.json';
+    @file_put_contents($eventFilename, json_encode(['event' => 'joueurs_modifies', 'code' => $code, 'left' => $userNom]));
+    echo json_encode(['success' => true]);
+    exit;
+} else {
+    http_response_code(500);
+    echo json_encode(['error' => 'Erreur lors de la mise à jour']);
+    exit;
+}
+
+?>

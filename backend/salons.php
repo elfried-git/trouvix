@@ -122,6 +122,9 @@ if ($salonExistant) {
 	}
 	$stmt = $pdo->prepare('UPDATE salons SET joueurs = ? WHERE code = ?');
 	$stmt->execute([$joueurs, $code]);
+	// Notify any listeners (SSE) that the salon players have changed
+	$eventFilename = __DIR__ . '/../tmp/salon_event_' . preg_replace('/[^a-zA-Z0-9_-]/', '', $code) . '.json';
+	@file_put_contents($eventFilename, json_encode(['event' => 'joueurs_modifies', 'code' => $code]));
 	echo json_encode(['success' => true, 'updated' => true]);
 	exit;
 } else {

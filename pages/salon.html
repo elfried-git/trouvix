@@ -167,10 +167,9 @@
         </div>
         <div id="host-info" style="text-align:center;margin-bottom:2em;"></div>
         <div class="players" id="players-list"></div>
-        <div class="salon-btns" style="display:flex;justify-content:center;margin-top:2.5em;">
-            <button class="btn-betou" id="btn-betou-kouenda"
-                style="background:linear-gradient(90deg,#00fff9 0%,#ff00ff 100%);color:#181c3a;font-weight:bold;font-size:1.13em;padding:0.7em 2.2em;border-radius:0.8em;border:none;box-shadow:0 0 16px #00fff9cc,0 0 32px #ff00ff99;cursor:pointer;margin-right:1.2em;">Jouer</button>
-            <button class="btn-retour" id="btn-retour">&#8592; Retour</button>
+        <div class="salon-btns" style="display:flex;justify-content:center;margin-top:2.5em;gap:0.8em;">
+            <button class="btn-demarrer" id="btn-demarrer" style="display:none;">Jouons</button>
+            <button class="btn-quitter" id="btn-quitter" style="background:linear-gradient(90deg,#ff0055 0%,#ff00ff 100%);color:#fff;font-weight:bold;font-size:1.13em;padding:0.7em 2.2em;border-radius:0.8em;border:none;box-shadow:0 0 16px #ff0055cc,0 0 32px #ff00ff99;cursor:pointer;">Quitter</button>
         </div>
     </div>
     </style>
@@ -182,7 +181,8 @@
         }
 
         .btn-retour,
-        .btn-demarrer {
+        .btn-demarrer,
+        .btn-quitter {
             background: #00fff9;
             border: none;
             color: #000;
@@ -210,6 +210,12 @@
         .btn-demarrer:hover {
             background: #e600e6;
             box-shadow: 0 0 24px #e600e699, 0 0 48px #e600e666;
+        }
+
+        .btn-quitter {
+            background: linear-gradient(90deg,#ff0055 0%,#ff00ff 100%);
+            color: #fff;
+            box-shadow: 0 0 16px #ff0055cc, 0 0 32px #ff00ff99;
         }
     </style>
     </div>
@@ -290,6 +296,75 @@
                     const img = document.getElementById('host-avatar-clickable');
                     if (img) img.onclick = () => { renderSalon(); };
                 }, 50);
+                // Affiche le bouton de démarrage uniquement pour l'hôte
+                const btnDemarrer = document.getElementById('btn-demarrer');
+                if (btnDemarrer) {
+                    btnDemarrer.style.display = 'inline-block';
+                    btnDemarrer.onclick = function () {
+                        try {
+                            if (salon && salon.code) {
+                                localStorage.setItem('codeSalon', salon.code);
+                                sessionStorage.setItem('codeSalon', salon.code);
+                                window.location.href = 'jeux-encours.html?code=' + encodeURIComponent(salon.code);
+                            } else {
+                                window.location.href = 'jeux-encours.html';
+                            }
+                        } catch (e) {
+                            window.location.href = 'jeux-encours.html';
+                        }
+                    };
+                }
+
+                // Si l'utilisateur est l'hôte, écouter les événements SSE pour mises à jour du salon
+                (function listenSalonEvents() {
+                    if (!window.EventSource || !salon || !salon.code) return;
+                    // évite d'ouvrir plusieurs connexions SSE pour le même salon
+                    if (window.__salonSseActive && window.__salonSseActive === salon.code) return;
+                    window.__salonSseActive = salon.code;
+                    let evt = new EventSource(`../backend/salon_events.php?code=${encodeURIComponent(salon.code)}`);
+                    evt.onmessage = function (e) {
+                        try {
+                            const data = JSON.parse(e.data);
+                            if (data && data.event) {
+                                // Rafraîchir la vue du salon (recharge joueurs, host info...)
+                                renderSalon();
+                                if (data.event === 'salon_supprime') {
+                                    // Salon détruit : prévenir et rediriger
+                                    let oldPopin = document.getElementById('salon-detruit-popin');
+                                    if (oldPopin) oldPopin.remove();
+                                    const popin = document.createElement('div');
+                                    popin.id = 'salon-detruit-popin';
+                                    popin.innerHTML = `
+                                        <div style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(10,16,40,0.92);z-index:3100;display:flex;align-items:center;justify-content:center;">
+                                            <div style="background:#181c3a;padding:2.2em 2.5em 2em 2.5em;border-radius:1.2em;box-shadow:0 0 32px #00fff966,0 0 0 2px #00fff933,0 0 80px 8px #ff00ff22;text-align:center;max-width:90vw;border:1.5px solid #00fff9;">
+                                                <div style='font-size:1.18em;color:#00fff9;font-weight:bold;margin-bottom:1.2em;'>Salon détruit</div>
+                                                <div style='color:#fff;margin-bottom:1.2em;'>Le salon a été détruit. Vous allez être redirigé.</div>
+                                                <button id="btn-salon-detruit-ok" style="background:linear-gradient(90deg,#00fff9 0%,#ff00ff 100%);color:#181c3a;font-weight:bold;font-size:1.13em;padding:0.7em 2.2em;border-radius:0.8em;border:none;box-shadow:0 0 16px #00fff9cc,0 0 32px #ff00ff99;cursor:pointer;">OK</button>
+                                            </div>
+                                        </div>
+                                    `;
+                                    document.body.appendChild(popin);
+                                    document.getElementById('btn-salon-detruit-ok').onclick = function () {
+                                        window.location.href = 'espace-membre.php';
+                                    };
+                                }
+                            }
+                        } catch (err) {
+                            // données non JSON ou autre -> forcer refresh
+                            renderSalon();
+                        }
+                        // close current connection; salon_events.php returns once per call
+                        try { evt.close(); } catch (e) {}
+                        window.__salonSseActive = null;
+                        // reconnect after small delay
+                        setTimeout(listenSalonEvents, 800);
+                    };
+                    evt.onerror = function () {
+                        try { evt.close(); } catch (e) {}
+                        window.__salonSseActive = null;
+                        setTimeout(listenSalonEvents, 1200);
+                    };
+                })();
             }
             const playersList = document.getElementById('players-list');
             playersList.innerHTML = '';
@@ -351,15 +426,23 @@
                                             popin.remove();
                                             try {
                                                 const res = await fetch('../backend/kick_player.php', {
-                                                        method: 'POST',
-                                                        headers: { 'Content-Type': 'application/json' },
-                                                        body: JSON.stringify({ code: salon.code, nom: nomARetirer })
+                                                    method: 'POST',
+                                                    headers: { 'Content-Type': 'application/json' },
+                                                    body: JSON.stringify({ code: salon.code, nom: nomARetirer }),
+                                                    credentials: 'same-origin'
                                                 });
-                                                const result = await res.json();
-                                                if (result && result.success) {
-                                                        renderSalon();
+                                                let result = null;
+                                                try {
+                                                    result = await res.json();
+                                                } catch (e) {
+                                                    // non-json response
+                                                    result = null;
+                                                }
+                                                if (res.ok && result && result.success) {
+                                                    renderSalon();
                                                 } else {
-                                                        alert(result && result.error ? result.error : 'Erreur lors du retrait');
+                                                    const errMsg = (result && result.error) ? result.error : (res.statusText || 'Erreur lors du retrait');
+                                                    alert(errMsg);
                                                 }
                                             } catch (e) {
                                                 alert('Erreur réseau lors du retrait');
@@ -390,12 +473,23 @@
                 };
             });
         }, 200);
-        document.getElementById('btn-retour').onclick = function () {
-            window.location.href = 'creer-salon.html';
-        };
-        document.getElementById('btn-demarrer').onclick = function () {
-            alert('Démarrage du salon... (fonction à implémenter)');
-        };
+        (function() {
+            const btnQuit = document.getElementById('btn-quitter');
+            if (btnQuit) {
+                btnQuit.onclick = async function () {
+                    try {
+                        await fetch('../backend/leave_salon.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ code: salonCode })
+                        });
+                    } catch (e) {
+                        // ignore network errors, we'll redirect anyway
+                    }
+                    window.location.href = 'espace-membre.php';
+                };
+            }
+        })();
     </script>
 </body>
 
