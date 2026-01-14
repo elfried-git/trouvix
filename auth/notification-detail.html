@@ -42,11 +42,17 @@
             text-decoration: underline;
             cursor: pointer;
         }
+
+        .notification-message {
+            word-break: break-word;
+            white-space: pre-line;
+        }
     </style>
 </head>
 
 <body>
-    <div class="notif-detail-container">
+    <div class="notif-detail-container" id="notifContainer">
+        <div id="sessionError" style="display:none;color:#ff2d55;text-align:center;font-weight:bold;margin-bottom:2em;"></div>
         <script>
             window.addEventListener('DOMContentLoaded', function () {
                 let badge = null;
@@ -54,7 +60,7 @@
                     badge = window.opener && window.opener.document.getElementById('notif-badge');
                 } catch (e) { }
                 if (!badge) badge = document.getElementById('notif-badge');
-                fetch('../backend/get_notifications.php')
+                fetch('../backend/get_notifications.php', { credentials: 'include' })
                     .then(r => r.json())
                     .then(list => {
                         if (Array.isArray(list)) {
@@ -73,86 +79,94 @@
         </script>
         <div class="notif-detail-message" id="notifMessage"></div>
         <div class="notif-detail-date" id="notifDate"></div>
-        <a class="notif-detail-back" href="admin-dashboard.php">&larr; Retour au tableau de bord</a>
+        <a class="notif-detail-back" id="notifBackLink" href="admin-dashboard.php">&larr; Retour au tableau de bord</a>
     </div>
     <script>
-        const params = new URLSearchParams(window.location.search);
-        const notifId = params.get('id');
-        const notifMessage = document.getElementById('notifMessage');
-        const notifDate = document.getElementById('notifDate');
-        if (notifId) {
-            fetch('../backend/get_notifications.php?id=' + encodeURIComponent(notifId))
-                .then(r => r.json())
-                .then(data => {
-                    if (data && data.notification) {
-                        notifMessage.textContent = data.notification.message;
-                        notifDate.textContent = data.notification.created_at;
+        // Vérification session admin AVANT tout
+        fetch('../backend/check_session.php', { credentials: 'include' })
+            .then(r => r.json())
+            .then(data => {
+                if (data && data.is_admin) {
+                    document.getElementById('notifContainer').style.display = '';
+                    document.getElementById('sessionError').style.display = 'none';
+                    const params = new URLSearchParams(window.location.search);
+                    const notifId = params.get('id');
+                    const notifMessage = document.getElementById('notifMessage');
+                    const notifDate = document.getElementById('notifDate');
+                    if (notifId) {
+                        fetch('../backend/get_notifications.php?id=' + encodeURIComponent(notifId), { credentials: 'include' })
+                            .then(r => r.json())
+                            .then(data => {
+                                if (data && data.notification) {
+                                    notifMessage.textContent = data.notification.message;
+                                    notifDate.textContent = data.notification.created_at;
+                                } else {
+                                    notifMessage.textContent = 'Notification introuvable.';
+                                }
+                            })
+                            .catch(() => {
+                                notifMessage.textContent = 'Erreur lors du chargement.';
+                            });
                     } else {
-                        notifMessage.textContent = 'Notification introuvable.';
-                    }
-                })
-                .catch(() => {
-                    notifMessage.textContent = 'Erreur lors du chargement.';
-                });
-        } else {
-            notifDate.style.display = 'none';
-            fetch('../backend/get_notifications.php')
-                .then(r => r.json())
-                .then(list => {
-                    if (Array.isArray(list) && list.length) {
-                        notifMessage.innerHTML = list.map(n =>
-                            `<div class='notif-item${n.is_read == 0 ? " notif-unread" : ""}' data-id='${n.id}' style='margin-bottom:1.5em;padding:1em 1.2em;border-radius:0.7em;background:#232a4d;box-shadow:0 0 8px #00fff933;position:relative;cursor:pointer;'>
+                        notifDate.style.display = 'none';
+                        fetch('../backend/get_notifications.php', { credentials: 'include' })
+                            .then(r => r.json())
+                            .then(list => {
+                                if (Array.isArray(list) && list.length) {
+                                    notifMessage.innerHTML = list.map(n =>
+                                        `<div class='notif-item${n.is_read == 0 ? " notif-unread" : ""}' data-id='${n.id}' style='margin-bottom:1.5em;padding:1em 1.2em;border-radius:0.7em;background:#232a4d;box-shadow:0 0 8px #00fff933;position:relative;cursor:pointer;'>
                             <b style='color:#0ff1ce;'>${n.host}</b><br>
                             <span style='color:#fff;'>${n.message}</span><br>
                             <span style='font-size:0.95em;color:#aaa;'>${n.created_at}</span>
                             <button class='btn-suppr-notif' data-id='${n.id}' style='position:absolute;top:1em;right:1em;background:#e74c3c;color:#fff;border:none;border-radius:0.4em;padding:0.3em 1em;font-weight:bold;cursor:pointer;'>Supprimer</button>
                         </div>`
-                        ).join('');
-                        const style = document.createElement('style');
-                        style.innerHTML = `@keyframes notif-blink {0%{box-shadow:0 0 8px #ff2d55;}50%{box-shadow:0 0 24px #ff2d55;}100%{box-shadow:0 0 8px #ff2d55;}} .notif-unread{animation:notif-blink 1s infinite;}`;
-                        document.head.appendChild(style);
-                        function updateBadgeRealtime() {
-                            let badge = null;
-                            try {
-                                badge = window.opener && window.opener.document.getElementById('notif-badge');
-                            } catch (e) { }
-                            if (!badge) badge = document.getElementById('notif-badge');
-                            const unread = document.querySelectorAll('.notif-unread').length;
-                            if (badge) {
-                                if (unread > 0) {
-                                    badge.textContent = unread;
-                                    badge.style.display = 'flex';
-                                } else {
-                                    badge.style.display = 'none';
-                                }
-                            }
-                        }
-                        updateBadgeRealtime();
-                        document.querySelectorAll('.notif-item.notif-unread').forEach(div => {
-                            div.addEventListener('click', function (e) {
-                                if (e.target.classList.contains('btn-suppr-notif')) return;
-                                const notifId = this.getAttribute('data-id');
-                                fetch('../backend/mark_notifications_read.php', {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({ id: notifId })
-                                }).then(() => {
-                                    this.classList.remove('notif-unread');
+                                    ).join('');
+                                    const style = document.createElement('style');
+                                    style.innerHTML = `@keyframes notif-blink {0%{box-shadow:0 0 8px #ff2d55;}50%{box-shadow:0 0 24px #ff2d55;}100%{box-shadow:0 0 8px #ff2d55;}} .notif-unread{animation:notif-blink 1s infinite;}`;
+                                    document.head.appendChild(style);
+                                    function updateBadgeRealtime() {
+                                        let badge = null;
+                                        try {
+                                            badge = window.opener && window.opener.document.getElementById('notif-badge');
+                                        } catch (e) { }
+                                        if (!badge) badge = document.getElementById('notif-badge');
+                                        const unread = document.querySelectorAll('.notif-unread').length;
+                                        if (badge) {
+                                            if (unread > 0) {
+                                                badge.textContent = unread;
+                                                badge.style.display = 'flex';
+                                            } else {
+                                                badge.style.display = 'none';
+                                            }
+                                        }
+                                    }
                                     updateBadgeRealtime();
-                                });
-                            });
-                        });
-                        setTimeout(() => {
-                            document.querySelectorAll('.btn-suppr-notif').forEach(btn => {
-                                btn.onclick = function (e) {
-                                    e.stopPropagation();
-                                    const notifId = this.getAttribute('data-id');
-                                    let modal = document.getElementById('modal-confirm-suppr-notif');
-                                    if (modal) modal.remove();
-                                    modal = document.createElement('div');
-                                    modal.id = 'modal-confirm-suppr-notif';
-                                    modal.style = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(10,16,40,0.7);z-index:4000;display:flex;align-items:center;justify-content:center;';
-                                    modal.innerHTML = `
+                                    document.querySelectorAll('.notif-item.notif-unread').forEach(div => {
+                                        div.addEventListener('click', function (e) {
+                                            if (e.target.classList.contains('btn-suppr-notif')) return;
+                                            const notifId = this.getAttribute('data-id');
+                                            fetch('../backend/mark_notifications_read.php', {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify({ id: notifId }),
+                                                credentials: 'include'
+                                            }).then(() => {
+                                                this.classList.remove('notif-unread');
+                                                updateBadgeRealtime();
+                                            });
+                                        });
+                                    });
+                                    setTimeout(() => {
+                                        document.querySelectorAll('.btn-suppr-notif').forEach(btn => {
+                                            btn.onclick = function (e) {
+                                                e.stopPropagation();
+                                                const notifId = this.getAttribute('data-id');
+                                                let modal = document.getElementById('modal-confirm-suppr-notif');
+                                                if (modal) modal.remove();
+                                                modal = document.createElement('div');
+                                                modal.id = 'modal-confirm-suppr-notif';
+                                                modal.style = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(10,16,40,0.7);z-index:4000;display:flex;align-items:center;justify-content:center;';
+                                                modal.innerHTML = `
                                     <div style=\"background:#181c3a;padding:2em 2.5em 2em 2.5em;border-radius:1.2em;box-shadow:0 0 32px #00fff966,0 0 0 2px #00fff933;text-align:center;max-width:90vw;min-width:320px;\">
                                         <div style='font-size:1.2em;color:#00fff9;font-weight:bold;margin-bottom:1.2em;'>Supprimer cette notification ?</div>
                                         <div style='color:#eaf6fb;margin-bottom:1.5em;'>Voulez-vous vraiment supprimer ce message ?</div>
@@ -162,40 +176,52 @@
                                         </div>
                                     </div>
                                 `;
-                                    document.body.appendChild(modal);
-                                    document.getElementById('btn-cancel-suppr-notif').onclick = function () {
-                                        modal.remove();
-                                    };
-                                    document.getElementById('btn-confirm-suppr-notif').onclick = () => {
-                                        fetch('../backend/delete_notification.php', {
-                                            method: 'POST',
-                                            headers: { 'Content-Type': 'application/json' },
-                                            body: JSON.stringify({ id: notifId })
-                                        })
-                                            .then(r => r.json())
-                                            .then(res => {
-                                                if (res.success) {
-                                                    btn.parentElement.remove();
-                                                    updateBadgeRealtime();
+                                                document.body.appendChild(modal);
+                                                document.getElementById('btn-cancel-suppr-notif').onclick = function () {
                                                     modal.remove();
-                                                } else {
-                                                    alert(res.error || 'Erreur lors de la suppression');
-                                                    modal.remove();
-                                                }
-                                            })
-                                            .catch(() => { alert('Erreur réseau'); modal.remove(); });
-                                    };
-                                };
+                                                };
+                                                document.getElementById('btn-confirm-suppr-notif').onclick = () => {
+                                                    fetch('../backend/delete_notification.php', {
+                                                        method: 'POST',
+                                                        headers: { 'Content-Type': 'application/json' },
+                                                        body: JSON.stringify({ id: notifId }),
+                                                        credentials: 'include'
+                                                    })
+                                                        .then(r => r.json())
+                                                        .then(res => {
+                                                            if (res.success) {
+                                                                btn.parentElement.remove();
+                                                                updateBadgeRealtime();
+                                                                modal.remove();
+                                                            } else {
+                                                                alert(res.error || 'Erreur lors de la suppression');
+                                                                modal.remove();
+                                                            }
+                                                        })
+                                                        .catch(() => { alert('Erreur réseau'); modal.remove(); });
+                                                };
+                                            };
+                                        });
+                                    }, 100);
+                                } else {
+                                    notifMessage.textContent = 'Aucune notification.';
+                                }
+                            })
+                            .catch(() => {
+                                notifMessage.textContent = 'Erreur lors du chargement.';
                             });
-                        }, 100);
-                    } else {
-                        notifMessage.textContent = 'Aucune notification.';
                     }
-                })
-                .catch(() => {
-                    notifMessage.textContent = 'Erreur lors du chargement.';
-                });
-        }
+                } else {
+                    document.getElementById('notifContainer').style.display = 'none';
+                    document.getElementById('sessionError').style.display = '';
+                    document.getElementById('sessionError').innerHTML = 'Session expirée ou accès refusé.<br><a href="admin-login.html" style="color:#0ff1ce;text-decoration:underline;">Se reconnecter</a>';
+                }
+            })
+            .catch(() => {
+                document.getElementById('notifContainer').style.display = 'none';
+                document.getElementById('sessionError').style.display = '';
+                document.getElementById('sessionError').innerHTML = 'Erreur de connexion au serveur.';
+            });
     </script>
 </body>
 
