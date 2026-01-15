@@ -171,7 +171,7 @@
     <nav>
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <span class="font-extrabold text-2xl tracking-wide text-white">Tableau de bord Admin</span>
-            <button id="logout-btn" type="button"></button>
+            <button id="logout-btn" type="button">Retour Admin</button>
         </div>
     </nav>
 
@@ -216,7 +216,7 @@
             var logoutBtn = document.getElementById('logout-btn');
             if (logoutBtn) {
                 logoutBtn.onclick = function () {
-                    window.location.href = '../auth/logout.php';
+                    window.location.href = '../auth/admin-dashboard.php';
                 };
             }
         });

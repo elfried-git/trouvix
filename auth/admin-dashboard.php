@@ -188,12 +188,14 @@ if (!isset($_SESSION['admin_id'])) {
         <nav class="admin-sidebar">
         <div class="logo-text">TROUVIX</div>
         <img src="../assets/avatar-default.png" alt="Avatar" class="avatar-round" style="display:block;margin:0 auto 1.5em auto;">
-    <a href="notification-detail.html" class="hote-btn" id="btn-notifications" style="position:relative;">Notifications
+    <a href="notification-detail.html" class="hote-btn" id="btn-notifications" style="position:relative;">Contact
         <span id="notif-badge" style="display:none;position:absolute;top:-10px;right:-10px;min-width:22px;height:22px;background:#ff2d55;color:#fff;border-radius:50%;font-size:1em;font-weight:bold;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(248, 0, 0, 0.2);border:2px solid #fff;z-index:2;">0</span>
     </a>
     <a href="#" class="hote-btn">Dashboard</a>
     <a href="#" class="hote-btn" id="btn-utilisateurs">Utilisateurs</a>
-    <a href="#" class="hote-btn" id="forum-link" target="_blank" rel="noopener">Forum</a>
+    <a href="#" class="hote-btn" id="forum-link" style="position:relative;">Forum
+        <span id="forum-badge" style="display:none;position:absolute;top:-10px;right:-10px;min-width:22px;height:22px;background:#FFD600;color:#181c3a;border-radius:50%;font-size:1em;font-weight:bold;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px #FFD60066;border:2px solid #fff;z-index:2;">0</span>
+    </a>
     <a href="#" class="hote-btn" id="btn-salons">Salons</a>
         </nav>
         <script>
@@ -332,14 +334,32 @@ if (!isset($_SESSION['admin_id'])) {
         });
 
         const forumLink = document.getElementById('forum-link');
+        const forumBadge = document.getElementById('forum-badge');
+        const adminMain = document.querySelector('.admin-main');
+        let forumSection = null;
         forumLink.addEventListener('click', function(e) {
             e.preventDefault();
-            if (window.ADMIN_SESSION && ADMIN_SESSION.nom) {
-                let adminData = { nom: ADMIN_SESSION.nom };
-                localStorage.setItem('ADMIN_SESSION', JSON.stringify(adminData));
-            }
             window.open('http://localhost/Trouvix/forum/admin-login.html', '_blank');
         });
+
+        // Badge Forum : nombre de sujets non lus
+        function updateForumBadge() {
+            fetch('../backend/get_topics.php')
+                .then(r => r.json())
+                .then(list => {
+                    if (Array.isArray(list)) {
+                        const unread = list.filter(t => !t.admin_read).length;
+                        if (unread > 0) {
+                            forumBadge.textContent = unread;
+                            forumBadge.style.display = 'flex';
+                        } else {
+                            forumBadge.style.display = 'none';
+                        }
+                    }
+                });
+        }
+        updateForumBadge();
+        setInterval(updateForumBadge, 5000);
     });
         var ADMIN_SESSION = null;
         fetch('../backend/get_user_info.php')
@@ -474,13 +494,7 @@ if (!isset($_SESSION['admin_id'])) {
         fetch('../backend/update_activity.php', { credentials: 'include' });
     }, 5000);
 
-    window.addEventListener('beforeunload', function() {
-        if (navigator.sendBeacon) {
-            navigator.sendBeacon('../backend/logout.php');
-        } else {
-            fetch('../backend/logout.php', { method: 'POST', credentials: 'include', keepalive: true });
-        }
-    });
+    // Suppression de la déconnexion automatique sur beforeunload
     </script>
     <script src="../js/admin-dashboard.js"></script>
     <script>

@@ -119,7 +119,7 @@
 
 <body class="font-sans"
     style="background:linear-gradient(135deg,#009B3A 0%,#FBDE4A 50%,#DC241F 100%);min-height:100vh;">
-    <audio id="congo-anthem" src="congo-anthem.mp3" autoplay loop></audio>
+    <audio id="congo-anthem" src="congoanthem.mp3" autoplay loop muted></audio>
     <button id="anthem-play-btn"
         style="position:fixed;bottom:18px;right:18px;z-index:9999;display:none;background:#009B3A;color:#fff;border:none;border-radius:50%;width:48px;height:48px;box-shadow:0 2px 8px #0003;align-items:center;justify-content:center;font-size:1.5em;cursor:pointer;"
         title="Activer le son du site">&#9835;</button>
@@ -129,13 +129,39 @@
             const anthemBtn = document.getElementById('anthem-play-btn');
             if (anthem) {
                 anthem.volume = 0.25;
-                anthem.play().catch(() => {
-                    anthemBtn.style.display = 'flex';
-                });
-                anthemBtn.onclick = function () {
-                    anthem.play();
+                anthem.muted = false;
+                function hideAnthemBtn() {
                     anthemBtn.style.display = 'none';
-                };
+                }
+                function showAnthemBtn() {
+                    anthemBtn.style.display = 'flex';
+                    anthemBtn.disabled = false;
+                    anthemBtn.style.pointerEvents = 'auto';
+                    anthemBtn.focus();
+                }
+                function tryPlayAnthem() {
+                    anthem.muted = false;
+                    anthem.play().then(hideAnthemBtn).catch(showAnthemBtn);
+                }
+                tryPlayAnthem();
+                anthemBtn.addEventListener('click', function(e) {
+                    console.log('Bouton son cliqué');
+                    anthem.muted = false;
+                    anthem.play().then(hideAnthemBtn).catch(showAnthemBtn);
+                });
+                // Déclencheur universel sur première interaction utilisateur
+                let anthemTried = false;
+                function userTryPlayAnthem() {
+                    if (!anthemTried) {
+                        anthem.muted = false;
+                        anthem.play().then(hideAnthemBtn).catch(showAnthemBtn);
+                        anthemTried = true;
+                        window.removeEventListener('click', userTryPlayAnthem);
+                        window.removeEventListener('touchstart', userTryPlayAnthem);
+                    }
+                }
+                window.addEventListener('click', userTryPlayAnthem);
+                window.addEventListener('touchstart', userTryPlayAnthem);
             }
         });
     </script>

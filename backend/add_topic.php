@@ -30,6 +30,10 @@ $stmt = $pdo->prepare('INSERT INTO forum_topics (title, content, author, categor
 $ok = $stmt->execute([$title, $content, $author, $category, $video, $attachment]);
 
 if ($ok) {
+    // Notifier l'admin d'un nouveau sujet forum
+    $notifMsg = "[Forum] Nouveau sujet posté par $author\nTitre: $title\nCatégorie: $category\nContenu: $content";
+    $stmtNotif = $pdo->prepare('INSERT INTO notifications (host, message, is_read, created_at) VALUES (?, ?, 0, NOW())');
+    $stmtNotif->execute(["Forum", $notifMsg]);
     echo json_encode(['success' => true, 'id' => $pdo->lastInsertId()]);
 } else {
     echo json_encode(['success' => false, 'error' => 'Erreur lors de l\'ajout']);
