@@ -175,8 +175,7 @@
                     <li id="menu-user-icon" style="display:flex;align-items:center;gap:0.4em;">
                         <a href="espace-membre.php" title="Espace membre"
                             style="display:flex;align-items:center;gap:0.4em;">
-                            <span id="menu-user-nom" style="font-size:1em;"></span>
-                            <?php session_start(); if(isset($_SESSION['user_nom'])) echo htmlspecialchars($_SESSION['user_nom']); ?>
+                            <!-- Nom utilisateur masqué sur mobile -->
                             </span>
                         </a>
                     </li>
@@ -193,6 +192,18 @@
         </div>
     </header>
     <script src="/Trouvix/js/session-nav.js"></script>
+            <script>
+            // Menu burger mobile : affiche le menu au clic
+            document.addEventListener('DOMContentLoaded', function() {
+                var nav = document.getElementById('main-nav');
+                var burger = document.getElementById('burger-menu');
+                if (burger && nav) {
+                    burger.addEventListener('click', function() {
+                        nav.classList.toggle('menu-open');
+                    });
+                }
+            });
+            </script>
     <main>
         <section class="hero">
             <h1><span class="highlight" data-test-id="welcome-title">Bienvenue sur Trouvix</span></h1>
@@ -206,7 +217,8 @@
                 <h2>Jeux / Quiz</h2>
                 <p id="desc-jeux" class="visually-hidden">Quiz éducatifs, jeux de logique, progression, classement.
                     Appuyez sur Entrée pour accéder à Jeux & Quiz.</p>
-                <a href="pages/jeux-quiz.html" class="card-link" tabindex="-1" aria-hidden="true"
+                <!-- <a href="pages/jeux-quiz.html" class="card-link" tabindex="-1" aria-hidden="true" -->
+                 <a href="#"
                     style="display:none"></a>
                 <span class="card-accent"></span>
             </div>
@@ -220,6 +232,12 @@
                 <a href="page-apprentissage-langues/index.html" class="card-link" tabindex="-1" aria-hidden="true"
                     style="display:none"></a>
                 <span class="card-accent"></span>
+            </div>
+            <div class="service-card vod" tabindex="0" role="region" aria-label="Films et VOD" style="display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                                <div id="vod-card-click" class="card-link" tabindex="0" role="button" aria-label="Films et VOD" style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;cursor:pointer;">
+                                    <div class="icon">🎬</div>
+                                    <h2>Films / VOD</h2>
+                                </div>
             </div>
             <div class="service-card forum" tabindex="0" role="button" aria-label="TV Garden" id="tv-garden"
                 aria-describedby="desc-forum" data-link="#">
@@ -299,6 +317,18 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
         </section>
     </main>
+            <!-- Popin VOD (même logique que TV/Replay) -->
+            <div id="vod-popin" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1000000000;background:rgba(10,16,40,0.98);align-items:center;justify-content:center;">
+                <div style="position:relative;width:100vw;height:100vh;max-width:100vw;max-height:100vh;display:flex;align-items:center;justify-content:center;">
+                    <iframe src="https://pluto.tv/fr/on-demand" title="Films et VOD" width="100%" height="100%" style="border:none;width:100vw;height:100vh;background:#000;"></iframe>
+                    <button id="vod-close-btn" aria-label="Fermer la VOD" style="position:absolute;top:24px;right:36px;font-size:2.2rem;color:#fff;background:#222a44cc;border:2px solid #fff;border-radius:50%;cursor:pointer;padding:8px 16px;z-index:1000000001;">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;">
+                            <line x1="8" y1="8" x2="24" y2="24" />
+                            <line x1="24" y1="8" x2="8" y2="24" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
     <button id="tv-close-btn" aria-label="Fermer la TV"
         style="display:none;position:fixed;top:24px;right:36px;font-size:2.2rem;color:#fff;background:#222a44cc;border:2px solid #fff;border-radius:50%;cursor:pointer;padding:8px 16px;z-index:1000000000;">
         <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="3"
@@ -310,6 +340,75 @@ document.addEventListener('DOMContentLoaded', function() {
     <script src="js/login-modal-ui.js"></script>
     <script src="js/card-navigation.js"></script>
     <script type="text/javascript" src="js/tv-garden.js" defer></script>
+</body>
+<script>
+// Logique d'ouverture/fermeture du popin VOD (Films / VOD) avec arrêt de la vidéo
+document.addEventListener('DOMContentLoaded', function() {
+    var vodCard = document.getElementById('vod-card-click');
+    var vodPopin = document.getElementById('vod-popin');
+    var vodCloseBtn = document.getElementById('vod-close-btn');
+    var vodIframeSrc = 'https://pluto.tv/fr/on-demand';
+    var vodIframeSelector = '#vod-popin iframe';
+    // Ouvre le popin VOD au clic sur la carte
+    function openVodPopin() {
+        if (vodPopin) {
+            // (Re)crée l'iframe à chaque ouverture pour garantir l'arrêt du flux précédent
+            var container = vodPopin.querySelector('div');
+            var oldIframe = vodPopin.querySelector('iframe');
+            if (oldIframe) oldIframe.remove();
+            var iframe = document.createElement('iframe');
+            iframe.src = vodIframeSrc;
+            iframe.title = 'Films et VOD';
+            iframe.width = '100%';
+            iframe.height = '100%';
+            iframe.style.border = 'none';
+            iframe.style.width = '100vw';
+            iframe.style.height = '100vh';
+            iframe.style.background = '#000';
+            container.insertBefore(iframe, vodCloseBtn);
+            vodPopin.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+    function closeVodPopin() {
+        if (vodPopin) {
+            vodPopin.style.display = 'none';
+            document.body.style.overflow = '';
+            // Supprime l'iframe pour arrêter le flux audio/vidéo
+            var oldIframe = vodPopin.querySelector('iframe');
+            if (oldIframe) oldIframe.remove();
+        }
+    }
+    if (vodCard && vodPopin) {
+        vodCard.addEventListener('click', function(e) {
+            openVodPopin();
+        });
+        vodCard.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                openVodPopin();
+                e.preventDefault();
+            }
+        });
+    }
+    if (vodCloseBtn && vodPopin) {
+        vodCloseBtn.addEventListener('click', function() {
+            closeVodPopin();
+        });
+    }
+    document.addEventListener('keydown', function(e) {
+        if (vodPopin && vodPopin.style.display !== 'none' && (e.key === 'Escape' || e.key === 'Esc')) {
+            closeVodPopin();
+        }
+    });
+    if (vodPopin) {
+        vodPopin.addEventListener('click', function(e) {
+            if (e.target === vodPopin) {
+                closeVodPopin();
+            }
+        });
+    }
+});
+</script>
 </body>
 <footer>
     <p>&COPY; 2025 Trouvix. Tous droits réservés.</p>

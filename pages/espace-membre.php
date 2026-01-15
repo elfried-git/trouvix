@@ -34,7 +34,6 @@ $user_email = $_SESSION['user_email'];
                     <li><a href="../index.html#contact">Contact</a></li>
                         <li id="menu-user-icon" style="display:flex;align-items:center;gap:0.4em;">
                             <a href="espace-membre.php" title="Espace membre" style="display:flex;align-items:center;gap:0.4em;">
-                                <span style="font-size:1.5em;">👤</span>
                                 <span id="menu-user-nom" style="font-size:1em;">
                                     <?php echo htmlspecialchars($user_nom); ?>
                                 </span>
