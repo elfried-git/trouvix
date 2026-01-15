@@ -21,7 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $alreadyConnected = false;
         if (!empty($user['last_activity'])) {
             $last = strtotime($user['last_activity']);
-            if ($last && (time() - $last) < 30) { 
+            // Réduit le délai à 2 secondes pour permettre une reconnexion rapide
+            if ($last && (time() - $last) < 2) {
                 $alreadyConnected = true;
             }
         }
@@ -39,16 +40,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'samesite' => 'Lax'
         ]);
         session_start();
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_nom'] = $user['nom'];
-        $_SESSION['user_email'] = $user['email'];
-        $_SESSION['username'] = $user['nom'];
-        $_SESSION['user_photo'] = isset($user['photo']) && $user['photo'] ? $user['photo'] : '../assets/avatar-default.png';
+        // Si l'utilisateur est admin, ne pas écraser les variables utilisateur
+        if (isset($user['is_admin']) && $user['is_admin'] == 1) {
+            $_SESSION['admin_id'] = $user['id'];
+            $_SESSION['admin_name'] = !empty($user['nom']) ? $user['nom'] : 'Administrateur';
+            $_SESSION['admin_email'] = $user['email'];
+            $_SESSION['admin_photo'] = isset($user['photo']) && $user['photo'] ? $user['photo'] : '../assets/avatar-default.png';
+        } else {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_nom'] = $user['nom'];
+            $_SESSION['user_email'] = $user['email'];
+            $_SESSION['username'] = $user['nom'];
+            $_SESSION['user_photo'] = isset($user['photo']) && $user['photo'] ? $user['photo'] : '../assets/avatar-default.png';
+        }
         echo json_encode([
             'success' => true,
             'message' => 'Connexion réussie !',
             'user_nom' => $user['nom'],
-            'user_photo' => $_SESSION['user_photo']
+            'user_photo' => isset($user['photo']) && $user['photo'] ? $user['photo'] : '../assets/avatar-default.png'
         ]);
     } else {
         http_response_code(401);

@@ -212,11 +212,20 @@ $user_email = $_SESSION['user_email'];
     <div class="client-space-container">
         <div class="profile-card">
       <div class="profile-avatar">
-        <?php if (!empty($_SESSION['user_photo'])): ?>
-          <img src="<?php echo htmlspecialchars($_SESSION['user_photo']); ?>" alt="Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
-        <?php else: ?>
-          <span><?php echo strtoupper(substr($user_nom, 0, 1)); ?></span>
-        <?php endif; ?>
+        <?php
+          $photo = isset($_SESSION['user_photo']) ? $_SESSION['user_photo'] : '../assets/avatar-default.png';
+          // Vérifie si le fichier existe (pour les photos uploadées)
+          $photoPath = str_replace('../', '', $photo);
+          if (strpos($photo, 'avatar-default.png') !== false || file_exists(__DIR__ . '/../' . $photoPath)) {
+        ?>
+            <img src="<?php echo htmlspecialchars($photo); ?>" alt="Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
+        <?php
+          } else {
+        ?>
+            <img src="../assets/avatar-default.png" alt="Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
+        <?php
+          }
+        ?>
       </div>
             <div class="profile-info">
                 <h2>Bienvenue, <span class="profile-name"><?php echo htmlspecialchars($user_nom); ?></span> !</h2>
