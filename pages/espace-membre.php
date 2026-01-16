@@ -209,64 +209,46 @@ $user_email = $_SESSION['user_email'];
   // ...existing code...
   </script>
     <div class="client-space-container">
-        <div class="profile-card">
-      <div class="profile-avatar">
-        <?php
-          $photo = isset($_SESSION['user_photo']) ? $_SESSION['user_photo'] : '../assets/avatar-default.png';
-          // Vérifie si le fichier existe (pour les photos uploadées)
-          $photoPath = str_replace('../', '', $photo);
-          if (strpos($photo, 'avatar-default.png') !== false || file_exists(__DIR__ . '/../' . $photoPath)) {
-        ?>
-            <img src="<?php echo htmlspecialchars($photo); ?>" alt="Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
-        <?php
-          } else {
-        ?>
-            <img src="../assets/avatar-default.png" alt="Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
-        <?php
-          }
-        ?>
-      </div>
-            <div class="profile-info">
-                <h2>Bienvenue, <span class="profile-name"><?php echo htmlspecialchars($user_nom); ?></span> !</h2>
-                <div class="profile-email">Email : <span><?php echo htmlspecialchars($user_email); ?></span></div>
+        <div class="profile-card" style="width:100vw;max-width:100vw;min-height:calc(100vh - 90px);margin:0;padding:0;background:#181c3a;border-radius:0;box-shadow:none;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100vw;">
+              <h2 style="color:#00fff9;font-size:2em;margin-bottom:0.5em;text-shadow:0 0 8px #00fff9,0 0 24px #00fff9;">Bienvenue !</h2>
+              <div style="font-size:1.3em;font-weight:bold;color:#fff;margin-bottom:0.3em;letter-spacing:0.03em;">
+                <?php echo htmlspecialchars($user_nom); ?>
+              </div>
+              <div style="color:#ff00ff;font-size:1.1em;margin-bottom:2em;word-break:break-all;">
+                <?php echo htmlspecialchars($user_email); ?>
+              </div>
+              <button class="btn-main btn-join-salon" id="btn-join-modal" style="margin-bottom:1.2em;width:90vw;max-width:400px;">Rejoindre un salon</button>
+              <form action="logout.php" method="post" class="logout-form" style="width:90vw;max-width:400px;margin:0;">
+                <button type="submit" class="logout-btn" style="width:100%;background:linear-gradient(90deg,#ff00ff 0%,#00fff9 100%);color:#181c3a;font-weight:bold;font-size:1.1em;padding:0.8em 0;border:none;border-radius:0.8em;box-shadow:0 0 16px #ff00ffcc,0 0 32px #00fff933;cursor:pointer;">Déconnexion</button>
+              </form>
             </div>
-            <form action="logout.php" method="post" class="logout-form">
-                <button type="submit" class="logout-btn">Déconnexion</button>
+        </div>
+        <div id="modal-join-salon" class="modal-bg" style="display:none;">
+          <div class="modal-box">
+            <h2 style="color:#00fff9;text-align:center;margin-bottom:1em;">Rejoindre un salon</h2>
+            <form id="form-join-salon" autocomplete="off">
+              <div class="form-group">
+                <label for="join-nom" style="color:#fff;font-weight:600;">Nom du joueur</label>
+                <input type="text" id="join-nom" class="form-input" value="<?php echo htmlspecialchars($user_nom); ?>" readonly style="background:#222;color:#00fff9;">
+              </div>
+              <div class="form-group">
+                <label for="join-code" style="color:#fff;font-weight:600;">Code du salon</label>
+                <input type="text" id="join-code" class="form-input" maxlength="10" required placeholder="Ex: VIX-1234">
+              </div>
+              <div class="form-join-btns">
+                <button type="button" class="btn-cancel-join" id="btn-cancel-join">Annuler</button>
+                <button type="submit" class="btn-go-salon">Rejoindre</button>
+              </div>
             </form>
-            <button class="btn-main btn-join-salon" id="btn-join-modal">Rejoindre un salon</button>
-            <div id="modal-join-salon" class="modal-bg" style="display:none;">
-              <div class="modal-box">
-                <h2 style="color:#00fff9;text-align:center;margin-bottom:1em;">Rejoindre un salon</h2>
-                <form id="form-join-salon" autocomplete="off">
-                  <div class="form-group">
-                    <label for="join-nom" style="color:#fff;font-weight:600;">Nom du joueur</label>
-                    <input type="text" id="join-nom" class="form-input" value="<?php echo htmlspecialchars($user_nom); ?>" readonly style="background:#222;color:#00fff9;">
-                  </div>
-                  <div class="form-group">
-                    <label for="join-code" style="color:#fff;font-weight:600;">Code du salon</label>
-                    <input type="text" id="join-code" class="form-input" maxlength="10" required placeholder="Ex: VIX-1234">
-                  </div>
-                  <div class="form-group">
-                    <label for="join-photo" style="color:#fff;font-weight:600;">Photo</label>
-                    <label class="avatar-upload-label">
-                      <input type="file" id="join-photo" accept="image/*" style="display:none;" disabled>
-                      <span class="avatar-placeholder" id="avatar-placeholder-modal" style="display:none;">+</span>
-                      <img id="avatar-preview-modal" class="avatar-preview" src="" alt="Aperçu photo" style="display:none;">
-                    </label>
-                  </div>
-                  <div class="form-join-btns">
-                    <button type="button" class="btn-cancel-join" id="btn-cancel-join">Annuler</button>
-                    <button type="submit" class="btn-go-salon">Rejoindre hôte</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-            <div id="alert-modal" class="modal-bg" style="display:none;">
-              <div class="modal-box" style="max-width:340px;">
-                <div id="alert-message" style="color:#fff;font-size:1.08em;margin-bottom:1.7em;text-align:left;"></div>
-                <button id="alert-ok" class="btn-main" style="width:120px;margin:0 auto;display:block;background:linear-gradient(90deg,#00fff9 0%,#ff00ff 100%);color:#181c3a;">OK</button>
-              </div>
-            </div>
+          </div>
+        </div>
+        <div id="alert-modal" class="modal-bg" style="display:none;">
+          <div class="modal-box" style="max-width:340px;">
+            <div id="alert-message" style="color:#fff;font-size:1.08em;margin-bottom:1.7em;text-align:left;"></div>
+            <button id="alert-ok" class="btn-main" style="width:120px;margin:0 auto;display:block;background:linear-gradient(90deg,#00fff9 0%,#ff00ff 100%);color:#181c3a;">OK</button>
+          </div>
+        </div>
             <style>
 /* Harmonisation avatars salon membre */
 .avatar {
@@ -591,18 +573,6 @@ $user_email = $_SESSION['user_email'];
             </style>
         </div>
         <div class="client-space-content">
-      <div id="member-salon-block" style="width:100%;max-width:420px;margin:0 auto 2em auto;padding:2em 1em 1.5em 1em;background:rgba(24,28,58,0.98);border-radius:1.7rem;box-shadow:0 0 48px #00fff9cc,0 0 0 3px #00fff933,0 0 80px 8px #ff00ff22;border:1.5px solid #00fff9;">
-                <div id="member-salon-message" style="text-align:center;font-size:1.18em;font-weight:bold;margin-bottom:1.1em;color:#00fff9;text-shadow:0 0 8px #00fff9cc;"></div>
-                <h2 style="color:#00fff9;text-align:center;margin-bottom:0.7em;">Salon</h2>
-                <div id="member-salon-code" style="text-align:center;font-size:1.12em;font-weight:600;color:#ff00ff;margin-bottom:1.1em;text-shadow:0 0 8px #ff00ff99;"></div>
-                <div id="member-host-info" style="text-align:center;margin-bottom:2em;"></div>
-                <div class="players" id="member-players-list"></div>
-                <button id="btn-jouons" style="display:block;margin:2em auto 0 auto;padding:0.9em 2.2em;font-size:1.18em;font-weight:bold;border-radius:1em;background:linear-gradient(90deg,#00fff9 0%,#ff00ff 100%);color:#181c3a;box-shadow:0 0 16px #00fff9cc,0 0 32px #ff00ff99;border:none;cursor:pointer;transition:background 0.2s,box-shadow 0.2s;">Jouons</button>
-        <div id="member-salon-message" style="text-align:center;font-size:1.18em;font-weight:bold;margin-bottom:1.1em;color:#00fff9;text-shadow:0 0 8px #00fff9cc;"></div>
-        <div id="member-salon-code" style="text-align:center;font-size:1.12em;font-weight:600;color:#ff00ff;margin-bottom:1.1em;text-shadow:0 0 8px #ff00ff99;"></div>
-        <div id="member-host-info" style="text-align:center;margin-bottom:2em;"></div>
-        <div class="players" id="member-players-list"></div>
-      </div>
         </div>
     </div>
 </body>

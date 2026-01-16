@@ -288,12 +288,7 @@
 					<option value="11">11</option>
 				</select>
 			</div>
-			<div class="form-group" style="text-align:center;">
-				<label class="form-label">Photo</label>
-				<label class="avatar-upload-label" tabindex="-1" style="cursor:default;">
-					<img id="avatar-preview" class="avatar-preview" src="../assets/avatar-default.png" alt="Photo hôte" style="display:block;">
-				</label>
-			</div>
+
 			<button type="submit" class="btn-main" id="btn-creer">Créer le Salon</button>
 	</form>
 	<button type="button" class="btn-main" style="margin-top:1.2em;background:linear-gradient(90deg,#444 60%,#00fff9 100%);color:#fff;" onclick="window.location.href='../index.html'">&#8592; Retour à l'accueil</button>
@@ -308,36 +303,14 @@
 			return 'VIX-' + code;
 		}
 
-		const avatarPreview = document.getElementById('avatar-preview');
+		// Suppression de la gestion d'avatar
 		window.addEventListener('DOMContentLoaded', function () {
 			fetch('../backend/get_user_info.php')
 				.then(res => res.ok ? res.json() : null)
 				.then(data => {
-					if (data) {
-						const pseudoInput = document.getElementById('pseudo-hote');
-						if (data.nom && pseudoInput && !pseudoInput.value) {
-							pseudoInput.value = data.nom;
-						}
-						if (data.photo && avatarPreview) {
-							avatarPreview.src = data.photo;
-							avatarPreview.style.display = 'block';
-						} else if (avatarPreview) {
-							avatarPreview.src = '../assets/avatar-default.png';
-							avatarPreview.style.display = 'block';
-						}
-					}
-				});
-		});
-
-		window.addEventListener('DOMContentLoaded', function () {
-			fetch('../backend/get_user_info.php')
-				.then(res => res.ok ? res.json() : null)
-				.then(data => {
-					if (data && data.nom) {
-						const pseudoInput = document.getElementById('pseudo-hote');
-						if (pseudoInput && !pseudoInput.value) {
-							pseudoInput.value = data.nom;
-						}
+					const pseudoInput = document.getElementById('pseudo-hote');
+					if (data && data.nom && pseudoInput && !pseudoInput.value) {
+						pseudoInput.value = data.nom;
 					}
 				});
 		});
@@ -352,21 +325,18 @@
 				alert("Tous les champs sont obligatoires.");
 				return;
 			}
-			let photo = avatarPreview.src;
-			if (!photo) photo = '../assets/avatar-default.png';
 			const codeSalon = generateSalonCode();
 			localStorage.setItem('trouvix_nbJoueurs', nbJoueurs);
 			showSalonModal({
 				nomSalon,
 				hote,
-				photo,
 				code: codeSalon,
 				nbJoueurs,
 				nbMots
 			});
 		});
 
-		function showSalonModal({ nomSalon, hote, photo, code, nbJoueurs, nbMots }) {
+		function showSalonModal({ nomSalon, hote, code, nbJoueurs, nbMots }) {
 			let modal = document.getElementById('modal-salon-cree');
 			if (modal) modal.remove();
 			modal = document.createElement('div');
@@ -374,7 +344,6 @@
 			modal.id = 'modal-salon-cree';
 			modal.innerHTML = `
 				<div class="modal-box">
-					<img src="${photo}" alt="Avatar Hôte">
 					<div style="font-size:1.15em;color:#00fff9;font-weight:bold;margin-bottom:0.5em;">Salon créé avec succès !</div>
 					<div style="margin-bottom:0.5em;">
 						<b>Nom du salon :</b> ${nomSalon} <br>
@@ -413,7 +382,6 @@
 								joueurs: [
 									{
 										nom: nomHote,
-										photo: photo,
 										estHote: true
 									}
 								]

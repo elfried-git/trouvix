@@ -317,8 +317,7 @@
                     placeholder="Titre du sujet" required>
                 <textarea id="topic-content" class="w-full border border-gray-300 rounded-lg p-3 mb-4" rows="4"
                     placeholder="Votre message..." required></textarea>
-                <input type="text" id="topic-author" class="w-full border border-gray-300 rounded-lg p-3 mb-4"
-                    placeholder="Votre pseudo (optionnel)">
+                <input type="text" id="topic-author" class="w-full border border-gray-300 rounded-lg p-3 mb-4" placeholder="Votre pseudo" readonly style="background:#f3f3f3;color:#888;">
                 <input type="url" id="topic-video" class="w-full border border-gray-300 rounded-lg p-3 mb-4"
                     placeholder="Lien vidéo (YouTube, Vimeo, etc. - optionnel)">
                 <input type="file" id="topic-attachment" class="w-full border border-gray-300 rounded-lg p-3 mb-4"
@@ -372,6 +371,16 @@
                 const div = document.createElement('div');
                 div.className = 'bg-white rounded-xl shadow-md p-6 mb-6 relative';
                 const replyFormId = `reply-form-${topic.id}`;
+                // --- Reaction system ---
+                const reactions = JSON.parse(localStorage.getItem('forumReactions') || '{}');
+                const topicReactions = reactions[topic.id] || [];
+                const reactionTypes = [
+                    { emoji: '👍', label: 'Like' },
+                    { emoji: '❤️', label: 'Love' },
+                    { emoji: '😂', label: 'Haha' },
+                    { emoji: '🎉', label: 'Bravo' }
+                ];
+                let userName = window._forumUserName || 'Anonyme';
                 div.innerHTML = `
                     <div class="flex items-center mb-2">
                         <span class="text-xs bg-primary-100 text-primary-500 px-2 py-1 rounded-full mr-2">${categoryLabel(topic.category)}</span>
@@ -379,6 +388,17 @@
                     </div>
                     <h3 class="text-lg font-bold text-gray-800 mb-1">${escapeHtml(topic.title)}</h3>
                     <div class="text-gray-600 mb-2">${escapeHtml(topic.content).slice(0, 120)}${topic.content.length > 120 ? '...' : ''}</div>
+                    <div class="flex flex-wrap gap-2 mb-2">
+                        ${reactionTypes.map(rt => {
+                            const reacted = topicReactions.find(r => r.name === userName && r.type === rt.emoji);
+                            return `<button class="reaction-btn px-2 py-1 rounded border ${reacted ? 'bg-primary-100 border-primary-500' : 'bg-gray-50 border-gray-300'}" data-topic="${topic.id}" data-type="${rt.emoji}" title="${rt.label}">${rt.emoji}</button>`;
+                        }).join(' ')}
+                    </div>
+                    <div class="text-xs text-gray-500 mb-2">
+                        ${topicReactions.length > 0 ?
+                            topicReactions.map(r => `<span class="inline-block mr-2">${r.emoji} <b>${escapeHtml(r.name)}</b></span>`).join('')
+                            : '<span>Aucune réaction pour l\'instant.</span>'}
+                    </div>
                     <div class="flex justify-between text-gray-500 text-sm mb-2">
                         <span><i data-feather="user" class="inline w-4 h-4 mr-1"></i> ${escapeHtml(topic.author || 'Anonyme')}</span>
                         <span class="reply-btn" data-topic-id="${topic.id}" style="cursor:pointer;"><i data-feather="message-square" class="inline w-4 h-4 mr-1"></i> 0 réponse(s)</span>
@@ -388,21 +408,30 @@
                 if (openReplyFormId && openReplyFormId == topic.id) {
                     const formContainer = div.querySelector(`#${replyFormId}-container`);
                     if (formContainer) {
-                        formContainer.innerHTML = `<form id="${replyFormId}" class="forum-reply-form mt-2 bg-gray-100 rounded p-3 flex flex-col gap-2">
-                            <input type="text" name="author" placeholder="Votre nom (optionnel)" class="border rounded p-2" value="${replyDraft.author || ''}" />
+                        // Préremplir le champ auteur avec le nom de session
+                        let defaultAuthor = window._forumUserName || 'Anonyme';
+                        formContainer.innerHTML = `<form id="${replyFormId}" class="forum-reply-form mt-2 bg-gray-100 rounded p-3 flex flex-col gap-2" autocomplete="off">
+                            <input type="text" name="author" placeholder="Votre nom" class="border rounded p-2 bg-gray-100 text-gray-500" value="${defaultAuthor}" readonly style="cursor:not-allowed;" />
                             <textarea name="content" placeholder="Votre réponse..." class="border rounded p-2" required>${replyDraft.content || ''}</textarea>
                             <button type="submit" class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-1 rounded">Répondre</button>
                         </form>`;
                         const form = document.getElementById(replyFormId);
-                        form.author.oninput = form.content.oninput = function () {
+                        // Focus et scroll doux sur le textarea
+                        setTimeout(() => {
+                            if (form && form.content) {
+                                form.content.focus();
+                                form.scrollIntoView({behavior:'smooth', block:'center'});
+                            }
+                        }, 50);
+                        form.content.oninput = function () {
                             window._replyDraft = {
-                                author: form.author.value,
+                                author: defaultAuthor,
                                 content: form.content.value
                             };
                         };
                         form.onsubmit = function (ev) {
                             ev.preventDefault();
-                            const author = form.author.value.trim() || 'Anonyme';
+                            const author = defaultAuthor;
                             const content = form.content.value.trim();
                             if (!content) return;
                             fetch('../backend/add_reply.php', {
@@ -417,11 +446,10 @@
                                 .then(r => r.json())
                                 .then(res => {
                                     if (res.success) {
-                                        window._openReplyFormId = null;
-                                        window._replyDraft = {};
+                                        // Laisser le formulaire ouvert, juste vider le champ réponse
+                                        form.content.value = '';
+                                        window._replyDraft = { author: defaultAuthor, content: '' };
                                         reloadTopicsFromBackend();
-                                        form.reset();
-                                        form.remove();
                                     } else {
                                         alert(res.error || 'Erreur lors de l\'envoi de la réponse');
                                     }
@@ -433,6 +461,25 @@
                     }
                 }
                 setTimeout(() => {
+                    // Reaction button event
+                    div.querySelectorAll('.reaction-btn').forEach(btn => {
+                        btn.onclick = function(e) {
+                            e.stopPropagation();
+                            const topicId = btn.getAttribute('data-topic');
+                            const type = btn.getAttribute('data-type');
+                            let reactions = JSON.parse(localStorage.getItem('forumReactions') || '{}');
+                            let topicReactions = reactions[topicId] || [];
+                            let userName = window._forumUserName || 'Anonyme';
+                            // Supprimer toute réaction précédente de cet utilisateur sur ce post
+                            topicReactions = topicReactions.filter(r => r.name !== userName);
+                            // Ajouter la nouvelle réaction
+                            topicReactions.push({ name: userName, type: type, emoji: type });
+                            reactions[topicId] = topicReactions;
+                            localStorage.setItem('forumReactions', JSON.stringify(reactions));
+                            renderTopics();
+                        };
+                    });
+                    // Reply button event
                     const replyBtn = div.querySelector('.reply-btn');
                     if (replyBtn) {
                         replyBtn.onclick = function (e) {
@@ -524,6 +571,26 @@
         document.getElementById('close-modal').onclick = function () {
             document.getElementById('topic-modal').classList.add('hidden');
         };
+        // Préremplit le pseudo avec le nom de session utilisateur (et le rend non modifiable)
+        async function setForumPseudo() {
+            try {
+                const res = await fetch('../backend/get_user_info.php', { credentials: 'include' });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.nom) {
+                        const authorInput = document.getElementById('topic-author');
+                        if (authorInput) {
+                            authorInput.value = data.nom;
+                        }
+                        window._forumUserName = data.nom;
+                    }
+                }
+            } catch(e) {
+                window._forumUserName = 'Anonyme';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', setForumPseudo);
+
         document.getElementById('topic-form').onsubmit = function (e) {
             e.preventDefault();
             const title = document.getElementById('topic-title').value.trim();

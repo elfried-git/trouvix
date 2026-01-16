@@ -69,9 +69,6 @@ if (!is_array($joueursArr) || count($joueursArr) === 0 || !isset($joueursArr[0][
 }
 $nomHote = substr(strip_tags($joueursArr[0]['nom']), 0, 50);
 
-if (empty($joueursArr[0]['photo'])) {
-	$joueursArr[0]['photo'] = '../assets/avatar-default.png';
-}
 
 $joueurs = json_encode($joueursArr);
 $createdAt = time();
@@ -82,6 +79,30 @@ $salonExistant = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($salonExistant) {
 	session_start();
+	require_once 'db.php';
+	$userId = null;
+	$sessionToken = $_SESSION['session_token'] ?? null;
+	if (isset($_SESSION['user_id'])) {
+		$userId = $_SESSION['user_id'];
+	} elseif (isset($_SESSION['admin_id'])) {
+		$userId = $_SESSION['admin_id'];
+	}
+	if ($userId && $sessionToken) {
+		$stmt = $pdo->prepare('SELECT session_token FROM users WHERE id = ?');
+		$stmt->execute([$userId]);
+		$row = $stmt->fetch();
+		if (!$row || $row['session_token'] !== $sessionToken) {
+			session_unset();
+			session_destroy();
+			http_response_code(401);
+			echo json_encode(['error' => 'Session expirée ou connectée ailleurs']);
+			exit;
+		}
+	} else {
+		http_response_code(401);
+		echo json_encode(['error' => 'Utilisateur non connecté']);
+		exit;
+	}
 	$session_nom = isset($_SESSION['user_nom']) ? $_SESSION['user_nom'] : (isset($_SESSION['admin_name']) ? $_SESSION['admin_name'] : null);
 	if (isset($_SESSION['admin_name'])) {
 		http_response_code(403);
@@ -147,10 +168,6 @@ if ($salonExistant) {
 		exit;
 	}
 	$user_nom = isset($_SESSION['user_nom']) ? $_SESSION['user_nom'] : null;
-	$user_photo = (isset($_SESSION['user_photo']) && !empty($_SESSION['user_photo'])) ? $_SESSION['user_photo'] : '../assets/avatar-default.png';
-	if (isset($_SESSION['admin_name'])) {
-		$user_photo = '../assets/avatar-default.png';
-	}
 	if (!$user_nom) {
 		http_response_code(401);
 		echo json_encode(['error' => 'Utilisateur non connecté.']);
@@ -158,7 +175,6 @@ if ($salonExistant) {
 	}
 	$joueursArr[0] = [
 		'nom' => $user_nom,
-		'photo' => $user_photo,
 		'estHote' => true
 	];
 	$joueurs = json_encode($joueursArr);

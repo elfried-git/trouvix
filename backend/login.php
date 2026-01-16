@@ -18,21 +18,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $stmt->fetch();
 
     if ($user && password_verify($otp, $user['otp'])) {
-        $alreadyConnected = false;
-        if (!empty($user['last_activity'])) {
-            $last = strtotime($user['last_activity']);
-            // Réduit le délai à 2 secondes pour permettre une reconnexion rapide
-            if ($last && (time() - $last) < 2) {
-                $alreadyConnected = true;
+        // Vérifie si un token de session existe déjà pour ce compte
+        $sessionActive = false;
+        if (!empty($user['session_token'])) {
+            // Vérifie si la session est vraiment active (last_activity < 30s)
+            $last = !empty($user['last_activity']) ? strtotime($user['last_activity']) : 0;
+            if ($last && (time() - $last) < 30) {
+                $sessionActive = true;
             }
         }
-        if ($alreadyConnected) {
+        if ($sessionActive) {
             http_response_code(403);
             echo json_encode(['error' => 'Ce compte est déjà connecté sur un autre appareil ou navigateur. Veuillez vous déconnecter d’abord.']);
             exit;
         }
-        $stmt = $pdo->prepare('UPDATE users SET last_activity = NOW() WHERE id = ?');
-        $stmt->execute([$user['id']]);
+        // Génère un token unique
+        $session_token = bin2hex(random_bytes(32));
+        $stmt = $pdo->prepare('UPDATE users SET last_activity = NOW(), session_token = ? WHERE id = ?');
+        $stmt->execute([$session_token, $user['id']]);
 
         session_set_cookie_params([
             'path' => '/',
@@ -45,19 +48,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['admin_id'] = $user['id'];
             $_SESSION['admin_name'] = !empty($user['nom']) ? $user['nom'] : 'Administrateur';
             $_SESSION['admin_email'] = $user['email'];
-            $_SESSION['admin_photo'] = isset($user['photo']) && $user['photo'] ? $user['photo'] : '../assets/avatar-default.png';
+            $_SESSION['session_token'] = $session_token;
         } else {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_nom'] = $user['nom'];
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['username'] = $user['nom'];
-            $_SESSION['user_photo'] = isset($user['photo']) && $user['photo'] ? $user['photo'] : '../assets/avatar-default.png';
+            $_SESSION['session_token'] = $session_token;
         }
         echo json_encode([
             'success' => true,
             'message' => 'Connexion réussie !',
-            'user_nom' => $user['nom'],
-            'user_photo' => isset($user['photo']) && $user['photo'] ? $user['photo'] : '../assets/avatar-default.png'
+            'user_nom' => $user['nom']
         ]);
     } else {
         http_response_code(401);

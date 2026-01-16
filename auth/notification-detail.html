@@ -54,8 +54,45 @@
 
 <body>
     <div class="notif-detail-container" id="notifContainer">
+        <div id="admin-reply-bubble" style="display:none;position:fixed;bottom:2em;right:2em;z-index:9999;background:#00fff9;color:#181c3a;padding:1.2em 1.5em;border-radius:1.2em;box-shadow:0 0 24px #00fff966;font-size:1.1em;max-width:90vw;min-width:220px;">
+            <div id="admin-reply-text"></div>
+            <div id="admin-reply-warning" style="font-size:0.95em;color:#e74c3c;margin-top:0.7em;"></div>
+        </div>
         <div id="sessionError" style="display:none;color:#ff2d55;text-align:center;font-weight:bold;margin-bottom:2em;"></div>
         <script>
+        // Affichage bulle réponse admin côté utilisateur (si présent dans localStorage)
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            const notifId = params.get('id');
+            if (!notifId) return;
+            const data = window.localStorage.getItem('adminReplyNotif_' + notifId);
+            if (data) {
+                const obj = JSON.parse(data);
+                const now = Date.now();
+                const elapsed = now - obj.time;
+                if (elapsed < 60000) {
+                    const bubble = document.getElementById('admin-reply-bubble');
+                    const text = document.getElementById('admin-reply-text');
+                    const warn = document.getElementById('admin-reply-warning');
+                    text.textContent = obj.reply;
+                    bubble.style.display = 'block';
+                    let remaining = Math.ceil((60000 - elapsed) / 1000);
+                    warn.textContent = 'Le chat avec l\'administrateur va bientôt disparaître.';
+                    const interval = setInterval(() => {
+                        remaining--;
+                        if (remaining <= 0) {
+                            bubble.style.display = 'none';
+                            window.localStorage.removeItem('adminReplyNotif_' + notifId);
+                            clearInterval(interval);
+                        } else {
+                            warn.textContent = 'Le chat avec l\'administrateur va bientôt disparaître.';
+                        }
+                    }, 1000);
+                } else {
+                    window.localStorage.removeItem('adminReplyNotif_' + notifId);
+                }
+            }
+        })();
             window.addEventListener('DOMContentLoaded', function () {
                 let badge = null;
                 try {
@@ -121,6 +158,13 @@
                             <span style='color:#fff;'>${n.message}</span><br>
                             <span style='font-size:0.95em;color:#aaa;'>${n.created_at}</span>
                             <button class='btn-suppr-notif' data-id='${n.id}' style='position:absolute;top:1em;right:1em;background:#e74c3c;color:#fff;border:none;border-radius:0.4em;padding:0.3em 1em;font-weight:bold;cursor:pointer;'>Supprimer</button>
+                            <button class='btn-repondre-notif' data-id='${n.id}' style='position:absolute;top:3.5em;right:1em;background:#00fff9;color:#181c3a;border:none;border-radius:0.4em;padding:0.3em 1em;font-weight:bold;cursor:pointer;'>Répondre</button>
+                            <div class='admin-reply-form-container' style='display:none;position:absolute;top:6em;right:1em;z-index:10;background:#232a4d;padding:1em;border-radius:0.7em;box-shadow:0 0 8px #00fff933;'>
+                                <form class='admin-reply-form' data-id='${n.id}' style='display:flex;flex-direction:column;gap:0.5em;'>
+                                    <textarea name='admin_reply' rows='2' placeholder='Votre réponse à l\'utilisateur...' style='border-radius:0.4em;padding:0.5em;resize:vertical;'></textarea>
+                                    <button type='submit' style='background:#00fff9;color:#181c3a;border:none;border-radius:0.4em;padding:0.3em 1em;font-weight:bold;cursor:pointer;'>Envoyer</button>
+                                </form>
+                            </div>
                         </div>`
                                     ).join('');
                                     const style = document.createElement('style');
@@ -202,6 +246,36 @@
                                                         })
                                                         .catch(() => { alert('Erreur réseau'); modal.remove(); });
                                                 };
+                                            };
+                                        });
+                                        // Gestion du bouton Répondre (admin)
+                                        document.querySelectorAll('.btn-repondre-notif').forEach(btn => {
+                                            btn.onclick = function(e) {
+                                                e.stopPropagation();
+                                                const notifId = this.getAttribute('data-id');
+                                                const formContainer = this.parentElement.querySelector('.admin-reply-form-container');
+                                                if (formContainer.style.display === 'none') {
+                                                    formContainer.style.display = 'block';
+                                                    const textarea = formContainer.querySelector('textarea');
+                                                    if (textarea) textarea.focus();
+                                                } else {
+                                                    formContainer.style.display = 'none';
+                                                }
+                                            };
+                                        });
+                                        // Envoi de la réponse admin (simulation, à adapter backend)
+                                        document.querySelectorAll('.admin-reply-form').forEach(form => {
+                                            form.onsubmit = function(ev) {
+                                                ev.preventDefault();
+                                                const notifId = this.getAttribute('data-id');
+                                                const reply = this.admin_reply.value.trim();
+                                                if (!reply) return;
+                                                // Ici, requête AJAX à adapter pour stocker la réponse côté backend
+                                                // Simule l'envoi et l'affichage côté utilisateur
+                                                alert('Réponse envoyée à l\'utilisateur !');
+                                                this.parentElement.style.display = 'none';
+                                                // Simuler la réception côté utilisateur (bulle)
+                                                window.localStorage.setItem('adminReplyNotif_' + notifId, JSON.stringify({reply, time: Date.now()}));
                                             };
                                         });
                                     }, 100);
