@@ -175,7 +175,6 @@
                     <li id="menu-user-icon" style="display:flex;align-items:center;gap:0.4em;">
                         <a href="espace-membre.php" title="Espace membre"
                             style="display:flex;align-items:center;gap:0.4em;">
-                            <!-- Nom utilisateur masqué sur mobile -->
                             </span>
                         </a>
                     </li>
@@ -193,7 +192,6 @@
     </header>
     <script src="/Trouvix/js/session-nav.js"></script>
             <script>
-            // Menu burger mobile : affiche le menu au clic
             document.addEventListener('DOMContentLoaded', function() {
                 var nav = document.getElementById('main-nav');
                 var burger = document.getElementById('burger-menu');
@@ -217,7 +215,7 @@
                 <h2>Jeux / Quiz</h2>
                 <p id="desc-jeux" class="visually-hidden">Quiz éducatifs, jeux de logique, progression, classement.
                     Appuyez sur Entrée pour accéder à Jeux & Quiz.</p>
-                <a href="pages/jeux-quiz.html" class="card-link" tabindex="-1" aria-hidden="true"
+                <a href="#" class="card-link" tabindex="-1" aria-hidden="true"
                     style="display:none"></a>
                 <span class="card-accent"></span>
             </div>
@@ -316,7 +314,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
         </section>
     </main>
-            <!-- Popin VOD (même logique que TV/Replay) -->
             <div id="vod-popin" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1000000000;background:rgba(10,16,40,0.98);align-items:center;justify-content:center;">
                 <div style="position:relative;width:100vw;height:100vh;max-width:100vw;max-height:100vh;display:flex;align-items:center;justify-content:center;">
                     <iframe src="https://pluto.tv/fr/on-demand" title="Films et VOD" width="100%" height="100%" style="border:none;width:100vw;height:100vh;background:#000;"></iframe>
@@ -341,17 +338,14 @@ document.addEventListener('DOMContentLoaded', function() {
     <script type="text/javascript" src="js/tv-garden.js" defer></script>
 </body>
 <script>
-// Logique d'ouverture/fermeture du popin VOD (Films / VOD) avec arrêt de la vidéo
 document.addEventListener('DOMContentLoaded', function() {
     var vodCard = document.getElementById('vod-card-click');
     var vodPopin = document.getElementById('vod-popin');
     var vodCloseBtn = document.getElementById('vod-close-btn');
     var vodIframeSrc = 'https://pluto.tv/fr/on-demand';
     var vodIframeSelector = '#vod-popin iframe';
-    // Ouvre le popin VOD au clic sur la carte
     function openVodPopin() {
         if (vodPopin) {
-            // (Re)crée l'iframe à chaque ouverture pour garantir l'arrêt du flux précédent
             var container = vodPopin.querySelector('div');
             var oldIframe = vodPopin.querySelector('iframe');
             if (oldIframe) oldIframe.remove();
@@ -373,7 +367,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (vodPopin) {
             vodPopin.style.display = 'none';
             document.body.style.overflow = '';
-            // Supprime l'iframe pour arrêter le flux audio/vidéo
             var oldIframe = vodPopin.querySelector('iframe');
             if (oldIframe) oldIframe.remove();
         }

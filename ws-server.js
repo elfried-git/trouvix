@@ -16,7 +16,6 @@ wss.on('connection', function connection(ws, req) {
   ws.on('pong', () => { ws.isAlive = true; });
 });
 
-// Broadcast helper
 function broadcast(data) {
   const payload = typeof data === 'string' ? data : JSON.stringify(data);
   wss.clients.forEach(function each(client) {
@@ -28,7 +27,6 @@ function broadcast(data) {
   });
 }
 
-// HTTP notify endpoint used by PHP backends
 app.post('/notify', (req, res) => {
   const data = req.body || {};
   console.log('Notify received:', data);
@@ -40,15 +38,13 @@ app.post('/notify', (req, res) => {
   }
 });
 
-// simple health
 app.get('/health', (req, res) => res.json({ ok: true }));
 
-// cleanup dead connections
 setInterval(() => {
   wss.clients.forEach((ws) => {
     if (!ws.isAlive) return ws.terminate();
     ws.isAlive = false;
-    ws.ping(() => {});
+    ws.ping(() => { });
   });
 }, 30000);
 
