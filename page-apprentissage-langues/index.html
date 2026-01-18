@@ -3,6 +3,17 @@
 
 <head>
         <style>
+                                    /* Espacement entre le texte d'intro et la grille */
+            .lw-languages {
+                margin-top: 8em;
+            }
+                        /* Centrer le texte d'intro */
+                        main > h2, main > p {
+                            text-align: center;
+                            width: 100%;
+                            margin-left: auto;
+                            margin-right: auto;
+                        }
             .flag {
                 width: 32px;
                 height: 22px;
@@ -43,10 +54,8 @@
         </nav>
     </header>
     <main>
-        <section class="lw-intro">
-            <h2>Bienvenue sur TrouvixWorld</h2>
-            <p>Plateforme interactive pour apprendre la langue de votre choix, et progresser à votre rythme !</p>
-        </section>
+        <h2>Bienvenue sur TrouvixWorld</h2>
+        <p>Plateforme interactive pour apprendre la langue de votre choix, et progresser à votre rythme !</p>
         <section class="lw-languages">
             <div class="lw-lang-card" id="anglais">
                 <h3>Anglais - US / GB</h3>
@@ -62,9 +71,6 @@
             </div>
         </section>
     </main>
-    <footer class="lw-footer">
-        <p>&copy; 2025 TrouvixWord. Plateforme d'apprentissage multilingue.</p>
-    </footer>
 </body>
 <script src="/Trouvix/js/session-nav.js"></script>
 </html>
