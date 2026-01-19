@@ -3,7 +3,7 @@
 require_once '../backend/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email'] ?? '');
+    $email = isset($_POST['email']) ? strtolower(trim($_POST['email'])) : '';
     $password = $_POST['password'] ?? '';
 
     if (empty($email) || empty($password)) {
@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Vérifier si l'admin existe déjà dans la table users
-    $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ?');
+    $stmt = $pdo->prepare('SELECT id FROM users WHERE LOWER(email) = ?');
     $stmt->execute([$email]);
     if ($stmt->fetch()) {
         echo 'Un compte existe déjà avec cet email.';

@@ -6,6 +6,11 @@
     <title>Créer un compte Administrateur</title>
     <link rel="stylesheet" href="auth.css">
     <link rel="stylesheet" href="../style.css">
+    <style>
+        body {
+            background: #181c3a !important;
+        }
+    </style>
 </head>
 <body class="body">
     <header>
@@ -29,6 +34,9 @@
             </div>
             <button type="submit" class="hote-btn">Créer le compte</button>
         </form>
+        <div style="text-align:center; margin-top:1.2em;">
+            <a href="admin-login.html" style="color:#0ff1ce; text-decoration:underline; font-weight:500;">Se connecter</a>
+        </div>
     </div>
     <script>
     document.getElementById('register-admin-form').addEventListener('submit', async function(e) {

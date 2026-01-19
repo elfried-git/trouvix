@@ -6,6 +6,44 @@
     <title>Connexion Administrateur</title>
     <link rel="stylesheet" href="auth.css">
     <link rel="stylesheet" href="../style.css">
+    <style>
+        body {
+            background: #181c3a !important;
+        }
+    </style>
+    <style>
+        input.form-input, textarea.form-input, select.form-input {
+            background: none !important;
+            background-color: transparent !important;
+            color: #fff !important;
+            border: 2px solid #00fff9 !important;
+            border-radius: 12px !important;
+            box-shadow: none !important;
+            font-size: 1.15em;
+            padding: 0.8em 1em;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input.form-input:focus, textarea.form-input:focus, select.form-input:focus {
+            outline: none !important;
+            border-color: #00fff9 !important;
+            box-shadow: 0 0 8px #00fff966 !important;
+            background: none !important;
+            background-color: transparent !important;
+        }
+        input.form-input::placeholder {
+            color: #00fff9 !important;
+            opacity: 1 !important;
+        }
+        /* Pour forcer le style même si auth.css surcharge */
+        .form-input {
+            background: none !important;
+            background-color: transparent !important;
+            color: #fff !important;
+            border: 2px solid #00fff9 !important;
+            border-radius: 12px !important;
+            box-shadow: none !important;
+        }
+    </style>
 </head>
 <body class="body">
     <header>

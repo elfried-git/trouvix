@@ -7,8 +7,7 @@ require_once 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = $_POST['nom'] ?? '';
-    $email = $_POST['email'] ?? '';
-    $ville = $_POST['ville'] ?? null;
+    $email = isset($_POST['email']) ? strtolower(trim($_POST['email'])) : '';
     $otp = $_POST['otp'] ?? '';
 
     $hashedOtp = password_hash($otp, PASSWORD_DEFAULT);
@@ -19,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ?');
+    $stmt = $pdo->prepare('SELECT id FROM users WHERE LOWER(email) = ?');
     $stmt->execute([$email]);
     if ($stmt->fetch()) {
         http_response_code(409);
@@ -27,8 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $stmt = $pdo->prepare('INSERT INTO users (nom, email, ville, otp) VALUES (?, ?, ?, ?)');
-    $stmt->execute([$nom, $email, $ville, $hashedOtp]);
+    $stmt = $pdo->prepare('INSERT INTO users (nom, email, otp) VALUES (?, ?, ?)');
+    $stmt->execute([$nom, $email, $hashedOtp]);
 
     echo json_encode(['success' => true, 'message' => 'Inscription réussie !']);
     exit;

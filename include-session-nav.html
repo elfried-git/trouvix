@@ -1,36 +1,42 @@
+
 <header>
-	<div class="header-row">
+	<div class="header-row" id="global-header">
 		<div class="logo" tabindex="0" aria-label="Accueil Trouvix">
 			<span class="logo-text">Trouvix</span>
 		</div>
-		<button id="burger-menu" class="burger" aria-label="Ouvrir le menu" style="display: flex; background: none; border: none; cursor: pointer;">
-			<svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0ff1ce" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+		<nav id="main-nav" class="main-nav" aria-label="Navigation principale">
+			<button id="close-menu" class="close-menu" aria-label="Fermer le menu" style="display:none">
+				<svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0ff1ce" stroke-width="3"
+					stroke-linecap="round" stroke-linejoin="round">
+					<line x1="8" y1="8" x2="24" y2="24" />
+					<line x1="24" y1="8" x2="8" y2="24" />
+				</svg>
+			</button>
+			<ul>
+				<li><a href="/Trouvix/index.html" aria-current="page">Accueil</a></li>
+				<li><a href="/Trouvix/index.html#contact">Contact</a></li>
+				<li><a href="/Trouvix/pages/espace-membre.php">Espace👤</a></li>
+			</ul>
+		</nav>
+		<button id="burger-menu" class="burger" aria-label="Ouvrir le menu">
+			<svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0ff1ce" stroke-width="3"
+				stroke-linecap="round" stroke-linejoin="round">
 				<line x1="6" y1="10" x2="26" y2="10" />
 				<line x1="6" y1="16" x2="26" y2="16" />
 				<line x1="6" y1="22" x2="26" y2="22" />
 			</svg>
 		</button>
-		<button id="close-menu" class="close-menu" aria-label="Fermer le menu" style="display:none">
-			<svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0ff1ce" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-				<line x1="8" y1="8" x2="24" y2="24" />
-				<line x1="24" y1="8" x2="8" y2="24" />
-			</svg>
-		</button>
-		<nav id="main-nav" class="main-nav" aria-label="Navigation principale">
-			<ul>
-				<li><a href="/index.html" aria-current="page">Accueil</a></li>
-				<li><a href="/pages/jeux-quiz.html">Quiz</a></li>
-				<li><a href="/pages/tv-replay.html">TV Replay</a></li>
-				<li><a href="/pages/espace-membre.php">Espace membre</a></li>
-				<li id="menu-user-icon" style="display:none">
-					<a href="/pages/espace-membre.php" title="Espace membre" style="display:flex;align-items:center;gap:0.4em;">
-						<span style="font-size:1.5em;">👤</span>
-						<span id="menu-user-nom" style="font-size:1em;"></span>
-					</a>
-				</li>
-				<li id="menu-login-link"><a href="/auth/login.html">Connexion</a></li>
-			</ul>
-		</nav>
 	</div>
 </header>
-<script src="/pages/session-nav.js"></script>
+<script src="/Trouvix/js/session-nav.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+	var nav = document.getElementById('main-nav');
+	var burger = document.getElementById('burger-menu');
+	if (burger && nav) {
+		burger.addEventListener('click', function() {
+			nav.classList.toggle('menu-open');
+		});
+	}
+});
+</script>
