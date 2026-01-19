@@ -229,22 +229,28 @@ if (!isset($_SESSION['admin_id'])) {
                 <h1 style="color:#0ff1ce;font-size:2em;margin:0;">Espace Administration</h1>
                 <div style="display:flex;align-items:center;gap:2em;margin-right:6vw;">
                     <div id="admin-info" style="color:#eaf6fb;font-size:1.08em;"></div>
-                    <a href="../backend/logout.php" class="hote-btn" style="
-                        margin-left:1.5em;
-                        max-width:220px;
-                        min-width:140px;
-                        text-align:center;
-                        background: linear-gradient(90deg, #00fff9 0%, #a259ff 100%);
-                        color: #181c3a;
-                        font-size: 1.35em;
-                        font-weight: 700;
-                        border-radius: 1em;
-                        box-shadow: 0 0 18px #00fff966;
-                        padding: 0.6em 1.5em;
-                        border: none;
-                        text-decoration: none;
-                        transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-                    " onmouseover="this.style.background='linear-gradient(90deg,#a259ff 0%,#00fff9 100%)';this.style.color='#181c3a';" onmouseout="this.style.background='linear-gradient(90deg,#00fff9 0%,#a259ff 100%)';this.style.color='#181c3a';">Déconnexion</a>
+                        <a href="../backend/logout.php" class="hote-btn" style="
+                            margin-left:1.5em;
+                            max-width:180px;
+                            min-width:110px;
+                            height:42px;
+                            text-align:center;
+                            background: linear-gradient(90deg, #00fff9 0%, #a259ff 100%);
+                            color: #181c3a;
+                            font-size: 1.08em;
+                            font-weight: 700;
+                            border-radius: 1.2em;
+                            box-shadow: 0 0 32px #00fff966,0 0 0 3px #00fff933,0 0 80px 8px #ff00ff22;
+                            padding: 0;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+                            border: none;
+                            outline: none;
+                            cursor: pointer;
+                            text-decoration: none;
+                        " onmouseover="this.style.background='linear-gradient(90deg,#a259ff 0%,#00fff9 100%)';this.style.color='#181c3a';" onmouseout="this.style.background='linear-gradient(90deg,#00fff9 0%,#a259ff 100%)';this.style.color='#181c3a';">Déconnexion</a>
                 </div>
             </header>
             <script>
