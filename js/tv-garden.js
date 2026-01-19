@@ -42,6 +42,12 @@ function main() {
 
     function loadTv(event) {
         event.stopPropagation();
+        // Vérifier si l'utilisateur est connecté
+        const isConnected = sessionStorage.getItem('user_nom');
+        if (!isConnected) {
+            showAccessDeniedPopinTV();
+            return;
+        }
         const tvContainer = document.createElement("div");
         const quickCommands = document.createElement("span");
         const tvCloseBtn = document.createElement("span");
@@ -72,7 +78,25 @@ function main() {
     }
 
     if (tvTrigger) {
-        tvTrigger.addEventListener("click", loadTv);
+        // N'ajouter le listener que si déjà connecté, sinon attendre le storage event
+        const isConnected = sessionStorage.getItem('user_nom');
+        if (isConnected) {
+            tvTrigger.addEventListener("click", loadTv);
+        }
+        
+        // Ajouter/retirer le listener dynamiquement quand connexion/déconnexion
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'user_nom') {
+                // Retirer tous les anciens listeners
+                const newTrigger = tvTrigger.cloneNode(true);
+                tvTrigger.parentNode.replaceChild(newTrigger, tvTrigger);
+                
+                // Ajouter nouveau listener si connecté
+                if (e.newValue) {
+                    newTrigger.addEventListener("click", loadTv);
+                }
+            }
+        });
     }
 }
 

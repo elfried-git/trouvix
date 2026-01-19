@@ -12,18 +12,26 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.service-card').forEach(function(card) {
             if (!isConnected) {
                 card.classList.add('disabled-card');
+                card.style.opacity = '0.5';
+                card.style.pointerEvents = 'none';
+                card.style.cursor = 'not-allowed';
                 card.addEventListener('click', function(e) {
                     e.preventDefault();
+                    e.stopPropagation();
                     showAccessDeniedPopin();
                 });
                 card.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
+                        e.stopPropagation();
                         showAccessDeniedPopin();
                     }
                 });
             } else {
                 card.classList.remove('disabled-card');
+                card.style.opacity = '1';
+                card.style.pointerEvents = 'auto';
+                card.style.cursor = 'pointer';
                 card.addEventListener('click', function(e) {
                     if (card.id === 'tv-garden') return;
                     const link = card.querySelector('a.card-link');
@@ -42,6 +50,44 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
         });
+        // Gestion spéciale pour vod-card-click et tv-garden
+        const vodCard = document.getElementById('vod-card-click');
+        const tvGarden = document.getElementById('tv-garden');
+        if (!isConnected) {
+            if (vodCard) {
+                vodCard.style.pointerEvents = 'none';
+                vodCard.style.cursor = 'not-allowed';
+                vodCard.style.opacity = '0.5';
+                vodCard.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showAccessDeniedPopin();
+                    return false;
+                };
+            }
+            if (tvGarden) {
+                tvGarden.style.pointerEvents = 'none';
+                tvGarden.style.cursor = 'not-allowed';
+                tvGarden.style.opacity = '0.5';
+                tvGarden.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showAccessDeniedPopin();
+                    return false;
+                };
+            }
+        } else {
+            if (vodCard) {
+                vodCard.style.pointerEvents = 'auto';
+                vodCard.style.cursor = 'pointer';
+                vodCard.style.opacity = '1';
+            }
+            if (tvGarden) {
+                tvGarden.style.pointerEvents = 'auto';
+                tvGarden.style.cursor = 'pointer';
+                tvGarden.style.opacity = '1';
+            }
+        }
     }
     updateCardAccess();
     // Rafraîchit dynamiquement l'accès aux cards sur changement de sessionStorage
@@ -86,7 +132,7 @@ style.innerHTML = `
     background: linear-gradient(90deg,#00fff9 60%,#ff00ff 100%); color: #181c3a;
     border: none; border-radius: 0.7em; font-size: 1.1em; font-weight: bold;
     padding: 0.6em 2.2em; cursor: pointer; box-shadow: 0 0 12px #00fff966;
-    transition: background 0.2s, color 0.2s;
+    transition: background 0.2s, color 0.2s; display: inline-block; position: relative; left: 50%; transform: translateX(-50%);
 }
 @keyframes popinIn {
     0% { transform: scale(0.8); opacity: 0; }
