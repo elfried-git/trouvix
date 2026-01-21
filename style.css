@@ -1487,6 +1487,10 @@ footer nav a:hover {
   border: solid white 2px;
   padding: 4px;
   cursor: pointer;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 5px;
+  font-weight: bold;
 }
 
 #tv-garden-view iframe.full-screen {
