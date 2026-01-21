@@ -467,7 +467,6 @@ document.addEventListener('DOMContentLoaded', function() {
     <script type="text/javascript" src="js/tv-garden.js" defer></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Modal Jeux / Quiz
         var jeuxCard = document.getElementById('card-jeux-quiz');
         var modalJeux = document.getElementById('modal-jeux-quiz');
         var closeJeuxBtn = document.getElementById('close-modal-jeux-quiz');
@@ -495,8 +494,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
-
-        // Modal Langues
         var languesCard = document.getElementById('card-langues');
         var modalLangues = document.getElementById('modal-langues');
         var closeLanguesBtn = document.getElementById('close-modal-langues');
@@ -535,7 +532,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var vodIframeSrc = 'https://pluto.tv/fr/on-demand';
     var vodIframeSelector = '#vod-popin iframe';
     function openVodPopin() {
-        // Vérifier si connecté
         var isConnected = sessionStorage.getItem('user_nom');
         if (!isConnected) {
             showAccessDeniedPopin();
@@ -598,12 +594,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script>
-// Bouton retour en haut
 document.addEventListener('DOMContentLoaded', function() {
     const scrollToTopBtn = document.getElementById('scroll-to-top');
     
     if (scrollToTopBtn) {
-        // Afficher/masquer le bouton selon le scroll
         window.addEventListener('scroll', function() {
             if (window.pageYOffset > 300) {
                 scrollToTopBtn.classList.add('show');
@@ -612,7 +606,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Remonter en haut au clic
         scrollToTopBtn.addEventListener('click', function() {
             window.scrollTo({
                 top: 0,
