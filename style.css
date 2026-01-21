@@ -1412,6 +1412,10 @@ nav button:hover {
   box-shadow: 0 0 16px #00fff966;
   transition: background 0.2s, color 0.2s, box-shadow 0.2s;
   margin-top: 0.5rem;
+  display: inline-block !important;
+  min-width: auto !important;
+  max-width: none !important;
+  height: auto !important;
 }
 
 .contact button:hover,
