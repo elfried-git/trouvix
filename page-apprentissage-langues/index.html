@@ -38,8 +38,8 @@
     <link rel="stylesheet" href="apprentissage.css">
 </head>
 <body>
-    <header class="lw-header">
-        <h1 id="lw-logo" style="cursor:pointer;">TrouvixWorld</h1>
+    <header class="lw-header" data-cy="langues-header">
+        <h1 id="lw-logo" style="cursor:pointer;" data-cy="langues-logo">TrouvixWorld</h1>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('lw-logo').addEventListener('click', function () {
@@ -47,27 +47,27 @@
                 });
             });
         </script>
-        <nav>
-            <a href="#anglais"><img src="gb.webp" alt="Anglais" class="flag"></a>
-            <a href="#espagnol"><img src="es.webp" alt="Espagnol" class="flag"></a>
-            <a href="#italien"><img src="it.webp" alt="Italien" class="flag"></a>
+        <nav data-cy="langues-nav">
+            <a href="#anglais" data-cy="nav-anglais"><img src="gb.webp" alt="Anglais" class="flag"></a>
+            <a href="#espagnol" data-cy="nav-espagnol"><img src="es.webp" alt="Espagnol" class="flag"></a>
+            <a href="#italien" data-cy="nav-italien"><img src="it.webp" alt="Italien" class="flag"></a>
         </nav>
     </header>
-    <main>
-        <h2>Bienvenue sur TrouvixWorld</h2>
-        <p>Plateforme interactive pour apprendre la langue de votre choix, et progresser à votre rythme !</p>
-        <section class="lw-languages">
-            <div class="lw-lang-card" id="anglais">
+    <main data-cy="langues-main">
+        <h2 data-cy="langues-title">Bienvenue sur TrouvixWorld</h2>
+        <p data-cy="langues-subtitle">Plateforme interactive pour apprendre la langue de votre choix, et progresser à votre rythme !</p>
+        <section class="lw-languages" data-cy="langues-cards">
+            <div class="lw-lang-card" id="anglais" data-cy="card-anglais">
                 <h3>Anglais - US / GB</h3>
-                <a class="lw-btn" href="#">Bientôt disponible...</a>
+                <a class="lw-btn" href="#" data-cy="btn-anglais">Bientôt disponible...</a>
             </div>
-            <div class="lw-lang-card" id="espagnol">
+            <div class="lw-lang-card" id="espagnol" data-cy="card-espagnol">
                 <h3>Espagnol</h3>
-                <a class="lw-btn" href="#">Bientôt disponible...</a>
+                <a class="lw-btn" href="#" data-cy="btn-espagnol">Bientôt disponible...</a>
             </div>
-            <div class="lw-lang-card" id="italien">
+            <div class="lw-lang-card" id="italien" data-cy="card-italien">
                 <h3>Italien</h3>
-                <a class="lw-btn" href="#">Bientôt disponible...</a>
+                <a class="lw-btn" href="#" data-cy="btn-italien">Bientôt disponible...</a>
             </div>
         </section>
     </main>

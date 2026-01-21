@@ -230,21 +230,21 @@
 </head>
 
 <body>
-  <div class="game-encart">
-    <div class="game-title">Jeu en cours</div>
-    <div id="game-info" class="game-info"></div>
-    <div class="timer">Temps restant : <span id="timer">20</span>s</div>
-    <div class="round-info" id="round-info"></div>
-    <div class="mot-info" id="mot-info"></div>
-    <form id="mot-form" autocomplete="off">
+  <div class="game-encart" data-cy="game-encart">
+    <div class="game-title" data-cy="game-title">Jeu en cours</div>
+    <div id="game-info" class="game-info" data-cy="game-info"></div>
+    <div class="timer" data-cy="game-timer">Temps restant : <span id="timer">20</span>s</div>
+    <div class="round-info" id="round-info" data-cy="round-info"></div>
+    <div class="mot-info" id="mot-info" data-cy="mot-info"></div>
+    <form id="mot-form" autocomplete="off" data-cy="mot-form">
       <div class="input-row">
-        <input type="text" id="mot-input" class="mot-input" placeholder="Deviner ce mot" required autocomplete="off" />
-        <button type="submit" class="btn-valider">Valider</button>
+        <input type="text" id="mot-input" class="mot-input" placeholder="Deviner ce mot" required autocomplete="off" data-cy="mot-input" />
+        <button type="submit" class="btn-valider" data-cy="btn-valider">Valider</button>
         <button id="btn-quitter" type="button"
-          style="display:none;margin-left:1.2em;padding:0.7em 2em;font-size:1.13em;font-weight:bold;border-radius:0.9em;background:linear-gradient(90deg,#ff0055 0%,#ff00ff 100%);color:#fff;box-shadow:0 0 12px #ff0055cc,0 0 24px #ff00ff99;border:none;cursor:pointer;letter-spacing:0.04em;transition:background 0.2s,box-shadow 0.2s;">Quitter</button>
+          style="display:none;margin-left:1.2em;padding:0.7em 2em;font-size:1.13em;font-weight:bold;border-radius:0.9em;background:linear-gradient(90deg,#ff0055 0%,#ff00ff 100%);color:#fff;box-shadow:0 0 12px #ff0055cc,0 0 24px #ff00ff99;border:none;cursor:pointer;letter-spacing:0.04em;transition:background 0.2s,box-shadow 0.2s;" data-cy="btn-quitter">Quitter</button>
       </div>
     </form>
-    <table class="historique-table" id="historique-table">
+    <table class="historique-table" id="historique-table" data-cy="historique-table">
       <thead>
         <tr>
           <th>Joueurs</th>
@@ -252,7 +252,7 @@
           <th>Nombre de lettres</th>
         </tr>
       </thead>
-      <tbody id="historique-body"></tbody>
+      <tbody id="historique-body" data-cy="historique-body"></tbody>
     </table>
   </div>
   <script>

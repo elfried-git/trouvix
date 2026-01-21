@@ -28,15 +28,15 @@
 </head>
 
 <body class="body">
-    <header>
+    <header data-cy="auth-header">
         <div class="header-row">
-            <div class="logo" tabindex="0" aria-label="Accueil Trouvix">
+            <div class="logo" tabindex="0" aria-label="Accueil Trouvix" data-cy="logo">
                 <span class="logo-text">Trouvix</span>
             </div>
-            <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
+            <nav id="main-nav" class="main-nav" aria-label="Navigation principale" data-cy="auth-nav">
                 <ul>
-                    <li><a href="../index.html">Accueil</a></li>
-                    <li><a href="../index.html#contact">Contact</a></li>
+                    <li><a href="../index.html" data-cy="nav-accueil">Accueil</a></li>
+                    <li><a href="../index.html#contact" data-cy="nav-contact">Contact</a></li>
                     <li id="menu-user-icon" style="display:none">
                         <a href="../pages/espace-membre.php" title="Espace membre"
                             style="display:flex;align-items:center;gap:0.4em;">
@@ -54,30 +54,30 @@
             </nav>
         </div>
     </header>
-    <div class="hote-login-container">
-        <div class="hote-title">Créer un compte</div>
-        <form id="register-form" autocomplete="off">
+    <div class="hote-login-container" data-cy="register-container">
+        <div class="hote-title" data-cy="register-title">Créer un compte</div>
+        <form id="register-form" autocomplete="off" data-cy="register-form">
             <div class="form-group">
                 <label class="form-label" for="register-nom">Nom <span style="color:#ff00ff">*</span></label>
                 <input class="form-input" id="register-nom" name="nom" type="text" maxlength="32" placeholder="Nom"
-                    required>
+                    required data-cy="register-nom">
             </div>
             <div class="form-group">
                 <label class="form-label" for="register-otp">OTP <span style="color:#ff00ff">*</span></label>
                 <input class="form-input" id="register-otp" name="otp" type="password" maxlength="8" placeholder="OTP"
-                    required>
+                    required data-cy="register-otp">
             </div>
             <div class="form-group">
                 <label class="form-label" for="register-email">Email<span style="color:#ff00ff">*</span></label>
-                <input class="form-input" id="register-email" name="email" type="email" placeholder="Email" required>
+                <input class="form-input" id="register-email" name="email" type="email" placeholder="Email" required data-cy="register-email">
             </div>
-            <div class="form-error" id="register-error"></div>
+            <div class="form-error" id="register-error" data-cy="register-error"></div>
             <div style="display:flex;gap:0.7em;justify-content:center;margin-top:1.2em;">
-                <button type="submit" class="hote-btn">Créer</button>
-                <a href="login.html" class="hote-btn quitter" style="text-decoration:none;">Retour</a>
+                <button type="submit" class="hote-btn" data-cy="register-submit">Créer</button>
+                <a href="login.html" class="hote-btn quitter" style="text-decoration:none;" data-cy="register-retour">Retour</a>
             </div>
             <div style="text-align:center; margin-top:1.2em;">
-                <a href="login.html" style="color:#0ff1ce; text-decoration:underline; font-weight:500;">J'ai déjà un
+                <a href="login.html" style="color:#0ff1ce; text-decoration:underline; font-weight:500;" data-cy="register-login-link">J'ai déjà un
                     compte</a>
             </div>
         </form>

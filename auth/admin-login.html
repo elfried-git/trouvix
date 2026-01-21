@@ -46,28 +46,28 @@
     </style>
 </head>
 <body class="body">
-    <header>
+    <header data-cy="admin-header">
         <div class="header-row">
-            <div class="logo" tabindex="0" aria-label="Accueil Trouvix">
+            <div class="logo" tabindex="0" aria-label="Accueil Trouvix" data-cy="logo">
                 <span class="logo-text">Trouvix</span>
             </div>
         </div>
     </header>
-    <div class="hote-login-container">
-        <div class="hote-title">Connexion Administrateur</div>
-        <form action="admin_login.php" method="POST" autocomplete="off">
+    <div class="hote-login-container" data-cy="admin-login-container">
+        <div class="hote-title" data-cy="admin-login-title">Connexion Administrateur</div>
+        <form action="admin_login.php" method="POST" autocomplete="off" data-cy="admin-login-form">
             <div class="form-group">
                 <label class="form-label" for="email">Adresse mail</label>
-                <input class="form-input" type="email" id="email" name="email" required>
+                <input class="form-input" type="email" id="email" name="email" required data-cy="admin-email">
             </div>
             <div class="form-group">
                 <label class="form-label" for="password">OTP</label>
-                <input class="form-input" type="password" id="password" name="password" maxlength="8" placeholder="OTP" required>
+                <input class="form-input" type="password" id="password" name="password" maxlength="8" placeholder="OTP" required data-cy="admin-password">
             </div>
-            <button type="submit" class="hote-btn">Se connecter</button>
+            <button type="submit" class="hote-btn" data-cy="admin-login-submit">Se connecter</button>
         </form>
         <div style="text-align:center; margin-top: 20px;">
-            <a href="register_admin.html" style="color: #00ffff; text-decoration: underline;">Créer un compte administrateur</a>
+            <a href="register_admin.html" style="color: #00ffff; text-decoration: underline;" data-cy="admin-register-link">Créer un compte administrateur</a>
         </div>
     </div>
 </body>

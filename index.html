@@ -244,16 +244,16 @@
 </head>
 
 <body>
-    <header>
+    <header data-cy="main-header">
         <div class="header-row" id="global-header">
-            <div class="logo" tabindex="0" aria-label="Accueil Trouvix">
+            <div class="logo" tabindex="0" aria-label="Accueil Trouvix" data-cy="logo">
                 <span class="logo-text">Trouvix</span>
             </div>
-            <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
+            <nav id="main-nav" class="main-nav" aria-label="Navigation principale" data-cy="main-nav">
                 <ul>
-                    <li><a href="index.html" aria-current="page">Accueil</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li><a href="pages/espace-membre.php">Espace👤</a></li>
+                    <li><a href="index.html" aria-current="page" data-cy="nav-accueil">Accueil</a></li>
+                    <li><a href="#contact" data-cy="nav-contact">Contact</a></li>
+                    <li><a href="pages/espace-membre.php" data-cy="nav-espace-membre">Espace👤</a></li>
                     <li id="menu-user-icon" style="display:flex;align-items:center;gap:0.4em;">
                         <a href="espace-membre.php" title="Espace membre"
                             style="display:flex;align-items:center;gap:0.4em;">
@@ -276,15 +276,15 @@
                 }
             });
             </script>
-    <main>
-        <section class="hero">
-            <h1><span class="highlight" data-test-id="welcome-title">Bienvenue sur Trouvix</span></h1>
-            <p class="subtitle" data-test-id="welcome-subtitle">La plateforme avec une variété des services.</p>
+    <main data-cy="main-content">
+        <section class="hero" data-cy="hero-section">
+            <h1><span class="highlight" data-test-id="welcome-title" data-cy="welcome-title">Bienvenue sur Trouvix</span></h1>
+            <p class="subtitle" data-test-id="welcome-subtitle" data-cy="welcome-subtitle">La plateforme avec une variété des services.</p>
         </section>
 
-        <section class="services-grid" aria-label="Services principaux">
+        <section class="services-grid" aria-label="Services principaux" data-cy="services-grid">
             <div class="service-card jeux" tabindex="0" role="button" aria-label="Jeux et Quiz"
-                aria-describedby="desc-jeux" data-link="jeux-quiz.html" data-test-id="card-jeux_quiz">
+                aria-describedby="desc-jeux" data-link="jeux-quiz.html" data-test-id="card-jeux_quiz" data-cy="card-jeux-quiz">
                 <div class="icon">🎲</div>
                 <h2>Jeux / Quiz</h2>
                 <p id="desc-jeux" class="visually-hidden">Quiz éducatifs, jeux de logique, progression, classement.
@@ -294,7 +294,7 @@
                 <span class="card-accent"></span>
             </div>
             <div class="service-card langues" tabindex="0" role="button" aria-label="Langues"
-                aria-describedby="desc-langues" data-link="page-apprentissage-langues/index.html">
+                aria-describedby="desc-langues" data-link="page-apprentissage-langues/index.html" data-cy="card-langues">
                 <div class="icon">🌍</div>
                 <h2>Langues</h2>
                 <p id="desc-langues" class="visually-hidden">Cours, exercices, quiz et jeux pour apprendre l'anglais,
@@ -304,19 +304,19 @@
                     style="display:none"></a>
                 <span class="card-accent"></span>
             </div>
-            <div class="service-card vod" tabindex="0" role="region" aria-label="Films et VOD" style="display:flex;flex-direction:column;align-items:center;justify-content:center;">
-                                <div id="vod-card-click" class="card-link" tabindex="0" role="button" aria-label="Films et VOD" style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;cursor:pointer;">
+            <div class="service-card vod" tabindex="0" role="region" aria-label="Films et VOD" style="display:flex;flex-direction:column;align-items:center;justify-content:center;" data-cy="card-vod">
+                                <div id="vod-card-click" class="card-link" tabindex="0" role="button" aria-label="Films et VOD" style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;cursor:pointer;" data-cy="vod-card-click">
                                     <div class="icon">🎬</div>
                                     <h2>Films / VOD</h2>
                                 </div>
             </div>
             <div class="service-card forum" tabindex="0" role="button" aria-label="TV Garden" id="tv-garden"
-                aria-describedby="desc-forum" data-link="#">
+                aria-describedby="desc-forum" data-link="#" data-cy="card-tv-replay">
                 <div class="icon">📺</div>
                 <h2>TV / Replay</h2>
             </div>
             <div class="service-card forum" tabindex="0" role="button" aria-label="Forum" aria-describedby="desc-forum"
-                data-link="forum/index.html">
+                data-link="forum/index.html" data-cy="card-forum">
                 <div class="icon">💬</div>
                 <h2>Forum</h2>
                 <p id="desc-forum" class="visually-hidden">Participez au forum de la communauté. Appuyez sur Entrée pour
@@ -325,24 +325,24 @@
                 <span class="card-accent"></span>
             </div>
         </section>
-        <section id="contact" class="contact">
-            <h2>Contactez l'administrateur</h2>
-            <form aria-label="Formulaire de contact" id="contactFormIndex">
+        <section id="contact" class="contact" data-cy="contact-section">
+            <h2 data-cy="contact-title">Contactez l'administrateur</h2>
+            <form aria-label="Formulaire de contact" id="contactFormIndex" data-cy="contact-form">
                 <div class="form-group">
                     <label for="contact-nom">Nom *</label>
-                    <input type="text" id="contact-nom" name="nom" placeholder="Votre nom" required autocomplete="name">
+                    <input type="text" id="contact-nom" name="nom" placeholder="Votre nom" required autocomplete="name" data-cy="contact-nom">
                 </div>
                 <div class="form-group">
                     <label for="contact-email">Email *</label>
-                    <input type="email" id="contact-email" name="email" placeholder="Votre email" required autocomplete="email">
+                    <input type="email" id="contact-email" name="email" placeholder="Votre email" required autocomplete="email" data-cy="contact-email">
                 </div>
                 <div class="form-group">
                     <label for="contact-message">Message *</label>
-                    <textarea id="contact-message" name="message" placeholder="Votre message" required rows="4"></textarea>
+                    <textarea id="contact-message" name="message" placeholder="Votre message" required rows="4" data-cy="contact-message"></textarea>
                 </div>
-                <button type="submit">Envoyer</button>
+                <button type="submit" data-cy="contact-submit">Envoyer</button>
             </form>
-            <div id="contact-success-index" style="display:none;color:#27ae60;font-weight:600;margin-top:1em;"></div>
+            <div id="contact-success-index" style="display:none;color:#27ae60;font-weight:600;margin-top:1em;" data-cy="contact-success"></div>
 </section>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -388,10 +388,10 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
         </section>
     </main>
-            <div id="vod-popin" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1000000000;background:rgba(10,16,40,0.98);align-items:center;justify-content:center;">
+            <div id="vod-popin" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1000000000;background:rgba(10,16,40,0.98);align-items:center;justify-content:center;" data-cy="vod-popin">
                 <div style="position:relative;width:100vw;height:100vh;max-width:100vw;max-height:100vh;display:flex;align-items:center;justify-content:center;">
-                    <iframe src="https://pluto.tv/fr/on-demand" title="Films et VOD" width="100%" height="100%" style="border:none;width:100vw;height:100vh;background:#000;"></iframe>
-                    <button id="vod-close-btn" aria-label="Fermer la VOD" style="position:absolute;top:24px;right:36px;font-size:2.2rem;color:#fff;background:#222a44cc;border:2px solid #fff;border-radius:50%;cursor:pointer;padding:8px 16px;z-index:1000000001;">
+                    <iframe src="https://pluto.tv/fr/on-demand" title="Films et VOD" width="100%" height="100%" style="border:none;width:100vw;height:100vh;background:#000;" data-cy="vod-iframe"></iframe>
+                    <button id="vod-close-btn" aria-label="Fermer la VOD" style="position:absolute;top:24px;right:36px;font-size:2.2rem;color:#fff;background:#222a44cc;border:2px solid #fff;border-radius:50%;cursor:pointer;padding:8px 16px;z-index:1000000001;" data-cy="vod-close-btn">
                         <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;">
                             <line x1="8" y1="8" x2="24" y2="24" />
                             <line x1="24" y1="8" x2="8" y2="24" />
@@ -474,8 +474,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 </body>
-<footer>
-    <p>&COPY; 2025 Trouvix. Tous droits réservés.</p>
+<footer data-cy="footer">
+    <p data-cy="footer-text">&COPY; 2025 Trouvix. Tous droits réservés.</p>
 </footer>
 
 </html>

@@ -137,19 +137,19 @@
 </head>
 
 <body>
-  <div class="join-salon-container">
-    <div class="join-title">Rejoindre un Salon</div>
-    <form id="join-form" autocomplete="off">
+  <div class="join-salon-container" data-cy="join-salon-container">
+    <div class="join-title" data-cy="join-title">Rejoindre un Salon</div>
+    <form id="join-form" autocomplete="off" data-cy="join-form">
       <div class="form-group">
         <label class="form-label" for="pin">Code PIN du Salon</label>
         <input class="form-input" id="pin" maxlength="6" minlength="6" required pattern="[A-Za-z0-9]{6}" type="text"
-          placeholder="Ex: 1A2B3C" style="text-transform:uppercase;letter-spacing:0.1em;">
-        <div class="form-error" id="pin-error"></div>
+          placeholder="Ex: 1A2B3C" style="text-transform:uppercase;letter-spacing:0.1em;" data-cy="join-pin">
+        <div class="form-error" id="pin-error" data-cy="join-pin-error"></div>
       </div>
       <div class="form-group">
         <label class="form-label" for="player-name">Nom du Joueur</label>
-        <input class="form-input" id="player-name" maxlength="15" required type="text" placeholder="Joueur Cool123">
-        <div class="form-error" id="name-error"></div>
+        <input class="form-input" id="player-name" maxlength="15" required type="text" placeholder="Joueur Cool123" data-cy="join-player-name">
+        <div class="form-error" id="name-error" data-cy="join-name-error"></div>
       </div>
       <div class="form-group">
         <label class="form-label">Photo</label>

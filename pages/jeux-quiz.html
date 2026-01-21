@@ -9,9 +9,9 @@
 </head>
 
 <body>
-    <header class="lw-header">
+    <header class="lw-header" data-cy="jeux-header">
         <h1 id="lw-logo"
-            style="cursor:pointer; text-align:center; width:100%; margin:0 auto; display:block; color:#19f6ff; font-weight: bold;">
+            style="cursor:pointer; text-align:center; width:100%; margin:0 auto; display:block; color:#19f6ff; font-weight: bold;" data-cy="jeux-logo">
             TrouvixJeux</h1>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
@@ -25,31 +25,31 @@
     </header>
     </header>
     <script src="/Trouvix/js/session-nav.js"></script>
-    <main>
-        <section class="jeux-quiz-content">
-            <h2>Bienvenue dans l'espace Jeux & Quiz</h2>
-            <p>Retrouvez ici tous les quiz, jeux de logique, classements et défis proposés par Trouvix !</p>
-            <div class="quiz-cards">
-                <div class="quiz-card">
+    <main data-cy="jeux-main">
+        <section class="jeux-quiz-content" data-cy="jeux-quiz-section">
+            <h2 data-cy="jeux-title">Bienvenue dans l'espace Jeux & Quiz</h2>
+            <p data-cy="jeux-subtitle">Retrouvez ici tous les quiz, jeux de logique, classements et défis proposés par Trouvix !</p>
+            <div class="quiz-cards" data-cy="quiz-cards">
+                <div class="quiz-card" data-cy="card-devichal">
                     <span class="icon">🤔</span>
                     <h3>DeviChal</h3>
                     <p>Défis quotidiens de devinettes et logique !</p>
-                    <button class="btn-choix-role" id="btn-jouer-devichal">Jouer</button>
-                    <div id="modal-choix-role" class="modal-overlay" tabindex="-1" aria-modal="true" role="dialog" style="display:none;">
-                        <div class="modal-content" id="modal-choix-role-content">
-                            <button id="btn-fermer-modal" class="modal-close" aria-label="Fermer">&times;</button>
+                    <button class="btn-choix-role" id="btn-jouer-devichal" data-cy="btn-jouer-devichal">Jouer</button>
+                    <div id="modal-choix-role" class="modal-overlay" tabindex="-1" aria-modal="true" role="dialog" style="display:none;" data-cy="modal-choix-role">
+                        <div class="modal-content" id="modal-choix-role-content" data-cy="modal-choix-content">
+                            <button id="btn-fermer-modal" class="modal-close" aria-label="Fermer" data-cy="modal-close">&times;</button>
                             <div class="modal-header">
                                 <span class="modal-icon">🎮</span>
                                 <h2>Choisissez votre rôle</h2>
                                 <p class="modal-desc">Sélectionnez comment vous souhaitez participer à DeviChal</p>
                             </div>
-                            <div class="modal-actions">
-                                <button id="btn-hote" class="modal-btn modal-btn-hote">
+                            <div class="modal-actions" data-cy="modal-actions">
+                                <button id="btn-hote" class="modal-btn modal-btn-hote" data-cy="btn-hote">
                                     <span class="modal-btn-icon">👑</span>
                                     Hôte
                                     <span class="modal-btn-sub">Créer un salon</span>
                                 </button>
-                                <button id="btn-joueur" class="modal-btn modal-btn-joueur">
+                                <button id="btn-joueur" class="modal-btn modal-btn-joueur" data-cy="btn-joueur">
                                     <span class="modal-btn-icon">🎲</span>
                                     Joueur
                                     <span class="modal-btn-sub">Rejoindre une partie</span>
@@ -58,17 +58,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="quiz-card">
+                <div class="quiz-card" data-cy="card-jeux-2">
                     <span class="icon">🎮</span>
                     <h3>Jeux 2</h3>
                     <p>Un jeu de réflexion pour tous les âges.</p>
-                    <button>Jouer</button>
+                    <button data-cy="btn-jeux-2">Jouer</button>
                 </div>
-                <div class="quiz-card">
+                <div class="quiz-card" data-cy="card-jeux-3">
                     <span class="icon">🧩</span>
                     <h3>Jeux 3</h3>
                     <p>Puzzles et casse-têtes variés.</p>
-                    <button>Jouer</button>
+                    <button data-cy="btn-jeux-3">Jouer</button>
                 </div>
             </div>
         </section>

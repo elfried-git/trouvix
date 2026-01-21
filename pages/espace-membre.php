@@ -16,31 +16,31 @@ $user_email = $_SESSION['user_email'];
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-    <header>
+    <header data-cy="membre-header">
         <div class="header-row">
-            <div class="logo" tabindex="0" aria-label="Accueil Trouvix">
+            <div class="logo" tabindex="0" aria-label="Accueil Trouvix" data-cy="membre-logo">
                 <span class="logo-text">Trouvix</span>
             </div>
-            <button id="close-menu" class="close-menu" aria-label="Fermer le menu" style="display:none">
+            <button id="close-menu" class="close-menu" aria-label="Fermer le menu" style="display:none" data-cy="membre-close-menu">
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#0ff1ce" stroke-width="3"
                     stroke-linecap="round" stroke-linejoin="round">
                     <line x1="8" y1="8" x2="24" y2="24" />
                     <line x1="24" y1="8" x2="8" y2="24" />
                 </svg>
             </button>
-            <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
+            <nav id="main-nav" class="main-nav" aria-label="Navigation principale" data-cy="membre-nav">
                 <ul>
-                    <li><a href="../index.html">Accueil</a></li>
-                    <li><a href="../index.html#contact">Contact</a></li>
-                        <li id="menu-user-icon" style="display:flex;align-items:center;gap:0.4em;">
+                    <li><a href="../index.html" data-cy="membre-nav-accueil">Accueil</a></li>
+                    <li><a href="../index.html#contact" data-cy="membre-nav-contact">Contact</a></li>
+                        <li id="menu-user-icon" style="display:flex;align-items:center;gap:0.4em;" data-cy="membre-user-icon">
                             <a href="espace-membre.php" title="Espace membre" style="display:flex;align-items:center;gap:0.4em;">
-                                <span id="menu-user-nom" style="font-size:1em;">
+                                <span id="menu-user-nom" style="font-size:1em;" data-cy="membre-user-nom">
                                     <?php echo htmlspecialchars($user_nom); ?>
                                 </span>
                             </a>
                         </li>
                         <!-- <li id="menu-login-link"><a href="../auth/login.html">Connexion</a></li> -->
-                        <li id="menu-logout-link" style="display:none"><form action="logout.php" method="post" style="display:inline;"><button type="submit" style="background:none;border:none;color:#0ff1ce;font-size:1em;cursor:pointer;">Déconnexion</button></form></li>
+                        <li id="menu-logout-link" style="display:none" data-cy="membre-logout-link"><form action="logout.php" method="post" style="display:inline;"><button type="submit" style="background:none;border:none;color:#0ff1ce;font-size:1em;cursor:pointer;" data-cy="membre-logout-btn">Déconnexion</button></form></li>
                 </ul>
             </nav>
         </div>

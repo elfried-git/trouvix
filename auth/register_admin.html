@@ -13,29 +13,29 @@
     </style>
 </head>
 <body class="body">
-    <header>
+    <header data-cy="admin-header">
         <div class="header-row">
-            <a href="admin-login.html" class="logo" tabindex="0" aria-label="Accueil Trouvix" style="text-decoration:none;">
+            <a href="admin-login.html" class="logo" tabindex="0" aria-label="Accueil Trouvix" style="text-decoration:none;" data-cy="logo">
                 <span class="logo-text">Trouvix</span>
             </a>
         </div>
     </header>
-    <div class="hote-login-container">
-        <div class="hote-title">Créer un compte Administrateur</div>
-        <div id="confirmation-message" style="display:none; color:#00ffcc; text-align:center; margin-bottom:15px; font-weight:bold;"></div>
-        <form id="register-admin-form" autocomplete="off">
+    <div class="hote-login-container" data-cy="admin-register-container">
+        <div class="hote-title" data-cy="admin-register-title">Créer un compte Administrateur</div>
+        <div id="confirmation-message" style="display:none; color:#00ffcc; text-align:center; margin-bottom:15px; font-weight:bold;" data-cy="admin-register-message"></div>
+        <form id="register-admin-form" autocomplete="off" data-cy="admin-register-form">
             <div class="form-group">
                 <label class="form-label" for="email">Adresse mail</label>
-                <input class="form-input" type="email" id="email" name="email" required>
+                <input class="form-input" type="email" id="email" name="email" required data-cy="admin-register-email">
             </div>
             <div class="form-group">
                 <label class="form-label" for="password">OTP</label>
-                <input class="form-input" type="password" id="password" name="password" required>
+                <input class="form-input" type="password" id="password" name="password" required data-cy="admin-register-password">
             </div>
-            <button type="submit" class="hote-btn">Créer le compte</button>
+            <button type="submit" class="hote-btn" data-cy="admin-register-submit">Créer le compte</button>
         </form>
         <div style="text-align:center; margin-top:1.2em;">
-            <a href="admin-login.html" style="color:#0ff1ce; text-decoration:underline; font-weight:500;">Se connecter</a>
+            <a href="admin-login.html" style="color:#0ff1ce; text-decoration:underline; font-weight:500;" data-cy="admin-register-login-link">Se connecter</a>
         </div>
     </div>
     <script>

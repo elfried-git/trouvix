@@ -26,15 +26,15 @@
     </style>
 </head>
 <body class="body">
-    <header>
+    <header data-cy="auth-header">
         <div class="header-row">
-            <div class="logo" tabindex="0" aria-label="Accueil Trouvix">
+            <div class="logo" tabindex="0" aria-label="Accueil Trouvix" data-cy="logo">
                 <span class="logo-text">Trouvix</span>
             </div>
-            <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
+            <nav id="main-nav" class="main-nav" aria-label="Navigation principale" data-cy="auth-nav">
                 <ul>
-                    <li><a href="../index.html">Accueil</a></li>
-                    <li><a href="../index.html#contact">Contact</a></li>
+                    <li><a href="../index.html" data-cy="nav-accueil">Accueil</a></li>
+                    <li><a href="../index.html#contact" data-cy="nav-contact">Contact</a></li>
                     <li id="menu-user-icon" style="display:none">
                         <a href="../pages/espace-membre.php" title="Espace membre" style="display:flex;align-items:center;gap:0.4em;">
                             <span style="font-size:1.5em;">👤</span>
@@ -66,25 +66,25 @@
                     </div>
                 </div>
                 <div class="hote-login-form-block-outer" style="display:flex;align-items:center;justify-content:center;">
-                    <div class="hote-login-form-block" style="flex:1;display:flex;flex-direction:column;justify-content:center;background:#181c3a;border-radius:1.2em;padding:2em 2em 2em 2em;box-shadow:0 0 32px #00fff966,0 0 0 3px #00fff933,0 0 80px 8px #ff00ff22;border:1.5px solid #00fff9;max-width:420px;">
-                            <div class="hote-title" style="color:#00fff9;text-align:center;font-size:2em;margin-bottom:1.2em;text-shadow:0 0 8px #00fff9cc;">Connexion Hôte</div>
-                            <form id="hote-login-form" autocomplete="off">
+                    <div class="hote-login-form-block" style="flex:1;display:flex;flex-direction:column;justify-content:center;background:#181c3a;border-radius:1.2em;padding:2em 2em 2em 2em;box-shadow:0 0 32px #00fff966,0 0 0 3px #00fff933,0 0 80px 8px #ff00ff22;border:1.5px solid #00fff9;max-width:420px;" data-cy="login-form-block">
+                            <div class="hote-title" style="color:#00fff9;text-align:center;font-size:2em;margin-bottom:1.2em;text-shadow:0 0 8px #00fff9cc;" data-cy="login-title">Connexion Hôte</div>
+                            <form id="hote-login-form" autocomplete="off" data-cy="login-form">
                                     <div class="form-group">
                                             <label class="form-label" for="register-email">Email</label>
-                                            <input class="form-input" id="register-email" name="email" type="email" placeholder="Email" required>
+                                            <input class="form-input" id="register-email" name="email" type="email" placeholder="Email" required data-cy="login-email">
                                     </div>
                                     <div class="form-group">
                                             <label class="form-label" for="hote-otp">OTP</label>
-                                            <input class="form-input" id="hote-otp" name="otp" type="password" maxlength="8" placeholder="OTP" required>
+                                            <input class="form-input" id="hote-otp" name="otp" type="password" maxlength="8" placeholder="OTP" required data-cy="login-otp">
                                     </div>
                                     <div style="display:flex;gap:0.7em;justify-content:center;margin-top:1.2em;">
                                             <button type="submit" class="hote-btn" id="hote-btn"
-                                                    style="flex:1; min-width:110px; max-width:180px; height:42px; font-size:1.08em; padding:0; display:flex; align-items:center; justify-content:center;">Connecter</button>
-                                            <a href="../index.html" class="hote-btn quitter" style="flex:1; min-width:110px; max-width:180px; height:42px; font-size:1.08em; padding:0; display:flex; align-items:center; justify-content:center; text-align:center; text-decoration:none;">Retour</a>
+                                                    style="flex:1; min-width:110px; max-width:180px; height:42px; font-size:1.08em; padding:0; display:flex; align-items:center; justify-content:center;" data-cy="login-submit">Connecter</button>
+                                            <a href="../index.html" class="hote-btn quitter" style="flex:1; min-width:110px; max-width:180px; height:42px; font-size:1.08em; padding:0; display:flex; align-items:center; justify-content:center; text-align:center; text-decoration:none;" data-cy="login-retour">Retour</a>
                                     </div>
-                                    <div id="hote-error" style="color:red;text-align:center;margin-top:1em;"></div>
+                                    <div id="hote-error" style="color:red;text-align:center;margin-top:1em;" data-cy="login-error"></div>
                                     <div style="text-align:center; margin-top:1.2em;">
-                                            <a href="register.html" style="color:#0ff1ce; text-decoration:underline; font-weight:500;">Je n'ai pas de compte</a>
+                                            <a href="register.html" style="color:#0ff1ce; text-decoration:underline; font-weight:500;" data-cy="login-register-link">Je n'ai pas de compte</a>
                                     </div>
                             </form>
                     </div>

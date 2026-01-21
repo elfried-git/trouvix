@@ -69,14 +69,14 @@
     </style>
 </head>
 <body>
-    <div class="notif-popin">
-        <h2>Notifications Salons</h2>
-        <div class="notif-list" id="notif-list">
+    <div class="notif-popin" data-cy="notif-admin-popin">
+        <h2 data-cy="notif-admin-title">Notifications Salons</h2>
+        <div class="notif-list" id="notif-list" data-cy="notif-admin-list">
             <!-- Notifications seront chargées ici -->
         </div>
-        <div class="notif-btns">
-            <button class="notif-btn" id="btn-fermer">Fermer</button>
-            <button class="notif-btn" id="btn-supprimer">Supprimer</button>
+        <div class="notif-btns" data-cy="notif-admin-btns">
+            <button class="notif-btn" id="btn-fermer" data-cy="notif-admin-fermer">Fermer</button>
+            <button class="notif-btn" id="btn-supprimer" data-cy="notif-admin-supprimer">Supprimer</button>
         </div>
     </div>
     <script>
