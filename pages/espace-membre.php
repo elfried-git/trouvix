@@ -5,7 +5,6 @@ if (!isset($_SESSION['user_id']) && !isset($_SESSION['admin_id'])) {
     header('Location: ../auth/login.html');
     exit;
 }
- Empêcher les admins d'accéder à l'espace membre
 if (isset($_SESSION['admin_id'])) {
     header('Location: ../auth/admin-dashboard.php');
     exit;
@@ -534,7 +533,9 @@ $user_email = $_SESSION['user_email'] ?? '';
         }
         .chat-input-container {
             display: flex;
+            flex-direction: column;
             gap: 0.5em;
+            align-items: stretch;
         }
         .chat-input {
             flex: 1;
@@ -546,6 +547,7 @@ $user_email = $_SESSION['user_email'] ?? '';
             font-size: 0.95em;
             outline: none;
             transition: border 0.2s, box-shadow 0.2s;
+            margin-bottom: 0.5em;
         }
         .chat-input:focus {
             border-color: #ff00ff;
@@ -562,6 +564,7 @@ $user_email = $_SESSION['user_email'] ?? '';
             transition: all 0.3s;
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             font-size: 0.95em;
+            align-self: flex-end;
         }
         .chat-send-btn:hover {
             background: linear-gradient(90deg, #00e6e0 0%, #914deb 100%);
@@ -569,7 +572,6 @@ $user_email = $_SESSION['user_email'] ?? '';
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
 
-        /* Scroll to top button */
         #scroll-to-top {
             position: fixed;
             bottom: 20px;
@@ -715,7 +717,6 @@ $user_email = $_SESSION['user_email'] ?? '';
 
     <script src="../js/session-nav.js"></script>
     <script>
-         Modal Join Salon
         const btnJoinSalon = document.getElementById('btn-join-salon');
         const modalJoinSalon = document.getElementById('modal-join-salon');
         const btnCancelJoin = document.getElementById('btn-cancel-join');
@@ -734,11 +735,9 @@ $user_email = $_SESSION['user_email'] ?? '';
             const code = document.getElementById('code-salon').value.trim();
             if (!code) return;
 
-             Rediriger vers la page salon
             window.location.href = `salon.html?code=${encodeURIComponent(code)}`;
         });
 
-         --- Affichage du salon rejoint dans l'espace membre ---
         async function fetchSalonForUser() {
             try {
                 const userInfoRes = await fetch('../backend/get_user_info.php');
@@ -748,8 +747,6 @@ $user_email = $_SESSION['user_email'] ?? '';
                 const salonsRes = await fetch('../backend/salons.php');
                 if (!salonsRes.ok) return null;
                 const salons = await salonsRes.json();
-                
-                 Cherche le salon où l'utilisateur est présent
                 for (const salon of salons) {
                     if (Array.isArray(salon.joueurs) && salon.joueurs.some(j => j && j.nom === userInfo.nom)) {
                         return { salon, userNom: userInfo.nom };
@@ -773,7 +770,6 @@ $user_email = $_SESSION['user_email'] ?? '';
             
             const { salon, userNom } = data;
             
-             Si le joueur n'est plus dans la liste, masquer le bloc
             if (!salon.joueurs.some(j => j && j.nom === userNom)) {
                 block.style.display = 'none';
                 return;
@@ -781,7 +777,6 @@ $user_email = $_SESSION['user_email'] ?? '';
             
             block.style.display = 'block';
             
-             Bouton Betou Kouenda
             const btnBetou = document.getElementById('btn-betou-kouenda');
             if (btnBetou) {
                 if (salon.joueurs.some(j => j && j.nom === userNom)) {
@@ -802,7 +797,6 @@ $user_email = $_SESSION['user_email'] ?? '';
             
             document.getElementById('member-salon-code').textContent = `Code du salon : ${salon.code}`;
             
-             Hôte
             const hote = salon.joueurs[0];
             let nomAffiche = hote && hote.nom ? hote.nom : 'Hôte';
             document.getElementById('member-host-info').innerHTML = `
@@ -812,7 +806,6 @@ $user_email = $_SESSION['user_email'] ?? '';
                 </div>
             `;
             
-             Joueurs (hors hôte)
             const playersList = document.getElementById('member-players-list');
             playersList.innerHTML = '';
             const totalSlots = salon.maxJoueurs;
@@ -840,7 +833,6 @@ $user_email = $_SESSION['user_email'] ?? '';
                 }
             }
             
-             Popin pour retirer un joueur (hôte uniquement)
             if (userNom === (hote && hote.nom)) {
                 setTimeout(() => {
                     document.querySelectorAll('.avatar.player[data-nom]').forEach(img => {
@@ -852,7 +844,6 @@ $user_email = $_SESSION['user_email'] ?? '';
                 }, 100);
             }
 
-             Message dynamique
             const joueursConnectes = salon.joueurs.filter(j => j && j.nom && j.photo).length;
             const salonMsg = document.getElementById('member-salon-message');
             if (joueursConnectes < totalSlots) {
@@ -864,7 +855,6 @@ $user_email = $_SESSION['user_email'] ?? '';
             }
         }
 
-         Popin stylée pour retirer un joueur
         function showKickPopin(nom, code, onKick) {
             let old = document.getElementById('kick-popin');
             if (old) old.remove();
@@ -906,14 +896,11 @@ $user_email = $_SESSION['user_email'] ?? '';
 
         renderMemberSalonBlock();
         
-         Rafraîchir périodiquement
         setInterval(renderMemberSalonBlock, 3000);
 
-         Bouton retour en haut
         const scrollToTopBtn = document.getElementById('scroll-to-top');
         
         if (scrollToTopBtn) {
-             Afficher/masquer le bouton selon le scroll
             window.addEventListener('scroll', function() {
                 if (window.pageYOffset > 300) {
                     scrollToTopBtn.classList.add('show');
@@ -922,7 +909,6 @@ $user_email = $_SESSION['user_email'] ?? '';
                 }
             });
             
-             Remonter en haut au clic
             scrollToTopBtn.addEventListener('click', function() {
                 window.scrollTo({
                     top: 0,
@@ -931,7 +917,6 @@ $user_email = $_SESSION['user_email'] ?? '';
             });
         }
 
-         Chat avec l'admin
         const chatInput = document.getElementById('chat-input');
         const chatSendBtn = document.getElementById('chat-send-btn');
         const chatMessages = document.getElementById('chat-messages');
@@ -940,7 +925,6 @@ $user_email = $_SESSION['user_email'] ?? '';
             const messageDiv = document.createElement('div');
             messageDiv.className = `chat-message ${isAdmin ? 'admin' : 'user'}`;
 
-             Ajout avatar admin si message admin
             if (isAdmin) {
                 const avatar = document.createElement('img');
                 avatar.src = '../assets/avatar-default.png';
@@ -952,7 +936,6 @@ $user_email = $_SESSION['user_email'] ?? '';
             const authorDiv = document.createElement('div');
             authorDiv.className = 'chat-message-author';
 
-             Afficher l'heure si disponible
             const timeStr = timestamp ? new Date(timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '';
             authorDiv.textContent = isAdmin ? 'Admin' + (timeStr ? ' • ' + timeStr : '') : 'Vous' + (timeStr ? ' • ' + timeStr : '');
 
@@ -963,9 +946,7 @@ $user_email = $_SESSION['user_email'] ?? '';
             messageDiv.appendChild(textDiv);
             chatMessages.appendChild(messageDiv);
 
-             Scroll vers le bas
             chatMessages.scrollTop = chatMessages.scrollHeight;
-                 Style avatar admin dans le chat
                 const style = document.createElement('style');
                 style.textContent = `
                     .chat-admin-avatar {
@@ -997,7 +978,6 @@ $user_email = $_SESSION['user_email'] ?? '';
                     console.log('Messages reçus côté utilisateur:', data);
                     
                     if (data.success && data.messages) {
-                         Sauvegarder la position de scroll
                         const scrollPos = chatMessages.scrollTop;
                         const isAtBottom = chatMessages.scrollHeight - chatMessages.scrollTop <= chatMessages.clientHeight + 50;
                         
@@ -1010,7 +990,6 @@ $user_email = $_SESSION['user_email'] ?? '';
                             addMessage(msg.message, msg.is_from_admin == 1, msg.created_at);
                         });
                         
-                         Auto-scroll si nouveaux messages ou déjà en bas
                         if (isAtBottom || data.messages.length > 0) {
                             chatMessages.scrollTop = chatMessages.scrollHeight;
                         } else {
@@ -1029,7 +1008,6 @@ $user_email = $_SESSION['user_email'] ?? '';
                 return;
             }
             
-             Envoyer le message au backend
             fetch('../backend/user_chat.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1039,7 +1017,7 @@ $user_email = $_SESSION['user_email'] ?? '';
             .then(data => {
                 if (data.success) {
                     chatInput.value = '';
-                    loadChatMessages();  Recharger pour afficher le message
+                    loadChatMessages(); 
                 } else {
                     alert('Erreur: ' + (data.error || 'Envoi échoué'));
                 }
@@ -1050,10 +1028,8 @@ $user_email = $_SESSION['user_email'] ?? '';
             });
         }
         
-         Charger les messages au démarrage
         loadChatMessages();
         
-         Recharger les messages toutes les 3 secondes pour voir les réponses admin EN TEMPS RÉEL
         setInterval(loadChatMessages, 3000);
 
         if (chatSendBtn) {
