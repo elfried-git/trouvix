@@ -1,12 +1,17 @@
 <?php
 session_set_cookie_params(['path' => '/']);
 session_start();
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['admin_id'])) {
     header('Location: ../auth/login.html');
     exit;
 }
-$user_nom = $_SESSION['user_nom'];
-$user_email = $_SESSION['user_email'];
+// Empêcher les admins d'accéder à l'espace membre
+if (isset($_SESSION['admin_id'])) {
+    header('Location: ../auth/admin-dashboard.php');
+    exit;
+}
+$user_nom = $_SESSION['user_nom'] ?? '';
+$user_email = $_SESSION['user_email'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -943,23 +948,55 @@ $user_email = $_SESSION['user_email'];
         function addMessage(text, isAdmin = false, timestamp = null) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `chat-message ${isAdmin ? 'admin' : 'user'}`;
-            
+
+            // Ajout avatar admin si message admin
+            if (isAdmin) {
+                const avatar = document.createElement('img');
+                avatar.src = '../assets/avatar-default.png';
+                avatar.alt = 'Admin';
+                avatar.className = 'chat-admin-avatar';
+                messageDiv.appendChild(avatar);
+            }
+
             const authorDiv = document.createElement('div');
             authorDiv.className = 'chat-message-author';
-            
+
             // Afficher l'heure si disponible
             const timeStr = timestamp ? new Date(timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '';
             authorDiv.textContent = isAdmin ? 'Admin' + (timeStr ? ' • ' + timeStr : '') : 'Vous' + (timeStr ? ' • ' + timeStr : '');
-            
+
             const textDiv = document.createElement('div');
             textDiv.textContent = text;
-            
+
             messageDiv.appendChild(authorDiv);
             messageDiv.appendChild(textDiv);
             chatMessages.appendChild(messageDiv);
-            
+
             // Scroll vers le bas
             chatMessages.scrollTop = chatMessages.scrollHeight;
+                // Style avatar admin dans le chat
+                const style = document.createElement('style');
+                style.textContent = `
+                    .chat-admin-avatar {
+                        width: 44px;
+                        height: 44px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        border: 2.5px solid #ffe600;
+                        box-shadow: 0 0 16px #ffe60099, 0 0 0 4px #181c3a;
+                        margin-bottom: 0.3em;
+                        display: block;
+                        margin-left: auto;
+                        margin-right: auto;
+                    }
+                    .chat-message.admin {
+                        position: relative;
+                        padding-top: 0.7em;
+                        padding-bottom: 0.7em;
+                        padding-left: 0.7em;
+                    }
+                `;
+                document.head.appendChild(style);
         }
 
         function loadChatMessages() {

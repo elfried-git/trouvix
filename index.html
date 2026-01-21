@@ -358,26 +358,40 @@
         </section>
 
         <section class="services-grid" aria-label="Services principaux" data-cy="services-grid">
-            <div class="service-card jeux" tabindex="0" role="button" aria-label="Jeux et Quiz"
-                aria-describedby="desc-jeux" data-link="jeux-quiz.html" data-test-id="card-jeux_quiz" data-cy="card-jeux-quiz">
+            <div class="service-card jeux" id="card-jeux-quiz" tabindex="0" role="button" aria-label="Jeux et Quiz"
+                aria-describedby="desc-jeux" data-test-id="card-jeux_quiz" data-cy="card-jeux-quiz">
                 <div class="icon">🎲</div>
                 <h2>Jeux / Quiz</h2>
                 <p id="desc-jeux" class="visually-hidden">Quiz éducatifs, jeux de logique, progression, classement.
                     Appuyez sur Entrée pour accéder à Jeux & Quiz.</p>
-                <a href="#" class="card-link" tabindex="-1" aria-hidden="true"
-                    style="display:none"></a>
                 <span class="card-accent"></span>
             </div>
-            <div class="service-card langues" tabindex="0" role="button" aria-label="Langues"
-                aria-describedby="desc-langues" data-link="page-apprentissage-langues/index.html" data-cy="card-langues">
+            <!-- Modal Jeux / Quiz bientôt dispo -->
+            <div id="modal-jeux-quiz" style="display:none;position:fixed;z-index:10000;top:0;left:0;width:100vw;height:100vh;background:rgba(10,16,40,0.92);align-items:center;justify-content:center;">
+                <div style="background:#222a44;padding:2.5em 2em 2em 2em;border-radius:1.2em;box-shadow:0 0 32px #00fff966;max-width:90vw;max-height:80vh;display:flex;flex-direction:column;align-items:center;">
+                    <div style="font-size:3.2rem;margin-bottom:1.2em;">🎲</div>
+                    <h2 style="color:#fff;font-size:2.1em;margin-bottom:0.7em;">Jeux / Quiz</h2>
+                    <p style="color:#0ff1ce;font-size:1.2em;margin-bottom:1.5em;text-align:center;">Cette section sera disponible très bientôt !</p>
+                    <button id="close-modal-jeux-quiz" style="background:linear-gradient(90deg,#00fff9 0%,#a259ff 100%);color:#181c3a;font-weight:700;padding:0.7em 2.2em;border:none;border-radius:0.7em;font-size:1.1em;cursor:pointer;">Fermer</button>
+                </div>
+            </div>
+            <div class="service-card langues" id="card-langues" tabindex="0" role="button" aria-label="Langues"
+                aria-describedby="desc-langues" data-cy="card-langues">
                 <div class="icon">🌍</div>
                 <h2>Langues</h2>
                 <p id="desc-langues" class="visually-hidden">Cours, exercices, quiz et jeux pour apprendre l'anglais,
                     l'espagnol, le français, l'italien et le swahili. Appuyez sur Entrée pour accéder à l'espace
                     Langues.</p>
-                <a href="page-apprentissage-langues/index.html" class="card-link" tabindex="-1" aria-hidden="true"
-                    style="display:none"></a>
                 <span class="card-accent"></span>
+            </div>
+            <!-- Modal Langues bientôt dispo -->
+            <div id="modal-langues" style="display:none;position:fixed;z-index:10000;top:0;left:0;width:100vw;height:100vh;background:rgba(10,16,40,0.92);align-items:center;justify-content:center;">
+                <div style="background:#222a44;padding:2.5em 2em 2em 2em;border-radius:1.2em;box-shadow:0 0 32px #00fff966;max-width:90vw;max-height:80vh;display:flex;flex-direction:column;align-items:center;">
+                    <div style="font-size:3.2rem;margin-bottom:1.2em;">🌍</div>
+                    <h2 style="color:#fff;font-size:2.1em;margin-bottom:0.7em;">Langues</h2>
+                    <p style="color:#0ff1ce;font-size:1.2em;margin-bottom:1.5em;text-align:center;">Cette section sera bientôt disponible !</p>
+                    <button id="close-modal-langues" style="background:linear-gradient(90deg,#00fff9 0%,#a259ff 100%);color:#181c3a;font-weight:700;padding:0.7em 2.2em;border:none;border-radius:0.7em;font-size:1.1em;cursor:pointer;">Fermer</button>
+                </div>
             </div>
             <div class="service-card vod" tabindex="0" role="region" aria-label="Films et VOD" style="display:flex;flex-direction:column;align-items:center;justify-content:center;" data-cy="card-vod">
                                 <div id="vod-card-click" class="card-link" tabindex="0" role="button" aria-label="Films et VOD" style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;cursor:pointer;" data-cy="vod-card-click">
@@ -400,7 +414,7 @@
                 <span class="card-accent"></span>
             </div>
         </section>
-        <section id="contact" class="contact" data-cy="contact-section">
+        <!-- <section id="contact" class="contact" data-cy="contact-section">
             <h2 data-cy="contact-title">Contactez l'administrateur</h2>
             <form aria-label="Formulaire de contact" id="contactFormIndex" data-cy="contact-form">
                 <div class="form-group">
@@ -420,7 +434,7 @@
                 </div>
             </form>
             <div id="contact-success-index" style="display:none;color:#27ae60;font-weight:600;margin-top:1em;" data-cy="contact-success"></div>
-</section>
+</section> -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('contactFormIndex');
@@ -479,6 +493,67 @@ document.addEventListener('DOMContentLoaded', function() {
     <script src="js/login-modal-ui.js"></script>
     <script src="js/card-navigation.js"></script>
     <script type="text/javascript" src="js/tv-garden.js" defer></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Modal Jeux / Quiz
+        var jeuxCard = document.getElementById('card-jeux-quiz');
+        var modalJeux = document.getElementById('modal-jeux-quiz');
+        var closeJeuxBtn = document.getElementById('close-modal-jeux-quiz');
+        if (jeuxCard && modalJeux) {
+            jeuxCard.addEventListener('click', function(e) {
+                e.preventDefault();
+                modalJeux.style.display = 'flex';
+            });
+            jeuxCard.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    modalJeux.style.display = 'flex';
+                }
+            });
+        }
+        if (closeJeuxBtn && modalJeux) {
+            closeJeuxBtn.addEventListener('click', function() {
+                modalJeux.style.display = 'none';
+            });
+        }
+        if (modalJeux) {
+            modalJeux.addEventListener('click', function(e) {
+                if (e.target === modalJeux) {
+                    modalJeux.style.display = 'none';
+                }
+            });
+        }
+
+        // Modal Langues
+        var languesCard = document.getElementById('card-langues');
+        var modalLangues = document.getElementById('modal-langues');
+        var closeLanguesBtn = document.getElementById('close-modal-langues');
+        if (languesCard && modalLangues) {
+            languesCard.addEventListener('click', function(e) {
+                e.preventDefault();
+                modalLangues.style.display = 'flex';
+            });
+            languesCard.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    modalLangues.style.display = 'flex';
+                }
+            });
+        }
+        if (closeLanguesBtn && modalLangues) {
+            closeLanguesBtn.addEventListener('click', function() {
+                modalLangues.style.display = 'none';
+            });
+        }
+        if (modalLangues) {
+            modalLangues.addEventListener('click', function(e) {
+                if (e.target === modalLangues) {
+                    modalLangues.style.display = 'none';
+                }
+            });
+        }
+    });
+    </script>
 </body>
 <script>
 document.addEventListener('DOMContentLoaded', function() {

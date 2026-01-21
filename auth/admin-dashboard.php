@@ -4,6 +4,11 @@ if (!isset($_SESSION['admin_id'])) {
     header('Location: admin-login.html');
     exit();
 }
+// Empêcher les utilisateurs simples d'accéder au dashboard admin
+if (isset($_SESSION['user_id'])) {
+    header('Location: ../pages/espace-membre.php');
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
