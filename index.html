@@ -168,8 +168,13 @@
             resize: vertical;
         }
         #contactFormIndex button {
-            width: auto;
-            display: inline-block;
+            width: auto !important;
+            display: inline-block !important;
+            min-width: auto !important;
+            max-width: none !important;
+            height: auto !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
         }
         #popin-access-denied-overlay {
             position: fixed;
@@ -244,10 +249,60 @@
                 opacity: 1;
             }
         }
+
+        #scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: auto;
+            height: auto;
+            background: transparent;
+            color: #00fff9;
+            border: none;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-shadow: 0 2px 8px rgba(0, 255, 249, 0.6);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+        }
+
+        #scroll-to-top.show {
+            opacity: 0.7;
+            visibility: visible;
+        }
+
+        #scroll-to-top:hover {
+            opacity: 1;
+            color: #ff00ff;
+            transform: translateY(-3px) scale(1.4);
+            text-shadow: 0 4px 16px rgba(0, 255, 249, 0.8), 0 0 20px rgba(255, 0, 255, 0.6);
+        }
+
+        #scroll-to-top:active {
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            #scroll-to-top {
+                bottom: 15px;
+                right: 15px;
+                font-size: 1.8rem;
+            }
+        }
     </style>
 </head>
 
 <body>
+    <button id="scroll-to-top" aria-label="Retour en haut" title="Retour en haut">
+        ↑
+    </button>
     <header data-cy="main-header">
         <div class="header-row" id="global-header">
             <div class="logo" tabindex="0" aria-label="Accueil Trouvix" data-cy="logo">
@@ -475,6 +530,31 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.target === vodPopin) {
                 closeVodPopin();
             }
+        });
+    }
+});
+</script>
+<script>
+// Bouton retour en haut
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollToTopBtn = document.getElementById('scroll-to-top');
+    
+    if (scrollToTopBtn) {
+        // Afficher/masquer le bouton selon le scroll
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        
+        // Remonter en haut au clic
+        scrollToTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         });
     }
 });
