@@ -134,37 +134,96 @@ $user_email = $_SESSION['user_email'];
         }
         .actions-buttons {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             gap: 1.2em;
+            justify-content: center;
+            align-items: stretch;
         }
         .btn-action {
-            background: linear-gradient(90deg, #00fff9 0%, #ff00ff 100%);
-            color: #181c3a;
+            background: rgba(24, 28, 58, 0.6);
+            backdrop-filter: blur(10px);
+            color: #00fff9;
             font-weight: bold;
-            border: none;
-            border-radius: 0.9em;
-            font-size: 1.15em;
-            padding: 0.95em 2em;
-            box-shadow: 0 0 24px #00fff9cc, 0 0 48px #ff00ff66;
-            letter-spacing: 0.04em;
-            text-shadow: 0 0 8px #fff;
-            transition: background 0.22s, color 0.22s, box-shadow 0.22s, transform 0.13s;
+            border: 2px solid #00fff9;
+            border-radius: 1.2em;
+            font-size: 0.95em;
+            padding: 0.8em 1.2em;
+            box-shadow: 0 0 20px rgba(0, 255, 249, 0.4), inset 0 0 20px rgba(0, 255, 249, 0.1);
+            letter-spacing: 0.02em;
+            text-shadow: 0 0 10px rgba(0, 255, 249, 0.8);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             outline: none;
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+            min-width: 0;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .btn-action::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(0, 255, 249, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .btn-action:hover::before {
+            width: 300px;
+            height: 300px;
         }
         .btn-action:hover, .btn-action:focus {
-            background: linear-gradient(90deg, #ff00ff 0%, #00fff9 100%);
-            color: #fff;
-            box-shadow: 0 0 40px #ff00ffaa, 0 0 0 2px #00fff933;
-            transform: scale(1.06);
+            border-color: #ff00ff;
+            color: #ff00ff;
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.6), 0 0 60px rgba(0, 255, 249, 0.4), inset 0 0 30px rgba(255, 0, 255, 0.2);
+            text-shadow: 0 0 15px rgba(255, 0, 255, 0.9);
+            transform: translateY(-2px);
         }
         .btn-logout {
-            background: linear-gradient(90deg, #222 60%, #00fff9 100%);
-            color: #fff;
+            background: rgba(34, 34, 34, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid #ff0055;
+            color: #ff0055;
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.4), inset 0 0 20px rgba(255, 0, 85, 0.1);
+            text-shadow: 0 0 10px rgba(255, 0, 85, 0.8);
+            font-weight: bold;
+            border-radius: 1.2em;
+            font-size: 1em;
+            padding: 0.8em 1.5em;
+            letter-spacing: 0.02em;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-logout::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 0, 85, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .btn-logout:hover::before {
+            width: 300px;
+            height: 300px;
         }
         .btn-logout:hover {
-            background: linear-gradient(90deg, #00fff9 0%, #222 100%);
-            color: #ff00ff;
+            border-color: #ffe600;
+            color: #ffe600;
+            box-shadow: 0 0 30px rgba(255, 230, 0, 0.6), 0 0 60px rgba(255, 0, 85, 0.4), inset 0 0 30px rgba(255, 230, 0, 0.2);
+            text-shadow: 0 0 15px rgba(255, 230, 0, 0.9);
+            transform: translateY(-2px);
         }
 
         /* Salon Block */
@@ -339,25 +398,45 @@ $user_email = $_SESSION['user_email'];
             color: #fff;
         }
         .btn-join-salon {
-            margin-top: 1em;
-            background: linear-gradient(90deg, #00fff9 0%, #ff00ff 100%);
-            color: #181c3a;
+            background: rgba(24, 28, 58, 0.6);
+            backdrop-filter: blur(10px);
+            color: #00fff9;
             font-weight: bold;
-            border: none;
-            border-radius: 0.9em;
-            font-size: 1.18em;
-            padding: 0.95em 2.4em;
-            box-shadow: 0 0 24px #00fff9cc, 0 0 48px #ff00ff66;
-            letter-spacing: 0.04em;
-            text-shadow: 0 0 8px #fff, 0 0 16px #00fff9cc;
-            transition: background 0.22s, color 0.22s, box-shadow 0.22s, transform 0.13s;
+            border: 2px solid #00fff9;
+            border-radius: 1.2em;
+            font-size: 1em;
+            padding: 0.8em 1.5em;
+            box-shadow: 0 0 20px rgba(0, 255, 249, 0.4), inset 0 0 20px rgba(0, 255, 249, 0.1);
+            letter-spacing: 0.02em;
+            text-shadow: 0 0 10px rgba(0, 255, 249, 0.8);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-join-salon::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(0, 255, 249, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .btn-join-salon:hover::before {
+            width: 300px;
+            height: 300px;
         }
         .btn-join-salon:hover {
-            background: linear-gradient(90deg, #ff00ff 0%, #00fff9 100%);
-            color: #fff;
-            box-shadow: 0 0 40px #ff00ffaa, 0 0 0 2px #00fff933;
-            transform: scale(1.06);
+            border-color: #ff00ff;
+            color: #ff00ff;
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.6), 0 0 60px rgba(0, 255, 249, 0.4), inset 0 0 30px rgba(255, 0, 255, 0.2);
+            text-shadow: 0 0 15px rgba(255, 0, 255, 0.9);
+            transform: translateY(-2px);
         }
 
         @media (max-width: 768px) {
@@ -376,6 +455,19 @@ $user_email = $_SESSION['user_email'];
         @media (max-width: 600px) {
             .profile-card, .actions-card {
                 padding: 2em 1.5em;
+            }
+            .actions-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 1em;
+            }
+            .btn-action {
+                width: 100%;
+                max-width: 250px;
+            }
+            .btn-logout {
+                width: 100%;
+                max-width: 250px;
             }
         }
     </style>
@@ -420,11 +512,11 @@ $user_email = $_SESSION['user_email'];
                 <h3>Actions Disponibles</h3>
                 <div class="actions-buttons">
                     <button class="btn-action" id="btn-join-salon" data-cy="membre-btn-join">
-                        🎮 Rejoindre un salon
+                        Go salon
                     </button>
                     <form action="logout.php" method="POST" style="margin: 0;">
                         <button type="submit" class="btn-action btn-logout" data-cy="membre-btn-logout">
-                            🚪 Déconnexion
+                            Déconnexion
                         </button>
                     </form>
                 </div>
@@ -460,9 +552,9 @@ $user_email = $_SESSION['user_email'];
                         <label for="code-salon" style="color:#0ff1ce;font-size:1.1em;text-align:center;">Code du Salon</label>
                         <input type="text" id="code-salon" class="form-input" placeholder="Ex: ABC123" required data-cy="membre-input-code">
                     </div>
-                    <div style="display:flex;gap:1em;justify-content:center;margin-top:2em;">
-                        <button type="button" id="btn-cancel-join" class="btn-action btn-logout" style="padding:0.7em 1.5em;font-size:1.05em;" data-cy="membre-btn-cancel">Annuler</button>
-                        <button type="submit" class="btn-join-salon" style="padding:0.7em 1.5em;font-size:1.05em;" data-cy="membre-btn-submit-join">Rejoindre</button>
+                    <div style="display:flex !important;flex-direction:row !important;gap:0.8em;justify-content:center;align-items:stretch !important;margin-top:2em;">
+                        <button type="button" id="btn-cancel-join" class="btn-logout" style="flex:0 0 110px !important;height:40px !important;font-size:0.9em !important;padding:0 !important;border:2px solid #ff0055 !important;margin:0 !important;" data-cy="membre-btn-cancel">Annuler</button>
+                        <button type="submit" class="btn-join-salon" style="flex:0 0 110px !important;height:40px !important;font-size:0.9em !important;padding:0 !important;border:2px solid #00fff9 !important;margin:0 !important;" data-cy="membre-btn-submit-join">Rejoindre</button>
                     </div>
                 </form>
             </div>
