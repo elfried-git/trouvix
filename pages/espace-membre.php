@@ -69,9 +69,9 @@ $user_email = $_SESSION['user_email'];
         /* Cards Grid */
         .member-cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2.5em;
-            max-width: 1200px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2em;
+            max-width: 1400px;
             width: 100%;
         }
 
@@ -79,7 +79,7 @@ $user_email = $_SESSION['user_email'];
         .profile-card {
             background: rgba(24,28,58,0.98);
             border-radius: 1.5em;
-            padding: 2.5em 2em;
+            padding: 2em 1.5em;
             box-shadow: 0 0 32px #00fff933, 0 0 0 2px #00fff933;
             text-align: center;
             transition: transform 0.18s, box-shadow 0.18s;
@@ -89,35 +89,35 @@ $user_email = $_SESSION['user_email'];
             box-shadow: 0 0 48px #00fff966, 0 0 0 2px #00fff933;
         }
         .profile-icon {
-            width: 90px;
-            height: 90px;
+            width: 70px;
+            height: 70px;
             background: linear-gradient(135deg, #00fff9 0%, #ff00ff 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3em;
+            font-size: 2.5em;
             color: #181c3a;
-            margin: 0 auto 1.5em auto;
+            margin: 0 auto 1.2em auto;
             box-shadow: 0 0 24px #00fff9cc, 0 0 48px #ff00ff66;
         }
         .profile-name {
-            font-size: 1.5em;
+            font-size: 1.3em;
             color: #00fff9;
             font-weight: bold;
-            margin-bottom: 0.5em;
+            margin-bottom: 0.4em;
         }
         .profile-email {
-            font-size: 1.1em;
+            font-size: 1em;
             color: #8be9fd;
-            margin-bottom: 1.5em;
+            margin-bottom: 1em;
         }
 
         /* Actions Card */
         .actions-card {
             background: rgba(24,28,58,0.98);
             border-radius: 1.5em;
-            padding: 2.5em 2em;
+            padding: 2em 1.5em;
             box-shadow: 0 0 32px #00fff933, 0 0 0 2px #00fff933;
             text-align: center;
             transition: transform 0.18s, box-shadow 0.18s;
@@ -127,9 +127,9 @@ $user_email = $_SESSION['user_email'];
             box-shadow: 0 0 48px #00fff966, 0 0 0 2px #00fff933;
         }
         .actions-card h3 {
-            font-size: 1.6em;
+            font-size: 1.4em;
             color: #ff00ff;
-            margin-bottom: 1.5em;
+            margin-bottom: 1.2em;
             font-weight: bold;
         }
         .actions-buttons {
@@ -453,7 +453,7 @@ $user_email = $_SESSION['user_email'];
         }
 
         @media (max-width: 600px) {
-            .profile-card, .actions-card {
+            .profile-card, .actions-card, .chat-card {
                 padding: 2em 1.5em;
             }
             .actions-buttons {
@@ -469,10 +469,150 @@ $user_email = $_SESSION['user_email'];
                 width: 100%;
                 max-width: 250px;
             }
+            .chat-messages {
+                max-height: 250px !important;
+            }
+        }
+
+        /* Chat Card */
+        .chat-card {
+            background: rgba(24,28,58,0.98);
+            border-radius: 1.5em;
+            padding: 2em 1.5em;
+            box-shadow: 0 0 32px #00fff933, 0 0 0 2px #00fff933;
+            text-align: center;
+            transition: transform 0.18s, box-shadow 0.18s;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 48px #00fff966, 0 0 0 2px #00fff933;
+        }
+        .chat-card h3 {
+            font-size: 1.4em;
+            color: #ffe600;
+            margin-bottom: 1.2em;
+            font-weight: bold;
+        }
+        .chat-messages {
+            flex: 1;
+            background: rgba(0,0,0,0.3);
+            border-radius: 1em;
+            padding: 1em;
+            margin-bottom: 1em;
+            max-height: 300px;
+            overflow-y: auto;
+            text-align: left;
+            border: 2px solid rgba(0,255,249,0.2);
+        }
+        .chat-message {
+            margin-bottom: 0.8em;
+            padding: 0.6em 0.8em;
+            border-radius: 0.7em;
+            font-size: 0.95em;
+        }
+        .chat-message.admin {
+            background: rgba(255,230,0,0.15);
+            border-left: 3px solid #ffe600;
+            color: #ffe600;
+        }
+        .chat-message.user {
+            background: rgba(0,255,249,0.15);
+            border-left: 3px solid #00fff9;
+            color: #00fff9;
+        }
+        .chat-message-author {
+            font-weight: bold;
+            margin-bottom: 0.3em;
+            font-size: 0.9em;
+        }
+        .chat-input-container {
+            display: flex;
+            gap: 0.5em;
+        }
+        .chat-input {
+            flex: 1;
+            background: rgba(24,28,58,0.8);
+            color: #00fff9;
+            border: 2px solid #00fff9;
+            border-radius: 0.8em;
+            padding: 0.7em 1em;
+            font-size: 0.95em;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        .chat-input:focus {
+            border-color: #ff00ff;
+            box-shadow: 0 0 16px rgba(255,0,255,0.4);
+        }
+        .chat-send-btn {
+            background: linear-gradient(90deg, #00fff9 0%, #a259ff 100%);
+            color: #181c3a;
+            font-weight: bold;
+            border: none;
+            border-radius: 0.8em;
+            padding: 0.7em 1.5em;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            font-size: 0.95em;
+        }
+        .chat-send-btn:hover {
+            background: linear-gradient(90deg, #00e6e0 0%, #914deb 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Scroll to top button */
+        #scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: auto;
+            height: auto;
+            background: transparent;
+            color: #00fff9;
+            border: none;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-shadow: 0 2px 8px rgba(0, 255, 249, 0.6);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+        }
+        #scroll-to-top.show {
+            opacity: 0.7;
+            visibility: visible;
+        }
+        #scroll-to-top:hover {
+            opacity: 1;
+            color: #ff00ff;
+            transform: translateY(-3px) scale(1.4);
+            text-shadow: 0 4px 16px rgba(0, 255, 249, 0.8), 0 0 20px rgba(255, 0, 255, 0.6);
+        }
+        #scroll-to-top:active {
+            transform: translateY(-1px);
+        }
+        @media (max-width: 768px) {
+            #scroll-to-top {
+                bottom: 15px;
+                right: 15px;
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
 <body>
+    <button id="scroll-to-top" aria-label="Retour en haut" title="Retour en haut" data-cy="scroll-to-top">
+        ↑
+    </button>
     <header data-cy="membre-header">
         <div class="header-row" id="global-header">
             <div class="logo" tabindex="0" aria-label="Accueil Trouvix" data-cy="membre-logo">
@@ -519,6 +659,21 @@ $user_email = $_SESSION['user_email'];
                             Déconnexion
                         </button>
                     </form>
+                </div>
+            </div>
+
+            <!-- Chat Card -->
+            <div class="chat-card" data-cy="membre-chat-card">
+                <h3>Chat Admin</h3>
+                <div class="chat-messages" id="chat-messages" data-cy="chat-messages">
+                    <div class="chat-message admin">
+                        <div class="chat-message-author">Admin</div>
+                        <div>Bonjour ! Comment puis-je vous aider ?</div>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" class="chat-input" id="chat-input" placeholder="Votre message..." data-cy="chat-input">
+                    <button class="chat-send-btn" id="chat-send-btn" data-cy="chat-send-btn">Envoyer</button>
                 </div>
             </div>
 
@@ -757,6 +912,133 @@ $user_email = $_SESSION['user_email'];
         
         // Rafraîchir périodiquement
         setInterval(renderMemberSalonBlock, 3000);
+
+        // Bouton retour en haut
+        const scrollToTopBtn = document.getElementById('scroll-to-top');
+        
+        if (scrollToTopBtn) {
+            // Afficher/masquer le bouton selon le scroll
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    scrollToTopBtn.classList.add('show');
+                } else {
+                    scrollToTopBtn.classList.remove('show');
+                }
+            });
+            
+            // Remonter en haut au clic
+            scrollToTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+
+        // Chat avec l'admin
+        const chatInput = document.getElementById('chat-input');
+        const chatSendBtn = document.getElementById('chat-send-btn');
+        const chatMessages = document.getElementById('chat-messages');
+
+        function addMessage(text, isAdmin = false, timestamp = null) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${isAdmin ? 'admin' : 'user'}`;
+            
+            const authorDiv = document.createElement('div');
+            authorDiv.className = 'chat-message-author';
+            
+            // Afficher l'heure si disponible
+            const timeStr = timestamp ? new Date(timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '';
+            authorDiv.textContent = isAdmin ? 'Admin' + (timeStr ? ' • ' + timeStr : '') : 'Vous' + (timeStr ? ' • ' + timeStr : '');
+            
+            const textDiv = document.createElement('div');
+            textDiv.textContent = text;
+            
+            messageDiv.appendChild(authorDiv);
+            messageDiv.appendChild(textDiv);
+            chatMessages.appendChild(messageDiv);
+            
+            // Scroll vers le bas
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function loadChatMessages() {
+            fetch('../backend/user_chat.php')
+                .then(r => r.json())
+                .then(data => {
+                    console.log('Messages reçus côté utilisateur:', data);
+                    
+                    if (data.success && data.messages) {
+                        // Sauvegarder la position de scroll
+                        const scrollPos = chatMessages.scrollTop;
+                        const isAtBottom = chatMessages.scrollHeight - chatMessages.scrollTop <= chatMessages.clientHeight + 50;
+                        
+                        chatMessages.innerHTML = '';
+                        
+                        console.log('Nombre de messages à afficher:', data.messages.length);
+                        
+                        data.messages.forEach(msg => {
+                            console.log('Message:', msg.message, 'isAdmin:', msg.is_from_admin);
+                            addMessage(msg.message, msg.is_from_admin == 1, msg.created_at);
+                        });
+                        
+                        // Auto-scroll si nouveaux messages ou déjà en bas
+                        if (isAtBottom || data.messages.length > 0) {
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        } else {
+                            chatMessages.scrollTop = scrollPos;
+                        }
+                    } else {
+                        console.error('Erreur chargement messages:', data);
+                    }
+                })
+                .catch(err => console.error('Erreur chargement messages:', err));
+        }
+
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) {
+                return;
+            }
+            
+            // Envoyer le message au backend
+            fetch('../backend/user_chat.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: message })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    chatInput.value = '';
+                    loadChatMessages(); // Recharger pour afficher le message
+                } else {
+                    alert('Erreur: ' + (data.error || 'Envoi échoué'));
+                }
+            })
+            .catch(err => {
+                console.error('Erreur envoi message:', err);
+                alert('Erreur réseau lors de l\'envoi');
+            });
+        }
+        
+        // Charger les messages au démarrage
+        loadChatMessages();
+        
+        // Recharger les messages toutes les 3 secondes pour voir les réponses admin EN TEMPS RÉEL
+        setInterval(loadChatMessages, 3000);
+
+        if (chatSendBtn) {
+            chatSendBtn.addEventListener('click', sendMessage);
+        }
+
+        if (chatInput) {
+            chatInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        }
     </script>
 </body>
 </html>

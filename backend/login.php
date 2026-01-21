@@ -21,9 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Vérifie si un token de session existe déjà pour ce compte
         $sessionActive = false;
         if (!empty($user['session_token'])) {
-            // Vérifie si la session est vraiment active (last_activity < 30s)
+            // Vérifie si la session est vraiment active (last_activity < 2s)
             $last = !empty($user['last_activity']) ? strtotime($user['last_activity']) : 0;
-            if ($last && (time() - $last) < 30) {
+            if ($last && (time() - $last) < 2) {
                 $sessionActive = true;
             }
         }
