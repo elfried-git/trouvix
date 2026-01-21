@@ -7,90 +7,83 @@
     <title>Trouvix</title>
     <link rel="stylesheet" href="style.css">
     <style>
-                                                /* Centrer la grille des services */
-                                                main {
-                                                    display: flex;
-                                                    flex-direction: column;
-                                                    align-items: center;
-                                                    justify-content: center;
-                                                    min-height: 80vh;
-                                                }
-                                                .services-grid {
-                                                    margin-top: 0;
-                                                    margin-bottom: 0;
-                                                }
-                                        /* Mise en page grid pour les services */
-                                        .services-grid {
-                                            display: grid;
-                                            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-                                            gap: 3.5rem 2.5rem;
-                                            justify-items: center;
-                                            align-items: stretch;
-                                            margin: 3em 0 2em 0;
-                                        }
-                                        .service-card {
-                                            background: #181c3a;
-                                            border-radius: 1.2em;
-                                            box-shadow: 0 0 32px #00fff933, 0 0 0 2px #00fff933;
-                                            padding: 2.5em 1.5em 2em 1.5em;
-                                            display: flex;
-                                            flex-direction: column;
-                                            align-items: center;
-                                            justify-content: center;
-                                            min-height: 220px;
-                                            min-width: 220px;
-                                            max-width: 340px;
-                                            width: 100%;
-                                            margin: 0 auto;
-                                            transition: transform 0.18s, box-shadow 0.18s;
-                                        }
-                                        .service-card:hover, .service-card:focus-within {
-                                            transform: scale(1.04);
-                                            box-shadow: 0 0 48px #00fff966, 0 0 0 2px #00fff933;
-                                        }
-                                        .service-card .icon {
-                                            font-size: 3.2rem;
-                                            margin-bottom: 1.5rem;
-                                        }
-                                        .service-card h2 {
-                                            color: #fff;
-                                            font-size: 2.2rem;
-                                            margin: 1.2rem 0 0.5rem 0;
-                                            text-align: center;
-                                        }
-                                        .service-card p {
-                                            color: #fff;
-                                            text-align: center;
-                                        }
-                                        @media (max-width: 700px) {
-                                            .services-grid {
-                                                grid-template-columns: 1fr;
-                                                gap: 2.2rem 0;
-                                            }
-                                            .service-card {
-                                                min-width: 0;
-                                                max-width: 98vw;
-                                                padding: 2em 0.7em 2em 0.7em;
-                                            }
-                                        }
-                                /* Titre principal en blanc */
-                                .hero h1, .highlight[data-test-id="welcome-title"] {
-                                    color: #fff !important;
-                                }
-                        /* Titre contact en blanc */
-                        .contact h2 {
-                            color: #fff !important;
-                        }
-                /* Rendre le texte du menu blanc */
-                .main-nav ul li a, .main-nav ul li span {
-                    color: #fff !important;
-                }
-                .main-nav ul li a:visited {
-                    color: #fff !important;
-                }
-                .main-nav ul li a:hover, .main-nav ul li a:focus {
-                    color: #181c3a !important;
-                }
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+        }
+        .services-grid {
+            margin-top: 0;
+            margin-bottom: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3.5rem 2.5rem;
+            justify-items: center;
+            align-items: stretch;
+            margin: 3em 0 2em 0;
+        }
+        .service-card {
+            background: #181c3a;
+            border-radius: 1.2em;
+            box-shadow: 0 0 32px #00fff933, 0 0 0 2px #00fff933;
+            padding: 2.5em 1.5em 2em 1.5em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 220px;
+            min-width: 220px;
+            max-width: 340px;
+            width: 100%;
+            margin: 0 auto;
+            transition: transform 0.18s, box-shadow 0.18s;
+        }
+        .service-card:hover, .service-card:focus-within {
+            transform: scale(1.04);
+            box-shadow: 0 0 48px #00fff966, 0 0 0 2px #00fff933;
+        }
+        .service-card .icon {
+            font-size: 3.2rem;
+            margin-bottom: 1.5rem;
+        }
+        .service-card h2 {
+            color: #fff;
+            font-size: 2.2rem;
+            margin: 1.2rem 0 0.5rem 0;
+            text-align: center;
+        }
+        .service-card p {
+            color: #fff;
+            text-align: center;
+        }
+        @media (max-width: 700px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 2.2rem 0;
+            }
+            .service-card {
+                min-width: 0;
+                max-width: 98vw;
+                padding: 2em 0.7em 2em 0.7em;
+            }
+        }
+        .hero h1, .highlight[data-test-id="welcome-title"] {
+            color: #fff !important;
+        }
+        .contact h2 {
+            color: #fff !important;
+        }
+        .main-nav ul li a, .main-nav ul li span {
+            color: #fff !important;
+        }
+        .main-nav ul li a:visited {
+            color: #fff !important;
+        }
+        .main-nav ul li a:hover, .main-nav ul li a:focus {
+            color: #181c3a !important;
+        }
         body {
             background: #181c3a !important;
         }
@@ -414,27 +407,6 @@
                 <span class="card-accent"></span>
             </div>
         </section>
-        <!-- <section id="contact" class="contact" data-cy="contact-section">
-            <h2 data-cy="contact-title">Contactez l'administrateur</h2>
-            <form aria-label="Formulaire de contact" id="contactFormIndex" data-cy="contact-form">
-                <div class="form-group">
-                    <label for="contact-nom">Nom *</label>
-                    <input type="text" id="contact-nom" name="nom" placeholder="Votre nom" required autocomplete="name" data-cy="contact-nom">
-                </div>
-                <div class="form-group">
-                    <label for="contact-email">Email *</label>
-                    <input type="email" id="contact-email" name="email" placeholder="Votre email" required autocomplete="email" data-cy="contact-email">
-                </div>
-                <div class="form-group">
-                    <label for="contact-message">Message *</label>
-                    <textarea id="contact-message" name="message" placeholder="Votre message" required rows="4" data-cy="contact-message"></textarea>
-                </div>
-                <div style="text-align:center;">
-                    <button type="submit" data-cy="contact-submit">Envoyer</button>
-                </div>
-            </form>
-            <div id="contact-success-index" style="display:none;color:#27ae60;font-weight:600;margin-top:1em;" data-cy="contact-success"></div>
-</section> -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('contactFormIndex');
