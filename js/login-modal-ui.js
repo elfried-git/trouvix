@@ -1,4 +1,3 @@
-// Gestion de l'ouverture/fermeture de la modale de connexion
 (function() {
     const loginLink = document.getElementById('login-link');
     if (!loginLink) return;
@@ -52,4 +51,19 @@
             document.getElementById('login-modal').setAttribute('aria-hidden', 'true');
         });
     }
+
+    setInterval(function() {
+        fetch('/trouvix/backend/update_activity.php', {
+            method: 'POST',
+            credentials: 'include'
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data && data.error) {
+                alert('Votre session a expiré ou a été connectée ailleurs. Vous allez être déconnecté.');
+                window.location.href = '/trouvix/auth/login.html';
+            }
+        })
+        .catch(() => {});
+    }, 60000); 
 })();

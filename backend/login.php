@@ -5,6 +5,18 @@ if (php_sapi_name() !== 'cli') {
 }
 require_once 'db.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Nettoyage automatique : supprime les tokens vieux de plus de 30 minutes
+        $pdo->exec("UPDATE users SET session_token = NULL WHERE session_token IS NOT NULL AND (last_activity IS NULL OR last_activity < NOW() - INTERVAL 30 MINUTE)");
+
+        // Supprime le token si aucune session PHP active n'existe pour ce compte (sécurité supplémentaire)
+        // (Ce code doit aussi être appelé dans un script de vérification périodique côté serveur pour une sécurité maximale)
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            $currentUserId = $_SESSION['user_id'] ?? $_SESSION['admin_id'] ?? null;
+            if ($currentUserId) {
+                $stmt = $pdo->prepare('UPDATE users SET session_token = NULL WHERE id = ? AND session_token IS NOT NULL');
+                $stmt->execute([$currentUserId]);
+            }
+        }
     $email = $_POST['email'] ?? '';
     $otp = $_POST['otp'] ?? '';
 
@@ -18,13 +30,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $stmt->fetch();
 
     if ($user && password_verify($otp, $user['otp'])) {
-        // Vérifie si un token de session existe déjà pour ce compte
+        // BLOQUE toute nouvelle connexion si un token existe et que la dernière activité est récente (<30min)
         $sessionActive = false;
         if (!empty($user['session_token'])) {
-            // Vérifie si la session est vraiment active (last_activity < 2s)
-            $last = !empty($user['last_activity']) ? strtotime($user['last_activity']) : 0;
-            if ($last && (time() - $last) < 2) {
-                $sessionActive = true;
+            if (!empty($user['last_activity'])) {
+                $last = strtotime($user['last_activity']);
+                if ($last && (time() - $last) < 20) { // 20s = 20 secondes
+                    $sessionActive = true;
+                }
             }
         }
         if ($sessionActive) {
