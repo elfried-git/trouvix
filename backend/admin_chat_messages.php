@@ -84,7 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Envoyer une réponse à un utilisateur
     if ($action === 'reply') {
         $userId = $data['user_id'] ?? 0;
-        $userName = $data['user_name'] ?? 'Admin';
+        // Utiliser le nom réel de l'admin connecté si disponible
+        $userName = isset($_SESSION['admin_name']) ? $_SESSION['admin_name'] : ($data['user_name'] ?? 'Admin');
         $message = $data['message'] ?? '';
         
         if (empty(trim($message)) || $userId <= 0) {
@@ -100,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             $stmt->execute([
                 ':user_id' => $userId,
-                ':user_name' => 'Admin',
+                ':user_name' => $userName,
                 ':message' => $message
             ]);
             

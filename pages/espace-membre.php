@@ -19,6 +19,10 @@ $user_email = $_SESSION['user_email'] ?? '';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Espace Membre - Trouvix</title>
     <link rel="stylesheet" href="../style.css">
+    <script type="module">
+    import { playBip } from '../js/bip.js';
+    window.playBip = playBip;
+    </script>
     <style>
         body {
             background: #181c3a !important;
@@ -976,20 +980,18 @@ $user_email = $_SESSION['user_email'] ?? '';
                 .then(r => r.json())
                 .then(data => {
                     console.log('Messages reçus côté utilisateur:', data);
-                    
                     if (data.success && data.messages) {
                         const scrollPos = chatMessages.scrollTop;
                         const isAtBottom = chatMessages.scrollHeight - chatMessages.scrollTop <= chatMessages.clientHeight + 50;
-                        
+                        // Bip sonore si nouveau message
+                        if (window._lastUserMsgCount !== undefined && data.messages.length > window._lastUserMsgCount) {
+                            window.playBip && window.playBip();
+                        }
+                        window._lastUserMsgCount = data.messages.length;
                         chatMessages.innerHTML = '';
-                        
-                        console.log('Nombre de messages à afficher:', data.messages.length);
-                        
                         data.messages.forEach(msg => {
-                            console.log('Message:', msg.message, 'isAdmin:', msg.is_from_admin);
                             addMessage(msg.message, msg.is_from_admin == 1, msg.created_at);
                         });
-                        
                         if (isAtBottom || data.messages.length > 0) {
                             chatMessages.scrollTop = chatMessages.scrollHeight;
                         } else {

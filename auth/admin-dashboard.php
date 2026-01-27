@@ -18,6 +18,10 @@ if (isset($_SESSION['user_id'])) {
     <title>Tableau de bord Administrateur</title>
     <link rel="stylesheet" href="auth.css">
     <link rel="stylesheet" href="../style.css">
+    <script type="module">
+    import { playBip } from '../js/bip.js';
+    window.playBip = playBip;
+    </script>
     <style>
         body { margin: 0; padding: 0; }
         .admin-sidebar {
@@ -950,9 +954,12 @@ if (isset($_SESSION['user_id'])) {
                 const isAtBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 50;
                 
                 // Vérifier les nouveaux messages
-                const latestId = Math.max(...userMessages.map(m => m.id));
-                const hasNewMessages = latestId > lastMessageId;
-                lastMessageId = latestId;
+                const latestId = userMessages.length > 0 ? Math.max(...userMessages.map(m => m.id)) : 0;
+                const hasNewMessages = latestId > (window.lastMessageId || 0);
+                if (hasNewMessages && window.lastMessageId !== undefined) {
+                    window.playBip && window.playBip();
+                }
+                window.lastMessageId = latestId;
                 
                 container.innerHTML = '';
                 
